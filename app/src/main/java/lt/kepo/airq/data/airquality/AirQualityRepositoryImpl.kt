@@ -25,7 +25,7 @@ class AirQualityRepositoryImpl internal constructor(
     }
 
     override suspend fun getHere(): ApiResponse<AirQuality> {
-        return airQualityService.getAirQualityHere().await()
+        return airQualityService.getAirQualityHere()
     }
 
 //    override suspend fun insert(airQuality: AirQuality) = airQualityDao.insert(airQuality)

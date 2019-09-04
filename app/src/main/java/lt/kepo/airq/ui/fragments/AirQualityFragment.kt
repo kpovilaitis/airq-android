@@ -23,6 +23,8 @@ class AirQualityFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_air_quality, container, false)
 
         viewModel.airQuality.observe(this, Observer {newAirQuality ->
+            textAirQualityIndex.text = newAirQuality.airQualityIndex.toString()
+            textCityName.text = newAirQuality.city.name
             textDominatingPollutant.text = newAirQuality.dominatingPollutant
         })
 

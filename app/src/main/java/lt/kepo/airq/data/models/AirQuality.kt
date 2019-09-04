@@ -10,6 +10,6 @@ data class AirQuality (
     @SerializedName("aqi") @PrimaryKey @ColumnInfo(name = "id")  val airQualityIndex: Int,
     @SerializedName("idx") val stationId: Int,
     @SerializedName("dominentpol") val dominatingPollutant: String,
-    @SerializedName("iaqi") val gardenPlantings: List<Property> = arrayListOf(),
+    @SerializedName("iaqi") val individualIndices: IndividualIndices,
     @SerializedName("city") val city: City
 )

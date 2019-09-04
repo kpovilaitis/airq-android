@@ -33,7 +33,7 @@ class AirQualityViewModel(private val airQualityRepository: AirQualityRepository
             val result = withContext(Dispatchers.IO) { airQualityRepository.getHere() }
 
             when (result.status) {
-                "OK" -> airQuality.value = result.data
+                "ok" -> airQuality.value = result.data
                 else -> {
 
                 }

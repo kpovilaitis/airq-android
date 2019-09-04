@@ -33,7 +33,8 @@ val appModule : Module = module {
 
     factory<AirQualityRepository> {
         AirQualityRepositoryImpl(
-            get()
+            airQualityDao = get(),
+            airQualityService = get()
         )
     }
 

@@ -27,13 +27,13 @@ val appModule : Module = module {
         baseUrl = API_BASE_URL
     ) }
 
-    single { get<AirQualityDatabase>().airQualityDao() }
+//    single { get<AirQualityDatabase>().airQualityDao() }
 
     single { Room.databaseBuilder(get(), AirQualityDatabase::class.java, AIRQ_DATABASE_NAME).build() }
 
     factory<AirQualityRepository> {
         AirQualityRepositoryImpl(
-            airQualityDao = get(),
+//            airQualityDao = get(),
             airQualityService = get()
         )
     }

@@ -23,9 +23,8 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
         // Set up ActionBar
-//        setSupportActionBar(toolbar)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-
+        setSupportActionBar(toolbar)
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
     override fun onSupportNavigateUp(): Boolean {

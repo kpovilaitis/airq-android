@@ -2,11 +2,13 @@ package lt.kepo.airq.data.airquality
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.Deferred
 import lt.kepo.airq.api.ApiClientService
+import lt.kepo.airq.api.ApiResponse
 import lt.kepo.airq.data.models.AirQuality
 
 class AirQualityRepositoryImpl internal constructor(
-    private val airQualityDao: AirQualityDao,
+//    private val airQualityDao: AirQualityDao,
     private val airQualityService: ApiClientService
 ): AirQualityRepository {
 
@@ -22,5 +24,9 @@ class AirQualityRepositoryImpl internal constructor(
 //        }
     }
 
-    override suspend fun insert(airQuality: AirQuality) = airQualityDao.insert(airQuality)
+    override suspend fun getHere(): ApiResponse<AirQuality> {
+        return airQualityService.getAirQualityHere().await()
+    }
+
+//    override suspend fun insert(airQuality: AirQuality) = airQualityDao.insert(airQuality)
 }

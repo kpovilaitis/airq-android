@@ -1,11 +1,14 @@
 package lt.kepo.airq.di
 
 import androidx.room.Room
+import com.google.gson.ExclusionStrategy
+import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
-import lt.kepo.airq.api.ApiClientService
+import lt.kepo.airq.api.ApiClient
 import lt.kepo.airq.api.ApiTokenInterceptor
-import lt.kepo.airq.data.airquality.AirQualityRepository
-import lt.kepo.airq.data.airquality.AirQualityRepositoryImpl
+import lt.kepo.airq.data.models.Property
+import lt.kepo.airq.db.airquality.AirQualityRepository
+import lt.kepo.airq.db.airquality.AirQualityRepositoryImpl
 import lt.kepo.airq.db.AirQualityDatabase
 import lt.kepo.airq.utilities.AIRQ_DATABASE_NAME
 import lt.kepo.airq.utilities.API_BASE_URL
@@ -21,20 +24,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule : Module = module {
 
-    single { createApiClientService<ApiClientService>(
+    single { createApiClientService<ApiClient>(
         okHttpClient = createHttpClient(),
         factory = RxJava2CallAdapterFactory.create(),
         baseUrl = API_BASE_URL
     ) }
 
-//    single { get<AirQualityDatabase>().airQualityDao() }
-
     single { Room.databaseBuilder(get(), AirQualityDatabase::class.java, AIRQ_DATABASE_NAME).build() }
+
+    single { get<AirQualityDatabase>().airQualityDao() }
 
     factory<AirQualityRepository> {
         AirQualityRepositoryImpl(
-//            airQualityDao = get(),
-            airQualityService = get()
+            airQualityDao = get(),
+            apiClient = get()
         )
     }
 

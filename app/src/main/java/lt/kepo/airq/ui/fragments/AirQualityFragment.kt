@@ -28,7 +28,14 @@ class AirQualityFragment : Fragment() {
             textDominatingPollutant.text = newAirQuality.dominatingPollutant
         })
 
-        viewModel.getAirQuality()
+        viewModel.isLoading.observe(this, Observer { newIsLoading ->
+            if (newIsLoading)
+                progress_bar.visibility = View.VISIBLE
+            else
+                progress_bar.visibility = View.GONE
+        })
+
+        viewModel.getAirQualityHereFromApi()
 
         return view
     }

@@ -3,7 +3,7 @@ package lt.kepo.airq.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import lt.kepo.airq.data.models.AirQuality
-import lt.kepo.airq.data.airquality.AirQualityDao
+import lt.kepo.airq.db.airquality.AirQualityDao
 
 @Database(
     entities = [

@@ -1,58 +1,41 @@
 package lt.kepo.airq.di
 
 import androidx.room.Room
-import com.google.gson.ExclusionStrategy
-import com.google.gson.FieldAttributes
-import com.google.gson.GsonBuilder
 import lt.kepo.airq.api.ApiClient
 import lt.kepo.airq.api.ApiTokenInterceptor
-import lt.kepo.airq.data.models.Property
-import lt.kepo.airq.db.airquality.AirQualityRepository
-import lt.kepo.airq.db.airquality.AirQualityRepositoryImpl
+import lt.kepo.airq.repository.AirQualityRepository
+import lt.kepo.airq.repository.implementation.AirQualityRepositoryImpl
 import lt.kepo.airq.db.AirQualityDatabase
-import lt.kepo.airq.utilities.AIRQ_DATABASE_NAME
-import lt.kepo.airq.utilities.API_BASE_URL
-import lt.kepo.airq.viewmodels.AirQualityViewModel
+import lt.kepo.airq.utility.AIR_Q_DATABASE_NAME
+import lt.kepo.airq.utility.API_BASE_URL
+import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import okhttp3.OkHttpClient
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule : Module = module {
 
-    single { createApiClientService<ApiClient>(
-        okHttpClient = createHttpClient(),
-        factory = RxJava2CallAdapterFactory.create(),
-        baseUrl = API_BASE_URL
-    ) }
+    single { createApiClientService<ApiClient>(okHttpClient = createHttpClient(), baseUrl = API_BASE_URL) }
 
-    single { Room.databaseBuilder(get(), AirQualityDatabase::class.java, AIRQ_DATABASE_NAME).build() }
+    single { Room.databaseBuilder(get(), AirQualityDatabase::class.java, AIR_Q_DATABASE_NAME).build() }
 
     single { get<AirQualityDatabase>().airQualityDao() }
 
-    factory<AirQualityRepository> {
-        AirQualityRepositoryImpl(
-            airQualityDao = get(),
-            apiClient = get()
-        )
-    }
+    factory<AirQualityRepository> { AirQualityRepositoryImpl( airQualityDao = get(), apiClient = get()) }
 
     viewModel { AirQualityViewModel(get()) }
 }
 
-inline fun <reified T> createApiClientService(okHttpClient: OkHttpClient, factory: CallAdapter.Factory, baseUrl: String): T {
-    val retrofit = Retrofit.Builder()
+inline fun <reified T> createApiClientService(okHttpClient: OkHttpClient, baseUrl: String): T {
+    return Retrofit.Builder()
         .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
-        .addCallAdapterFactory(factory)
+        .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()
-
-    return retrofit.create(T::class.java)
+        .create(T::class.java)
 }
 
 fun createHttpClient(): OkHttpClient {

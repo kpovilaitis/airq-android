@@ -22,7 +22,7 @@
 
     <fragment
             android:id="@+id/air_quality_fragment"
-            android:name="lt.kepo.airq.ui.fragments.AirQualityFragment"
+            android:name="lt.kepo.airq.ui.fragment.AirQualityFragment"
             tools:layout="@layout/fragment_air_quality">
 
     </fragment>

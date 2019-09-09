@@ -1,4 +1,4 @@
-package lt.kepo.airq.ui.activities
+package lt.kepo.airq.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

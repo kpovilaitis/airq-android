@@ -1,7 +1,7 @@
-package lt.kepo.airq.data.models
+package lt.kepo.airq.api.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class City (
+data class CityDto (
     @SerializedName("name") val name: String
 )

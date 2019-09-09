@@ -1,9 +1,9 @@
-package lt.kepo.airq.data.models
+package lt.kepo.airq.api.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Station (
+data class StationDto (
     @SerializedName("uid") val id: Int,
     @SerializedName("aqi") val airQualityIndex: Int,
-    @SerializedName("station") var station: City
+    @SerializedName("station") var station: CityDto
 )

@@ -21,9 +21,10 @@ class AirQualityViewModel(private val airQualityRepository: AirQualityRepository
 
     val airQuality = MutableLiveData<AirQuality>()
     var isLoading = MutableLiveData<Boolean>()
+    var isError = MutableLiveData<Boolean>(false)
 
     init {
-        getLocalAirQualityHere()
+        launch { airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getLocalHere() } }
     }
 
     override fun onCleared() {
@@ -39,17 +40,20 @@ class AirQualityViewModel(private val airQualityRepository: AirQualityRepository
 
             try {
                 airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getRemoteHere() }
+
+                isError.value = false
+
             } catch (e: HttpException) {
                 println(e)
+
+                isError.value = true
             } catch (e: UnknownHostException) {
                 println(e)
+
+                isError.value = true
             }
 
             isLoading.value = false
         }
-    }
-
-    fun getLocalAirQualityHere() {
-        launch { airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getLocalHere() } }
     }
 }

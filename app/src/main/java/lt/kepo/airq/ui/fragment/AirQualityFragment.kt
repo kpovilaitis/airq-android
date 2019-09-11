@@ -18,6 +18,7 @@ class AirQualityFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel.airQuality.observe(this, airQualityObserver)
         viewModel.isLoading.observe(this, isLoadingObserver )
+        viewModel.isError.observe(this, isErrorObserver)
 
         return inflater.inflate(R.layout.fragment_air_quality, container, false)
     }
@@ -29,12 +30,16 @@ class AirQualityFragment : Fragment() {
     }
 
     private val airQualityObserver = Observer<AirQuality> { newAirQuality ->
-        textAirQualityIndex.text = newAirQuality.airQualityIndex.toString()
-        textCityName.text = newAirQuality.city.name
-        textDominatingPollutant.text = newAirQuality.dominatingPollutant
+        textAirQualityIndex.text = newAirQuality?.airQualityIndex?.toString()
+        textCityName.text = newAirQuality?.city?.name
+        textDominatingPollutant.text = newAirQuality?.dominatingPollutant
     }
 
     private val isLoadingObserver = Observer<Boolean> { isLoading ->
         if (isLoading) progress_bar.visibility = View.VISIBLE else progress_bar.visibility = View.GONE
+    }
+
+    private val isErrorObserver = Observer<Boolean> { isError ->
+        if (isError) textError.visibility = View.VISIBLE else textError.visibility = View.GONE
     }
 }

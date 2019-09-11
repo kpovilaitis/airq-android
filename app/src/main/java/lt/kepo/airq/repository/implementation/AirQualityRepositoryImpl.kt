@@ -12,7 +12,9 @@ class AirQualityRepositoryImpl internal constructor(
     override suspend fun getRemoteHere(): AirQuality {
         val response = AirQuality.build(apiClient.getHere().body()!!.data)
 
-        airQualityDao.resetTable(response)
+        response.isCurrentLocationQuality = true
+
+        airQualityDao.upsertHere(response)
 
         return response
     }
@@ -25,5 +27,5 @@ class AirQualityRepositoryImpl internal constructor(
 
     override suspend fun getLocalByStationId(stationId: Int): AirQuality = airQualityDao.getByStationId(stationId)
 
-    override suspend fun insert(airQuality: AirQuality) = airQualityDao.insert(airQuality)
+    override suspend fun insert(airQuality: AirQuality): Long = airQualityDao.insert(airQuality)
 }

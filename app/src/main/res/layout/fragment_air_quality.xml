@@ -12,6 +12,17 @@
             android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:layout_below="@id/progress_bar"
+            android:layout_centerHorizontal="true"
+            android:text="ERROR"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textCityName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,10 +4,10 @@ import androidx.room.Embedded
 import lt.kepo.airq.api.dto.IndividualIndicesDto
 
 data class IndividualIndices(
-    @Embedded(prefix = "so2_") val sulfurOxide: Property,
-    @Embedded(prefix = "o3_") val ozone: Property,
-    @Embedded(prefix = "pm10_") val particle10: Property,
-    @Embedded(prefix = "pm25_") val particle25: Property
+    @Embedded(prefix = "sulfur_oxide_") val sulfurOxide: Property,
+    @Embedded(prefix = "ozone_") val ozone: Property,
+    @Embedded(prefix = "particle_10_") val particle10: Property,
+    @Embedded(prefix = "particle_25_") val particle25: Property
 ) {
     companion object {
         fun build(dto: IndividualIndicesDto): IndividualIndices {

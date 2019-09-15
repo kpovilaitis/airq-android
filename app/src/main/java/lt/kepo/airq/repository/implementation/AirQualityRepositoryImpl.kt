@@ -1,5 +1,11 @@
 package lt.kepo.airq.repository.implementation
 
+import android.content.Context
+import android.location.Location
+import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnSuccessListener
 import lt.kepo.airq.api.ApiClient
 import lt.kepo.airq.db.dao.AirQualityDao
 import lt.kepo.airq.db.model.AirQuality
@@ -7,8 +13,14 @@ import lt.kepo.airq.repository.AirQualityRepository
 
 class AirQualityRepositoryImpl internal constructor(
     private val airQualityDao: AirQualityDao,
-    private val apiClient: ApiClient
+    private val apiClient: ApiClient,
+    private val context: Context
 ): AirQualityRepository {
+    override val location = MutableLiveData<Location?>()
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    init { addLocationListener(OnSuccessListener { loc -> location.value = loc }) }
+
     override suspend fun getRemoteHere(): AirQuality {
         val response = AirQuality.build(apiClient.getHere().body()!!.data)
 
@@ -28,4 +40,9 @@ class AirQualityRepositoryImpl internal constructor(
     override suspend fun getLocalByStationId(stationId: Int): AirQuality = airQualityDao.getByStationId(stationId)
 
     override suspend fun insert(airQuality: AirQuality): Long = airQualityDao.insert(airQuality)
+
+    private fun addLocationListener(listener: OnSuccessListener<Location>) {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        fusedLocationClient.lastLocation.addOnSuccessListener(listener)
+    }
 }

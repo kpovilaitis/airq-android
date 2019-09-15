@@ -1,7 +1,11 @@
 package lt.kepo.airq.ui.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -25,6 +29,10 @@ class MainActivity : AppCompatActivity() {
         // Set up ActionBar
         setSupportActionBar(toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),104)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

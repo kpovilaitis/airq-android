@@ -24,7 +24,7 @@ val appModule : Module = module {
 
     single { get<AirQualityDatabase>().airQualityDao() }
 
-    factory<AirQualityRepository> { AirQualityRepositoryImpl( airQualityDao = get(), apiClient = get()) }
+    factory<AirQualityRepository> { AirQualityRepositoryImpl( airQualityDao = get(), apiClient = get(), context = get()) }
 
     viewModel { AirQualityViewModel(get()) }
 }

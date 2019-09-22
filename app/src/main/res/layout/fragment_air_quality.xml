@@ -1,46 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeToRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:layout_below="@id/progress_bar"
-            android:layout_centerHorizontal="true"
-            android:text="ERROR"
-            android:textStyle="bold"
-            android:visibility="gone"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textCityName"
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/textAirQualityIndex"
-            android:gravity="center"/>
+            android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textAirQualityIndex"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/textDominatingPollutant"
-            android:gravity="center"/>
+        <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textDominatingPollutant"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"/>
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/progress_bar"
+                android:layout_centerHorizontal="true"
+                android:text="ERROR"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-</RelativeLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/progress_bar"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/colorAccent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textCityName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/textAirQualityIndex"
+                android:gravity="center" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textAirQualityIndex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/textDominatingPollutant"
+                android:gravity="center" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textDominatingPollutant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center" />
+
+    </RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

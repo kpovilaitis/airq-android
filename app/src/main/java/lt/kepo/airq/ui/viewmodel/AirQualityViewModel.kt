@@ -1,36 +1,40 @@
 package lt.kepo.airq.ui.viewmodel
 
-import android.location.Location
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnSuccessListener
-import kotlinx.coroutines.*
+import lt.kepo.airq.utility.isLocationEnabled
 import lt.kepo.airq.db.model.AirQuality
 import lt.kepo.airq.repository.AirQualityRepository
 import retrofit2.HttpException
 import java.net.UnknownHostException
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.AndroidViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 /**
  * The ViewModel used in [AirQualityFragment].
  */
-class AirQualityViewModel(private val airQualityRepository: AirQualityRepository) : ViewModel(), CoroutineScope {
+class AirQualityViewModel(
+    private val airQualityRepository: AirQualityRepository,
+    application: Application
+) : AndroidViewModel(application), CoroutineScope {
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val job = Job()
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
 
     val airQuality = MutableLiveData<AirQuality>()
-    var isLoading = MutableLiveData<Boolean>()
-    var isError = MutableLiveData<Boolean>()
+    val isLoading = MutableLiveData<Boolean>()
+    val isError = MutableLiveData<Boolean>()
 
     init {
-        airQualityRepository.location.observeForever { location -> println("LatLng: " + location?.latitude + "," + location?.longitude) }
-
-        launch { airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getLocalHere() } }
+        if (isLocationEnabled(application)) {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
+        }
     }
 
     override fun onCleared() {
@@ -40,25 +44,49 @@ class AirQualityViewModel(private val airQualityRepository: AirQualityRepository
         job.cancel()
     }
 
-    fun getRemoteAirQualityHere() {
+    fun getLocalAirQualityHere() {
         launch {
-            isLoading.value = true
+            airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getLocalHere() }
+        }
+    }
 
-            try {
-                airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getRemoteHere() }
+    fun getRemoteAirQualityHere(context: Context) {
+        try {
+            if (isLocationEnabled(context)) {
+                fusedLocationClient.locationAvailability.addOnSuccessListener { locationAvailability ->
+                    if (locationAvailability.isLocationAvailable) {
+                        fusedLocationClient.lastLocation.addOnSuccessListener { loc ->
+                            launch {
+                                isLoading.value = true
+                                airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getRemoteHereByLocation(loc) }
+                                isLoading.value = false
+                            }
+                        }
+                    } else launch {
+                        isLoading.value = true
+                        airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getRemoteHere() }
+                        isLoading.value = false
+                    }
+                }
 
-                isError.value = false
-
-            } catch (e: HttpException) {
-                println(e)
-
-                isError.value = true
-            } catch (e: UnknownHostException) {
-                println(e)
-
-                isError.value = true
+            } else {
+                launch {
+                    isLoading.value = true
+                    airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getRemoteHere() }
+                    isLoading.value = false
+                }
             }
 
+            isError.value = false
+        } catch (e: HttpException) {
+            println(e)
+
+            isError.value = true
+            isLoading.value = false
+        } catch (e: UnknownHostException) {
+            println(e)
+
+            isError.value = true
             isLoading.value = false
         }
     }

@@ -24,9 +24,9 @@ val appModule : Module = module {
 
     single { get<AirQualityDatabase>().airQualityDao() }
 
-    factory<AirQualityRepository> { AirQualityRepositoryImpl( airQualityDao = get(), apiClient = get(), context = get()) }
+    factory<AirQualityRepository> { AirQualityRepositoryImpl( airQualityDao = get(), apiClient = get()) }
 
-    viewModel { AirQualityViewModel(get()) }
+    viewModel { AirQualityViewModel(get(), get()) }
 }
 
 inline fun <reified T> createApiClientService(okHttpClient: OkHttpClient, baseUrl: String): T {

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AirQ</string>
+    <string name="menu_refresh">refresh</string>
 </resources>

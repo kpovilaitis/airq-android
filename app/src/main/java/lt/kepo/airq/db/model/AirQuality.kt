@@ -9,7 +9,7 @@ import lt.kepo.airq.api.dto.AirQualityDto
 @Entity(tableName = "air_qualities")
 data class AirQuality (
     @PrimaryKey @ColumnInfo(name = "station_id") val stationId: Int,
-    @ColumnInfo(name = "air_quality_index") val airQualityIndex: Int,
+    @ColumnInfo(name = "air_quality_index") val airQualityIndex: String,
     @ColumnInfo(name = "dominating_pollutant") val dominatingPollutant: String,
     @Embedded val individualIndices: IndividualIndices,
     @Embedded(prefix = "city_") val city: City,

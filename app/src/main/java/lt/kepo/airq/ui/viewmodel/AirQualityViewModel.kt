@@ -1,19 +1,21 @@
 package lt.kepo.airq.ui.viewmodel
 
-import lt.kepo.airq.utility.isLocationEnabled
-import lt.kepo.airq.db.model.AirQuality
-import lt.kepo.airq.repository.AirQualityRepository
-import retrofit2.HttpException
-import java.net.UnknownHostException
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.MutableLiveData
+import android.location.Location
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.*
+import lt.kepo.airq.api.ApiEmptyResponse
+import lt.kepo.airq.api.ApiErrorResponse
+import lt.kepo.airq.api.ApiSuccessResponse
+import lt.kepo.airq.db.model.AirQuality
+import lt.kepo.airq.repository.airquality.AirQualityRepository
+import lt.kepo.airq.utility.isLocationEnabled
+import kotlin.coroutines.CoroutineContext
 
 /**
  * The ViewModel used in [AirQualityFragment].
@@ -29,7 +31,8 @@ class AirQualityViewModel(
 
     val airQuality = MutableLiveData<AirQuality>()
     val isLoading = MutableLiveData<Boolean>()
-    val isError = MutableLiveData<Boolean>()
+    val errorMessage = MutableLiveData<String>()
+    val isLocationFound = MutableLiveData<Boolean>()
 
     init {
         if (isLocationEnabled(application)) {
@@ -45,48 +48,46 @@ class AirQualityViewModel(
     }
 
     fun getLocalAirQualityHere() {
-        launch {
-            airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getLocalHere() }
-        }
+        launch { airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getLocalAirQualityHere() } }
     }
 
     fun getRemoteAirQualityHere(context: Context) {
-        try {
-            if (isLocationEnabled(context)) {
-                fusedLocationClient.locationAvailability.addOnSuccessListener { locationAvailability ->
-                    if (locationAvailability.isLocationAvailable) {
-                        fusedLocationClient.lastLocation.addOnSuccessListener { loc ->
-                            launch {
-                                isLoading.value = true
-                                airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getRemoteHereByLocation(loc) }
-                                isLoading.value = false
-                            }
-                        }
-                    } else launch {
-                        isLoading.value = true
-                        airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getRemoteHere() }
-                        isLoading.value = false
+        if (isLocationEnabled(context)) {
+            fusedLocationClient.locationAvailability.addOnSuccessListener { locationAvailability ->
+                if (locationAvailability.isLocationAvailable)
+                    fusedLocationClient.lastLocation.addOnSuccessListener { loc -> launchRemoteAirQualityHere(loc) }
+                else
+                    launchRemoteAirQualityHere(null)
+            }
+        } else {
+            launchRemoteAirQualityHere(null)
+        }
+    }
+
+    private fun launchRemoteAirQualityHere(location: Location?) {
+        launch {
+            isLoading.value = true
+            isLocationFound.value = location != null
+
+            when (val response = withContext(Dispatchers.IO) {
+                if (location == null)
+                    airQualityRepository.getRemoteAirQualityHere()
+                else
+                    airQualityRepository.getRemoteAirQualityHere(location)
+            }) {
+                is ApiSuccessResponse -> {
+                    errorMessage.value = ""
+                    airQuality.value = AirQuality.build(response.data)
+
+                    launch (Dispatchers.IO) {
+                        airQuality.value!!.isCurrentLocationQuality = true
+                        airQualityRepository.upsertAirQualityHere(airQuality.value!!)
                     }
                 }
-
-            } else {
-                launch {
-                    isLoading.value = true
-                    airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getRemoteHere() }
-                    isLoading.value = false
-                }
+                is ApiErrorResponse -> errorMessage.value = response.errorMessage
+                is ApiEmptyResponse -> errorMessage.value = "Api returned empty response"
             }
 
-            isError.value = false
-        } catch (e: HttpException) {
-            println(e)
-
-            isError.value = true
-            isLoading.value = false
-        } catch (e: UnknownHostException) {
-            println(e)
-
-            isError.value = true
             isLoading.value = false
         }
     }

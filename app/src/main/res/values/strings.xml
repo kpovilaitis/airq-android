@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">AirQ</string>
-    <string name="menu_refresh">refresh</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_search">Search</string>
+
+    <string name="hint_search">@string/menu_search</string>
+
+    <string name="label_station_air_quality">Air quality index: %s</string>
+
+    <string name="title_saved_stations">Saved stations</string>
+
 </resources>

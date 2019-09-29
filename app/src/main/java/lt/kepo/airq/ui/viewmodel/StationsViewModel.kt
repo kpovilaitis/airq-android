@@ -1,0 +1,84 @@
+package lt.kepo.airq.ui.viewmodel
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
+import lt.kepo.airq.api.ApiEmptyResponse
+import lt.kepo.airq.api.ApiErrorResponse
+import lt.kepo.airq.api.ApiSuccessResponse
+import lt.kepo.airq.db.model.Station
+import lt.kepo.airq.repository.stations.StationsRepository
+import kotlin.coroutines.CoroutineContext
+
+class StationsViewModel(private val stationsRepository: StationsRepository) : ViewModel(), CoroutineScope {
+
+    private val job = Job()
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + job
+
+    val stations = MutableLiveData<MutableList<Station>>()
+    val isLoading = MutableLiveData<Boolean>()
+    val errorMessage = MutableLiveData<String>()
+
+    override fun onCleared() {
+        super.onCleared()
+
+        viewModelScope.cancel()
+        job.cancel()
+    }
+
+    fun getRemoteStations(query: String) {
+        launch {
+            isLoading.value = true
+
+            when (val response = withContext(Dispatchers.IO) { stationsRepository.getRemoteStations(query) }) {
+                is ApiSuccessResponse -> {
+                    errorMessage.value = ""
+                    stations.value = response.data.map{ stationDto -> Station.build(stationDto) }.toMutableList()
+                }
+                is ApiErrorResponse -> errorMessage.value = response.errorMessage
+                is ApiEmptyResponse -> errorMessage.value = "Api returned empty response"
+            }
+
+            isLoading.value = false
+        }
+    }
+
+
+    fun updateLocalStations() {
+        launch {
+            stations.value?.forEach { station ->
+                when (val response = withContext(Dispatchers.IO) { stationsRepository.getStation(station.id) }) {
+                    is ApiSuccessResponse -> {
+                        errorMessage.value = ""
+
+                        val responseStation = Station.build(response.data)
+                        stations.value?.find { it.id == responseStation.id }?.airQualityIndex = responseStation.airQualityIndex
+
+                        launch (Dispatchers.IO) {
+                            stationsRepository.insertStation(station)
+                        }
+                    }
+                    is ApiErrorResponse -> errorMessage.value = response.errorMessage
+                    is ApiEmptyResponse -> errorMessage.value = "Api returned empty response"
+                }
+            }
+        }
+    }
+
+    fun addStationToLocalStorage(station: Station) {
+        launch { withContext(Dispatchers.IO) {stationsRepository.insertStation(station) } }
+    }
+
+    fun getLocalAllStations() {
+        launch { stations.value = withContext(Dispatchers.IO) { stationsRepository.getLocalAllStations().toMutableList() } }
+    }
+
+    fun removeLocalStation(station: Station) {
+        stations.value?.remove(station)
+
+        launch {
+            withContext(Dispatchers.IO) { stationsRepository.deleteStation(station) }
+        }
+    }
+}

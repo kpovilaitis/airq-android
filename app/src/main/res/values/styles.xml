@@ -1,22 +1,42 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
         <item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowBackground">@android:color/white</item>
+
         <item name="android:textColor">@android:color/black</item>
+
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:actionOverflowButtonStyle">@style/ActionButtonOverflow</item>
+
+        <item name="android:fontFamily">@font/red_hat</item>
     </style>
 
     <style name="AppTheme.Compat"/>
 
     <style name="ActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-<!--        <item name="android:textColor">@android:color/white</item>-->
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ActionButtonOverflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_overflow_menu</item>
+    </style>
+
+    <style name="ToolBarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/background_toolbar</item>
+        <item name="titleTextAppearance">@style/ActionBarTitle</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
     </style>
 
 </resources>

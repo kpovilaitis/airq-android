@@ -38,7 +38,7 @@ interface AirQualityDao {
             "WHERE is_current_location_quality = 1")
     fun updateHere(
         stationId: Int,
-        airQualityIndex: Int,
+        airQualityIndex: String,
         dominatingPollutant: String,
         isCurrentLocationQuality: Boolean,
         cityName: String,

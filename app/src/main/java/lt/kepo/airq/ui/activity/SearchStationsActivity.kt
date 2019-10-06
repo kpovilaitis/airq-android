@@ -14,6 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchStationsActivity : AppCompatActivity() {
     private val viewModel: StationsViewModel by viewModel()
+    private lateinit var stationsAdapter: StationsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +25,7 @@ class SearchStationsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        val stationsAdapter = StationsAdapter(ArrayList(), listClickListener, R.drawable.ic_add)
+        stationsAdapter = StationsAdapter(ArrayList(), listClickListener, R.drawable.ic_add)
 
         stationsRecyclerView.layoutManager = LinearLayoutManager(this)
         stationsRecyclerView.adapter = stationsAdapter
@@ -46,7 +47,11 @@ class SearchStationsActivity : AppCompatActivity() {
         })
     }
 
-    private val listClickListener: (Int) -> Unit = { position -> viewModel.addStationToLocalStorage(viewModel.stations.value!![position]) }
+    private val listClickListener: (Int) -> Unit = { position ->
+        viewModel.addStationToLocalStorage(viewModel.stations.value!![position])
+        viewModel.stations.value?.removeAt(position)
+        stationsAdapter.notifyDataSetChanged()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

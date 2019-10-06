@@ -11,8 +11,11 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import kotlinx.android.synthetic.main.activity_main.*
 import lt.kepo.airq.R
+import lt.kepo.airq.worker.UpdateLocalStationsWorker
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -33,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),104)
         }
+
+        val request = OneTimeWorkRequestBuilder<UpdateLocalStationsWorker>().build()
+        WorkManager.getInstance(this).enqueue(request)
     }
 
     override fun onSupportNavigateUp(): Boolean {

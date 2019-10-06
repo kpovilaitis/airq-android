@@ -55,16 +55,16 @@ class AirQualityViewModel(
         if (isLocationEnabled(context)) {
             fusedLocationClient.locationAvailability.addOnSuccessListener { locationAvailability ->
                 if (locationAvailability.isLocationAvailable)
-                    fusedLocationClient.lastLocation.addOnSuccessListener { loc -> launchRemoteAirQualityHere(loc) }
+                    fusedLocationClient.lastLocation.addOnSuccessListener { loc -> fetchRemoteAirQualityHere(loc) }
                 else
-                    launchRemoteAirQualityHere(null)
+                    fetchRemoteAirQualityHere(null)
             }
         } else {
-            launchRemoteAirQualityHere(null)
+            fetchRemoteAirQualityHere(null)
         }
     }
 
-    private fun launchRemoteAirQualityHere(location: Location?) {
+    private fun fetchRemoteAirQualityHere(location: Location?) {
         launch {
             isLoading.value = true
             isLocationFound.value = location != null

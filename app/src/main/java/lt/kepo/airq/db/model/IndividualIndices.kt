@@ -3,7 +3,7 @@ package lt.kepo.airq.db.model
 import androidx.room.Embedded
 import lt.kepo.airq.api.dto.IndividualIndicesDto
 
-data class IndividualIndices(
+data class IndividualIndices (
     @Embedded(prefix = "sulfur_oxide_") val sulfurOxide: Property,
     @Embedded(prefix = "ozone_") val ozone: Property,
     @Embedded(prefix = "particle_10_") val particle10: Property,

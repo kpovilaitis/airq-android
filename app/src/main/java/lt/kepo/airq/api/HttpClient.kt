@@ -17,6 +17,6 @@ interface HttpClient {
     @GET("/search/")
     suspend fun getStations(@Query("keyword") query: String): Response<ApiHttpResponse<List<StationDto>>>
 
-    @GET("/search/{stationId}/")
+    @GET("/feed/{stationId}/")
     suspend fun getStation(@Path("stationId") stationId: String): Response<ApiHttpResponse<AirQualityDto>>
 }

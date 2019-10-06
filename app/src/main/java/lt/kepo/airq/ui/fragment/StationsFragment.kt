@@ -40,8 +40,6 @@ class StationsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         activity?.title = resources.getString(R.string.title_saved_stations)
-
-        viewModel.updateLocalStations()
     }
 
     override fun onStart() {
@@ -66,6 +64,7 @@ class StationsFragment : Fragment() {
 
     private val listClickListener: (Int) -> Unit = { position ->
         viewModel.removeLocalStation(viewModel.stations.value!![position])
+        viewModel.stations.value?.removeAt(position)
         stationsAdapter.notifyDataSetChanged()
     }
 

@@ -44,41 +44,38 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
         }
     }
 
-
-    fun updateLocalStations() {
-        launch {
-            stations.value?.forEach { station ->
-                when (val response = withContext(Dispatchers.IO) { stationsRepository.getStation(station.id) }) {
-                    is ApiSuccessResponse -> {
-                        errorMessage.value = ""
-
-                        val responseStation = Station.build(response.data)
-                        stations.value?.find { it.id == responseStation.id }?.airQualityIndex = responseStation.airQualityIndex
-
-                        launch (Dispatchers.IO) {
-                            stationsRepository.insertStation(station)
-                        }
-                    }
-                    is ApiErrorResponse -> errorMessage.value = response.errorMessage
-                    is ApiEmptyResponse -> errorMessage.value = "Api returned empty response"
-                }
-            }
-        }
-    }
+//    fun getAndUpdateLocalStations() {
+//        launch {
+//            stations.value = withContext(Dispatchers.IO) { stationsRepository.getLocalAllStations().toMutableList() }
+//
+//            stations.value?.forEach { station ->
+//                when (val response = withContext(Dispatchers.IO) { stationsRepository.getStation(station.id) }) {
+//                    is ApiSuccessResponse -> {
+//                        errorMessage.value = ""
+//
+//                        val responseStation = Station.build(response.data)
+//                        stations.value?.find { it.id == responseStation.id }?.airQualityIndex = responseStation.airQualityIndex
+//
+//                        launch (Dispatchers.IO) {
+//                            stationsRepository.insertStation(station)
+//                        }
+//                    }
+//                    is ApiErrorResponse -> errorMessage.value = response.errorMessage
+//                    is ApiEmptyResponse -> errorMessage.value = "Api returned empty response"
+//                }
+//            }
+//        }
+//    }
 
     fun addStationToLocalStorage(station: Station) {
         launch { withContext(Dispatchers.IO) {stationsRepository.insertStation(station) } }
     }
 
     fun getLocalAllStations() {
-        launch { stations.value = withContext(Dispatchers.IO) { stationsRepository.getLocalAllStations().toMutableList() } }
+        launch { stations.value =withContext(Dispatchers.IO) { stationsRepository.getLocalAllStations().toMutableList() } }
     }
 
     fun removeLocalStation(station: Station) {
-        stations.value?.remove(station)
-
-        launch {
-            withContext(Dispatchers.IO) { stationsRepository.deleteStation(station) }
-        }
+        launch { withContext(Dispatchers.IO) { stationsRepository.deleteStation(station) } }
     }
 }

@@ -17,9 +17,6 @@ import lt.kepo.airq.repository.airquality.AirQualityRepository
 import lt.kepo.airq.utility.isLocationEnabled
 import kotlin.coroutines.CoroutineContext
 
-/**
- * The ViewModel used in [AirQualityFragment].
- */
 class AirQualityViewModel(
     private val airQualityRepository: AirQualityRepository,
     application: Application
@@ -48,7 +45,7 @@ class AirQualityViewModel(
     }
 
     fun getLocalAirQualityHere() {
-        launch { airQuality.value = withContext(Dispatchers.IO) { airQualityRepository.getLocalAirQualityHere() } }
+        launch { airQuality.value = airQualityRepository.getLocalAirQualityHere() }
     }
 
     fun getRemoteAirQualityHere(context: Context) {
@@ -69,19 +66,18 @@ class AirQualityViewModel(
             isLoading.value = true
             isLocationFound.value = location != null
 
-            when (val response = withContext(Dispatchers.IO) {
-                if (location == null)
+            when (val response = if (location == null)
                     airQualityRepository.getRemoteAirQualityHere()
                 else
                     airQualityRepository.getRemoteAirQualityHere(location)
-            }) {
+            ) {
                 is ApiSuccessResponse -> {
                     errorMessage.value = ""
                     airQuality.value = AirQuality.build(response.data)
 
                     launch (Dispatchers.IO) {
                         airQuality.value!!.isCurrentLocationQuality = true
-                        airQualityRepository.upsertAirQualityHere(airQuality.value!!)
+                        airQualityRepository.upsertLocalAirQualityHere(airQuality.value!!)
                     }
                 }
                 is ApiErrorResponse -> errorMessage.value = response.errorMessage

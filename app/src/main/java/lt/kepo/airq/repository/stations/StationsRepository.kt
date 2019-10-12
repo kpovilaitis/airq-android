@@ -10,9 +10,9 @@ interface StationsRepository {
 
     suspend fun getLocalAllStations(): List<Station>
 
-    suspend fun getStation(stationId: Int): ApiResponse<AirQualityDto>
+    suspend fun getRemoteStation(stationId: Int): ApiResponse<AirQualityDto>
 
-    suspend fun insertStation(station: Station)
+    suspend fun insertLocalStation(station: Station)
 
-    suspend fun deleteStation(station: Station)
+    suspend fun deleteLocalStation(station: Station)
 }

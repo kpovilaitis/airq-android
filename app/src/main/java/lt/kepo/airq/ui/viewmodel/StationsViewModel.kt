@@ -31,7 +31,7 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
         launch {
             isLoading.value = true
 
-            when (val response = withContext(Dispatchers.IO) { stationsRepository.getRemoteStations(query) }) {
+            when (val response = stationsRepository.getRemoteStations(query)) {
                 is ApiSuccessResponse -> {
                     errorMessage.value = ""
                     stations.value = response.data.map{ stationDto -> Station.build(stationDto) }.toMutableList()
@@ -49,7 +49,7 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
 //            stations.value = withContext(Dispatchers.IO) { stationsRepository.getLocalAllStations().toMutableList() }
 //
 //            stations.value?.forEach { station ->
-//                when (val response = withContext(Dispatchers.IO) { stationsRepository.getStation(station.id) }) {
+//                when (val response = withContext(Dispatchers.IO) { stationsRepository.getRemoteStation(station.id) }) {
 //                    is ApiSuccessResponse -> {
 //                        errorMessage.value = ""
 //
@@ -57,7 +57,7 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
 //                        stations.value?.find { it.id == responseStation.id }?.airQualityIndex = responseStation.airQualityIndex
 //
 //                        launch (Dispatchers.IO) {
-//                            stationsRepository.insertStation(station)
+//                            stationsRepository.insertLocalStation(station)
 //                        }
 //                    }
 //                    is ApiErrorResponse -> errorMessage.value = response.errorMessage
@@ -68,14 +68,14 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
 //    }
 
     fun addStationToLocalStorage(station: Station) {
-        launch { withContext(Dispatchers.IO) {stationsRepository.insertStation(station) } }
+        launch { stationsRepository.insertLocalStation(station) }
     }
 
     fun getLocalAllStations() {
-        launch { stations.value =withContext(Dispatchers.IO) { stationsRepository.getLocalAllStations().toMutableList() } }
+        launch { stations.value = stationsRepository.getLocalAllStations().toMutableList() }
     }
 
     fun removeLocalStation(station: Station) {
-        launch { withContext(Dispatchers.IO) { stationsRepository.deleteStation(station) } }
+        launch { stationsRepository.deleteLocalStation(station) }
     }
 }

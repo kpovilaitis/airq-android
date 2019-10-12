@@ -18,17 +18,17 @@ class UpdateLocalStationsWorker(
     private val repository by inject<StationsRepository>()
 
     override suspend fun doWork(): Result = coroutineScope {
-        val stations = withContext(Dispatchers.IO) { repository.getLocalAllStations() }
+        val stations = repository.getLocalAllStations()
 
         val jobs = stations.map {
             async {
-                when (val response = withContext(Dispatchers.IO) { repository.getStation(it.id) }) {
+                when (val response = repository.getRemoteStation(it.id)) {
                     is ApiSuccessResponse -> {
                         val responseStation = Station.build(response.data)
 
                         stations.find{ it.id == responseStation.id }?.airQualityIndex = responseStation.airQualityIndex
 
-                        launch (Dispatchers.IO) { repository.insertStation(it) }
+                        withContext(Dispatchers.IO) { repository.insertLocalStation( it ) }
                     }
                     else -> Result.failure()
                 }

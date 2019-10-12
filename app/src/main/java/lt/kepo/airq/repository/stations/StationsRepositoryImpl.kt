@@ -1,5 +1,7 @@
 package lt.kepo.airq.repository.stations
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import lt.kepo.airq.api.ApiResponse
 import lt.kepo.airq.api.HttpClient
 import lt.kepo.airq.api.dto.AirQualityDto
@@ -13,9 +15,9 @@ class StationsRepositoryImpl internal constructor(
     private val stationDao: StationDao,
     private val httpClient: HttpClient
 ) : StationsRepository {
-    override suspend fun getStation(stationId: Int): ApiResponse<AirQualityDto> {
+    override suspend fun getRemoteStation(stationId: Int): ApiResponse<AirQualityDto> {
         return try {
-            ApiResponse.parse(httpClient.getStation("@${stationId}"))
+            ApiResponse.parse( withContext(Dispatchers.IO) {httpClient.getStation("@${stationId}") }  )
         } catch (exception: Exception) {
             ApiResponse.parse(exception)
         }
@@ -23,15 +25,15 @@ class StationsRepositoryImpl internal constructor(
 
     override suspend fun getRemoteStations(query: String): ApiResponse<List<StationDto>> {
         return try {
-            ApiResponse.parse(httpClient.getStations(query))
+            ApiResponse.parse( withContext(Dispatchers.IO) { httpClient.getStations(query) } )
         } catch (exception: Exception) {
             ApiResponse.parse(exception)
         }
     }
 
-    override suspend fun getLocalAllStations(): List<Station>  = stationDao.getAll()
+    override suspend fun getLocalAllStations(): List<Station> = withContext(Dispatchers.IO) { stationDao.getAll() }
 
-    override suspend fun insertStation(station: Station) = stationDao.upsert(station)
+    override suspend fun insertLocalStation(station: Station) = withContext(Dispatchers.IO) { stationDao.upsert(station) }
 
-    override suspend fun deleteStation(station: Station) = stationDao.delete(station)
+    override suspend fun deleteLocalStation(station: Station) = withContext(Dispatchers.IO) {stationDao.delete(station) }
 }

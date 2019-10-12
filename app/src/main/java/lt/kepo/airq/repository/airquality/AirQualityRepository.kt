@@ -18,5 +18,5 @@ interface AirQualityRepository {
 
     suspend fun getLocalAirQuality(stationId: Int): AirQuality
 
-    suspend fun upsertAirQualityHere(airQuality: AirQuality)
+    suspend fun upsertLocalAirQualityHere(airQuality: AirQuality)
 }

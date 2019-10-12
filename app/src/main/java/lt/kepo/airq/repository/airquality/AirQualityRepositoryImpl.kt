@@ -1,6 +1,8 @@
 package lt.kepo.airq.repository.airquality
 
 import android.location.Location
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import lt.kepo.airq.api.ApiResponse
 import lt.kepo.airq.api.HttpClient
 import lt.kepo.airq.api.dto.AirQualityDto
@@ -14,7 +16,7 @@ class AirQualityRepositoryImpl internal constructor(
 ) : AirQualityRepository {
     override suspend fun getRemoteAirQualityHere(): ApiResponse<AirQualityDto> {
         return try {
-            ApiResponse.parse(httpClient.getAirQualityHere())
+            ApiResponse.parse( withContext(Dispatchers.IO) { httpClient.getAirQualityHere() } )
         } catch (exception: Exception) {
             ApiResponse.parse(exception)
         }
@@ -22,7 +24,9 @@ class AirQualityRepositoryImpl internal constructor(
 
     override suspend fun getRemoteAirQualityHere(location: Location): ApiResponse<AirQualityDto> {
         return try {
-            ApiResponse.parse(httpClient.getAirQualityHere("geo:${location.latitude};${location.longitude}"))
+            ApiResponse.parse( withContext(Dispatchers.IO) {
+                httpClient.getAirQualityHere("geo:${location.latitude};${location.longitude}")
+            } )
         } catch (exception: Exception) {
             ApiResponse.parse(exception)
         }
@@ -32,10 +36,10 @@ class AirQualityRepositoryImpl internal constructor(
         TODO("not implemented")
     }
 
-    override suspend fun getLocalAirQualityHere(): AirQuality = airQualityDao.getHere()
+    override suspend fun getLocalAirQualityHere(): AirQuality = withContext(Dispatchers.IO) { airQualityDao.getHere() }
 
-    override suspend fun getLocalAirQuality(stationId: Int): AirQuality = airQualityDao.getByStationId(stationId)
+    override suspend fun getLocalAirQuality(stationId: Int): AirQuality = withContext(Dispatchers.IO) { airQualityDao.getByStationId(stationId) }
 
-    override suspend fun upsertAirQualityHere(airQuality: AirQuality) = airQualityDao.upsertHere(airQuality)
+    override suspend fun upsertLocalAirQualityHere(airQuality: AirQuality) = withContext(Dispatchers.IO) { airQualityDao.upsertHere(airQuality) }
 }
 

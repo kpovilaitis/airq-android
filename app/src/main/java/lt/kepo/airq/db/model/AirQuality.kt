@@ -13,6 +13,7 @@ data class AirQuality (
     @ColumnInfo(name = "dominating_pollutant") val dominatingPollutant: String,
     @Embedded val individualIndices: IndividualIndices,
     @Embedded(prefix = "city_") val city: City,
+    @Embedded(prefix = "time_") val time: Time,
     @ColumnInfo(name = "is_current_location_quality") var isCurrentLocationQuality: Boolean
 ) {
     companion object {
@@ -23,6 +24,7 @@ data class AirQuality (
                 dto.dominatingPollutant,
                 IndividualIndices.build(dto.individualIndices),
                 City.build(dto.city),
+                Time.build(dto.time),
                 dto.isCurrentLocationQuality
             )
         }

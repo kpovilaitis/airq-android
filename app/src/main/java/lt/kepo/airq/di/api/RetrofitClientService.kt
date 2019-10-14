@@ -7,6 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 inline fun <reified T> createApiClientService(okHttpClient: OkHttpClient, baseUrl: String): T {
     val gson = GsonBuilder()
+        .setDateFormat("yyyy-MM-dd HH:mm:ss")
         .registerTypeAdapterFactory(LowercaseEnumTypeAdapterFactory())
         .create()
 

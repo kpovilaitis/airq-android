@@ -14,11 +14,11 @@ sealed class ApiResponse<T> {
                 val body = response.body()
 
                 when {
+                    response.code() == 204 -> ApiErrorResponse("Api returned empty response")
+
                     body == null -> ApiErrorResponse("unknown error")
 
                     body.status == ApiResponseStatus.OK -> ApiSuccessResponse(data = body.data)
-
-                    response.code() == 204 -> ApiEmptyResponse()
 
                     else -> ApiErrorResponse(body.data?.toString() ?: "unknown error")
                 }
@@ -36,8 +36,6 @@ sealed class ApiResponse<T> {
         }
     }
 }
-
-class ApiEmptyResponse<T> : ApiResponse<T>()
 
 data class ApiErrorResponse<T>(val errorMessage: String) : ApiResponse<T>()
 

@@ -11,6 +11,7 @@ import lt.kepo.airq.db.model.AirQuality
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import lt.kepo.airq.R
+import java.text.SimpleDateFormat
 
 class AirQualityFragment : Fragment() {
     private val viewModel: AirQualityViewModel by viewModel()
@@ -25,24 +26,23 @@ class AirQualityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.airQuality.observe(this, airQualityObserver)
-        viewModel.isLoading.observe(this, isLoadingObserver )
         viewModel.errorMessage.observe(this, errorMessageObserver)
         viewModel.isLocationFound.observe(this, isLocationFoundObserver )
 
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent)
-        swipeToRefreshLayout.setOnRefreshListener { viewModel.getRemoteAirQualityHere(requireContext()) }
+        swipeToRefreshLayout.setOnRefreshListener {
+            swipeToRefreshLayout.isRefreshing = true
+            viewModel.getRemoteAirQualityHere(requireContext())
+        }
 
-        viewModel.getLocalAirQualityHere()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+        swipeToRefreshLayout.isRefreshing = true
         viewModel.getRemoteAirQualityHere(requireContext())
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
+
+        airQualityObserver.onChanged(viewModel.airQuality.value)
 
         activity?.title = viewModel.airQuality.value?.city?.name ?: resources.getString(R.string.app_name)
     }
@@ -58,6 +58,7 @@ class AirQualityFragment : Fragment() {
                 true
             }
             R.id.menu_refresh -> {
+                swipeToRefreshLayout.isRefreshing = true
                 viewModel.getRemoteAirQualityHere(requireContext())
                 true
             }
@@ -68,14 +69,21 @@ class AirQualityFragment : Fragment() {
     private val airQualityObserver = Observer<AirQuality> { newAirQuality ->
         activity?.title = newAirQuality?.city?.name
 
+        swipeToRefreshLayout.isRefreshing = false
+
         textAirQualityIndex.text = newAirQuality?.airQualityIndex
         textCityName.text = newAirQuality?.city?.name
         textDominatingPollutant.text = newAirQuality?.dominatingPollutant
+
+        if (newAirQuality?.time?.localTime != null)
+            textTimeRecorded.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newAirQuality.time.localTime)
     }
 
-    private val isLoadingObserver = Observer<Boolean> { isLoading -> swipeToRefreshLayout.isRefreshing = isLoading }
+    private val errorMessageObserver = Observer<String> { errorMessage ->
+        swipeToRefreshLayout.isRefreshing = false
 
-    private val errorMessageObserver = Observer<String> { errorMessage -> textError.text = errorMessage }
+        textError.text = errorMessage
+    }
 
     private val isLocationFoundObserver = Observer<Boolean> { isLocationFound ->
         if (isLocationFound) textLocation.visibility = View.VISIBLE else textLocation.visibility = View.GONE

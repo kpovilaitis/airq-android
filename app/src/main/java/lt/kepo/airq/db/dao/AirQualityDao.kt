@@ -1,28 +1,31 @@
 package lt.kepo.airq.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import lt.kepo.airq.db.model.AirQuality
 
 @Dao
 interface AirQualityDao {
     @Query("SELECT * FROM air_qualities WHERE station_id = :stationId")
-    fun getByStationId(stationId: Int): AirQuality
+    fun getByStationId(stationId: Int): LiveData<AirQuality>
 
     @Query("SELECT * FROM air_qualities WHERE is_current_location_quality = 1")
-    fun getHere(): AirQuality
+    fun getHere(): LiveData<AirQuality>
 
     @Transaction
-    fun upsertHere(airQuality: AirQuality) {
+    suspend fun upsertHere(airQuality: AirQuality) {
         if (updateHere(
-            airQuality.stationId,
-            airQuality.airQualityIndex,
-            airQuality.dominatingPollutant,
-            airQuality.isCurrentLocationQuality,
-            airQuality.city.name,
-            airQuality.individualIndices.sulfurOxide.value,
-            airQuality.individualIndices.ozone.value,
-            airQuality.individualIndices.particle10.value,
-            airQuality.individualIndices.particle25.value) == 0) upsert(airQuality)
+                airQuality.stationId,
+                airQuality.airQualityIndex,
+                airQuality.dominatingPollutant,
+                airQuality.isCurrentLocationQuality,
+                airQuality.city.name,
+                airQuality.time.localTime.time,
+                airQuality.individualIndices.sulfurOxide.value,
+                airQuality.individualIndices.ozone.value,
+                airQuality.individualIndices.particle10.value,
+                airQuality.individualIndices.particle25.value) == 0)
+            upsert(airQuality)
     }
 
     @Query("UPDATE air_qualities " +
@@ -31,33 +34,35 @@ interface AirQualityDao {
             "dominating_pollutant = :dominatingPollutant, " +
             "is_current_location_quality = :isCurrentLocationQuality, " +
             "city_name = :cityName, " +
+            "time_local = :localTime, " +
             "sulfur_oxide_value = :sulfurOxideValue, " +
             "ozone_value = :ozoneValue, " +
             "particle_10_value = :particle10Value, " +
             "particle_25_value = :particle25Value " +
             "WHERE is_current_location_quality = 1")
-    fun updateHere(
+    suspend fun updateHere(
         stationId: Int,
         airQualityIndex: String,
         dominatingPollutant: String,
         isCurrentLocationQuality: Boolean,
         cityName: String,
+        localTime: Long,
         sulfurOxideValue: Double,
         ozoneValue: Double,
         particle10Value: Double,
         particle25Value: Double): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(airQuality: AirQuality): Long
+    suspend fun insert(airQuality: AirQuality): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(airQuality: AirQuality)
+    suspend fun update(airQuality: AirQuality)
 
     @Query("DELETE FROM air_qualities WHERE station_id = :stationId")
-    fun delete(stationId: Int)
+    suspend fun delete(stationId: Int)
 
     @Transaction
-    fun upsert(airQuality: AirQuality) {
+    suspend fun upsert(airQuality: AirQuality) {
         if (insert(airQuality) == -1L) update(airQuality)
     }
 }

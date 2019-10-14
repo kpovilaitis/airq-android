@@ -44,7 +44,7 @@ class GetLocalAirQualityHereTest {
         val expectedUser = AirQualityRepositoryMock.airQualityLocal
 
         scopeRule.launch(Dispatchers.Main) { // Will be launched in the mainThreadSurrogate dispatcher
-            viewModel.getLocalAirQualityHere()
+//            viewModel.getLocalAirQualityHere()
 
             ArgumentCaptor.forClass(AirQuality::class.java).run {
                 verify(observer, times(1)).onChanged(capture())

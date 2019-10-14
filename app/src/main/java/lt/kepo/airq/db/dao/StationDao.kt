@@ -6,19 +6,19 @@ import lt.kepo.airq.db.model.Station
 @Dao
 interface StationDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(station: Station): Long
+    suspend fun insert(station: Station): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(station: Station)
+    suspend fun update(station: Station)
 
     @Delete
-    fun delete(station: Station)
+    suspend fun delete(station: Station)
 
     @Transaction
-    fun upsert(station: Station) {
+    suspend fun upsert(station: Station) {
         if (insert(station) == -1L) update(station)
     }
 
     @Query("SELECT * FROM stations")
-    fun getAll() : List<Station>
+    suspend fun getAll() : List<Station>
 }

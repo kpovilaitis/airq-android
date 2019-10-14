@@ -4,43 +4,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import lt.kepo.airq.api.ApiEmptyResponse
-import lt.kepo.airq.api.ApiErrorResponse
 import lt.kepo.airq.api.ApiSuccessResponse
 import lt.kepo.airq.db.model.Station
 import lt.kepo.airq.repository.stations.StationsRepository
-import kotlin.coroutines.CoroutineContext
 
-class StationsViewModel(private val stationsRepository: StationsRepository) : ViewModel(), CoroutineScope {
-
-    private val job = Job()
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + job
-
+class StationsViewModel(private val stationsRepository: StationsRepository) : ViewModel() {
     val stations = MutableLiveData<MutableList<Station>>()
-    val isLoading = MutableLiveData<Boolean>()
-    val errorMessage = MutableLiveData<String>()
 
     override fun onCleared() {
         super.onCleared()
 
         viewModelScope.cancel()
-        job.cancel()
     }
 
     fun getRemoteStations(query: String) {
-        launch {
-            isLoading.value = true
-
+        viewModelScope.launch {
             when (val response = stationsRepository.getRemoteStations(query)) {
-                is ApiSuccessResponse -> {
-                    errorMessage.value = ""
-                    stations.value = response.data.map{ stationDto -> Station.build(stationDto) }.toMutableList()
-                }
-                is ApiErrorResponse -> errorMessage.value = response.errorMessage
-                is ApiEmptyResponse -> errorMessage.value = "Api returned empty response"
+                is ApiSuccessResponse -> stations.value = response.data.map{ stationDto -> Station.build(stationDto) }.toMutableList()
             }
-
-            isLoading.value = false
         }
     }
 
@@ -68,14 +49,14 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
 //    }
 
     fun addStationToLocalStorage(station: Station) {
-        launch { stationsRepository.insertLocalStation(station) }
+        viewModelScope.launch { stationsRepository.insertLocalStation(station) }
     }
 
     fun getLocalAllStations() {
-        launch { stations.value = stationsRepository.getLocalAllStations().toMutableList() }
+        viewModelScope.launch { stations.value = stationsRepository.getLocalAllStations().toMutableList() }
     }
 
     fun removeLocalStation(station: Station) {
-        launch { stationsRepository.deleteLocalStation(station) }
+        viewModelScope.launch { stationsRepository.deleteLocalStation(station) }
     }
 }

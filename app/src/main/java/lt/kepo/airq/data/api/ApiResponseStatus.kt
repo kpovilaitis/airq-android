@@ -1,4 +1,4 @@
-package lt.kepo.airq.api
+package lt.kepo.airq.data.api
 
 enum class ApiResponseStatus {
     OK,

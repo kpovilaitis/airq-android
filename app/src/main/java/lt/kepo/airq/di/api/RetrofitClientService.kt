@@ -6,13 +6,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import lt.kepo.airq.data.api.HttpClient
 import javax.xml.datatype.DatatypeConstants.SECONDS
 import okhttp3.Route
 import okhttp3.OkHttpClient
 import java.io.IOException
 
 
-inline fun <reified T> createApiClientService(okHttpClient: OkHttpClient, baseUrl: String): T {
+fun createApiClientService(okHttpClient: OkHttpClient, baseUrl: String): HttpClient {
     val gson = GsonBuilder()
         .setDateFormat("yyyy-MM-dd HH:mm:ss")
         .registerTypeAdapterFactory(LowercaseEnumTypeAdapterFactory())
@@ -23,7 +24,7 @@ inline fun <reified T> createApiClientService(okHttpClient: OkHttpClient, baseUr
         .addConverterFactory(GsonConverterFactory.create(gson))
         .client(okHttpClient)
         .build()
-        .create(T::class.java)
+        .create(HttpClient::class.java)
 }
 
 fun createHttpClient(): OkHttpClient {

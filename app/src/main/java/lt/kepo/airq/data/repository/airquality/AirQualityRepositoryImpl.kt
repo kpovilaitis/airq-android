@@ -1,10 +1,9 @@
-package lt.kepo.airq.repository.airquality
+package lt.kepo.airq.data.repository.airquality
 
 import android.location.Location
 import androidx.lifecycle.LiveData
-import lt.kepo.airq.api.ApiResponse
-import lt.kepo.airq.api.HttpClient
-import lt.kepo.airq.api.dto.AirQualityDto
+import lt.kepo.airq.data.api.ApiResponse
+import lt.kepo.airq.data.api.HttpClient
 import lt.kepo.airq.db.dao.AirQualityDao
 import lt.kepo.airq.db.model.AirQuality
 import java.lang.Exception
@@ -13,7 +12,7 @@ class AirQualityRepositoryImpl internal constructor(
     private val airQualityDao: AirQualityDao,
     private val httpClient: HttpClient
 ) : AirQualityRepository {
-    override suspend fun getRemoteAirQualityHere(location: Location?): ApiResponse<AirQualityDto> {
+    override suspend fun getRemoteAirQualityHere(location: Location?): ApiResponse<AirQuality> {
         return try {
             return if (location != null) {
                 ApiResponse.parse(httpClient.getAirQualityHere("geo:${location.latitude};${location.longitude}"))

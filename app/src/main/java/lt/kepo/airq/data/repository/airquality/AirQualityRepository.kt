@@ -1,9 +1,8 @@
-package lt.kepo.airq.repository.airquality
+package lt.kepo.airq.data.repository.airquality
 
 import android.location.Location
 import androidx.lifecycle.LiveData
-import lt.kepo.airq.api.ApiResponse
-import lt.kepo.airq.api.dto.AirQualityDto
+import lt.kepo.airq.data.api.ApiResponse
 import lt.kepo.airq.db.model.AirQuality
 
 interface AirQualityRepository {

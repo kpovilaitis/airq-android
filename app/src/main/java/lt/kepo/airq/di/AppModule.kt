@@ -1,7 +1,6 @@
 package lt.kepo.airq.di
 
 import androidx.room.Room
-import lt.kepo.airq.api.HttpClient
 import lt.kepo.airq.db.AppDatabase
 import lt.kepo.airq.di.api.createApiClientService
 import lt.kepo.airq.di.api.createHttpClient
@@ -12,7 +11,7 @@ import org.koin.dsl.module
 
 val appModule : Module = module {
 
-    single { createApiClientService<HttpClient>(createHttpClient(), API_BASE_URL) }
+    single { createApiClientService(createHttpClient(), API_BASE_URL) }
 
     single { Room.databaseBuilder(get(), AppDatabase::class.java, AIR_Q_DATABASE_NAME).build() }
 

@@ -1,13 +1,12 @@
 package lt.kepo.airq
 
 import android.location.Location
-import lt.kepo.airq.api.ApiResponse
-import lt.kepo.airq.api.dto.AirQualityDto
+import lt.kepo.airq.data.api.ApiResponse
 import lt.kepo.airq.db.model.AirQuality
 import lt.kepo.airq.db.model.City
 import lt.kepo.airq.db.model.IndividualIndices
 import lt.kepo.airq.db.model.Property
-import lt.kepo.airq.repository.airquality.AirQualityRepository
+import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 
 class AirQualityRepositoryMock : AirQualityRepository{
     override suspend fun getRemoteAirQualityHere(): ApiResponse<AirQualityDto> {

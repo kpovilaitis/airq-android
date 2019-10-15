@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
-import lt.kepo.airq.api.ApiSuccessResponse
+import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.db.model.Station
-import lt.kepo.airq.repository.stations.StationsRepository
+import lt.kepo.airq.data.repository.stations.StationsRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -24,9 +24,9 @@ class UpdateLocalStationsWorker(
             async {
                 when (val response = repository.getRemoteStation(it.id)) {
                     is ApiSuccessResponse -> {
-                        val responseStation = Station.build(response.data)
+                        val responseStation = response.data
 
-                        stations.find{ it.id == responseStation.id }?.airQualityIndex = responseStation.airQualityIndex
+                        stations.find{ it.id == responseStation.stationId }?.airQualityIndex = responseStation.airQualityIndex
 
                         withContext(Dispatchers.IO) { repository.insertLocalStation( it ) }
                     }

@@ -1,7 +1,7 @@
 package lt.kepo.airq.di
 
-import lt.kepo.airq.repository.airquality.AirQualityRepository
-import lt.kepo.airq.repository.airquality.AirQualityRepositoryImpl
+import lt.kepo.airq.data.repository.airquality.AirQualityRepository
+import lt.kepo.airq.data.repository.airquality.AirQualityRepositoryImpl
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module

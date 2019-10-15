@@ -1,7 +1,7 @@
-package lt.kepo.airq.api.dto
+package lt.kepo.airq.db.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PropertyDto (
+data class Property (
     @SerializedName("v") val value: Double
 )

@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import lt.kepo.airq.api.ApiSuccessResponse
+import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.db.model.Station
-import lt.kepo.airq.repository.stations.StationsRepository
+import lt.kepo.airq.data.repository.stations.StationsRepository
 
 class StationsViewModel(private val stationsRepository: StationsRepository) : ViewModel() {
     val stations = MutableLiveData<MutableList<Station>>()
@@ -20,7 +20,7 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
     fun getRemoteStations(query: String) {
         viewModelScope.launch {
             when (val response = stationsRepository.getRemoteStations(query)) {
-                is ApiSuccessResponse -> stations.value = response.data.map{ stationDto -> Station.build(stationDto) }.toMutableList()
+                is ApiSuccessResponse -> stations.value = response.data.toMutableList()
             }
         }
     }

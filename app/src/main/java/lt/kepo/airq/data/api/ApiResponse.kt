@@ -1,4 +1,4 @@
-package lt.kepo.airq.api
+package lt.kepo.airq.data.api
 
 import retrofit2.Response
 import java.lang.Exception

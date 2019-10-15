@@ -21,8 +21,8 @@ class AirQualityViewModel(
     private val _isLocationFound = MutableLiveData<Boolean>()
 
     val airQuality: LiveData<AirQuality> = Transformations.switchMap( airQualityRepository.getLocalAirQualityHere() ) { liveData { emit(it) } }
-    val errorMessage: LiveData<String> = Transformations.switchMap(_errorMessage) { liveData { emit(it) } }
-    val isLocationFound: LiveData<Boolean> = Transformations.switchMap(_isLocationFound) { liveData { emit(it) } }
+    val errorMessage: LiveData<String> get() = _errorMessage
+    val isLocationFound: LiveData<Boolean> get() = _isLocationFound
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -58,7 +58,7 @@ class AirQualityViewModel(
 
             when (val response = airQualityRepository.getRemoteAirQualityHere(location)) {
                 is ApiSuccessResponse -> {
-                    val airQualityResponse = AirQuality.build(response.data)
+                    val airQualityResponse = response.data
 
                     airQualityResponse.isCurrentLocationQuality = true
 

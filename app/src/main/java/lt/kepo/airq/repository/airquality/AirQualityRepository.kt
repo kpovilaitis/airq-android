@@ -7,7 +7,7 @@ import lt.kepo.airq.api.dto.AirQualityDto
 import lt.kepo.airq.db.model.AirQuality
 
 interface AirQualityRepository {
-    suspend fun getRemoteAirQualityHere(location: Location?): ApiResponse<AirQualityDto>
+    suspend fun getRemoteAirQualityHere(location: Location?): ApiResponse<AirQuality>
 
     suspend fun getRemoteAirQuality(stationId: Int): AirQuality
 

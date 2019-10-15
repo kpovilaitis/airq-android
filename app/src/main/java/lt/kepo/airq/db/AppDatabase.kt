@@ -7,6 +7,7 @@ import lt.kepo.airq.db.model.AirQuality
 import lt.kepo.airq.db.dao.AirQualityDao
 import lt.kepo.airq.db.dao.StationDao
 import lt.kepo.airq.db.model.Station
+import lt.kepo.airq.db.typeconverter.DateTypeConverter
 
 @TypeConverters(DateTypeConverter::class)
 @Database(

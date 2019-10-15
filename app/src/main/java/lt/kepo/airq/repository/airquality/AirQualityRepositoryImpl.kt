@@ -20,7 +20,6 @@ class AirQualityRepositoryImpl internal constructor(
             } else {
                 ApiResponse.parse(httpClient.getAirQualityHere())
             }
-
         } catch (exception: Exception) {
             ApiResponse.parse(exception)
         }

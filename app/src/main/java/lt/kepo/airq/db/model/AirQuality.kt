@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import lt.kepo.airq.api.dto.AirQualityDto
+import lt.kepo.airq.db.Builder
 
 @Entity(tableName = "air_qualities")
 data class AirQuality (
@@ -16,17 +17,15 @@ data class AirQuality (
     @Embedded(prefix = "time_") val time: Time,
     @ColumnInfo(name = "is_current_location_quality") var isCurrentLocationQuality: Boolean
 ) {
-    companion object {
-        fun build(dto: AirQualityDto): AirQuality {
-            return AirQuality(
-                dto.stationId,
-                dto.airQualityIndex,
-                dto.dominatingPollutant,
-                IndividualIndices.build(dto.individualIndices),
-                City.build(dto.city),
-                Time.build(dto.time),
-                dto.isCurrentLocationQuality
-            )
-        }
+    companion object : Builder<AirQualityDto, AirQuality> {
+        override fun build(dto: AirQualityDto): AirQuality = AirQuality(
+            dto.stationId,
+            dto.airQualityIndex,
+            dto.dominatingPollutant,
+            IndividualIndices.build(dto.individualIndices),
+            City.build(dto.city),
+            Time.build(dto.time),
+            dto.isCurrentLocationQuality
+        )
     }
 }

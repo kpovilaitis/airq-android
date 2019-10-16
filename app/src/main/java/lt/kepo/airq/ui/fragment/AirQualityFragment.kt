@@ -11,6 +11,7 @@ import lt.kepo.airq.db.model.AirQuality
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import lt.kepo.airq.R
+import lt.kepo.airq.utility.AIR_Q_DATE_FORMAT
 import java.text.SimpleDateFormat
 
 class AirQualityFragment : Fragment() {
@@ -76,7 +77,7 @@ class AirQualityFragment : Fragment() {
         textDominatingPollutant.text = newAirQuality?.dominatingPollutant
 
         if (newAirQuality?.time?.localTime != null)
-            textTimeRecorded.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newAirQuality.time.localTime)
+            textTimeRecorded.text = SimpleDateFormat(AIR_Q_DATE_FORMAT).format(newAirQuality.time.localTime)
     }
 
     private val errorMessageObserver = Observer<String> { errorMessage ->

@@ -1,4 +1,4 @@
-package lt.kepo.airq.db
+package lt.kepo.airq.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -15,7 +15,7 @@ import lt.kepo.airq.db.typeconverter.DateTypeConverter
         AirQuality::class,
         Station::class
     ],
-    version = 2
+    version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
 

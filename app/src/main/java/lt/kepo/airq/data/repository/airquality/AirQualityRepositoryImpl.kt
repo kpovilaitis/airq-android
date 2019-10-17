@@ -28,9 +28,9 @@ class AirQualityRepositoryImpl internal constructor(
         TODO("not implemented")
     }
 
-    override fun getLocalAirQualityHere(): LiveData<AirQuality> = airQualityDao.getHere()
+    override suspend fun getLocalAirQualityHere(): AirQuality = airQualityDao.getHere()
 
-    override suspend fun getLocalAirQuality(stationId: Int): LiveData<AirQuality> = airQualityDao.getByStationId(stationId)
+    override suspend fun getLocalAirQuality(stationId: Int): AirQuality = airQualityDao.getByStationId(stationId)
 
     override suspend fun upsertLocalAirQualityHere(airQuality: AirQuality) = airQualityDao.upsertHere(airQuality)
 }

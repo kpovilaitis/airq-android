@@ -7,10 +7,10 @@ import lt.kepo.airq.db.model.AirQuality
 @Dao
 interface AirQualityDao {
     @Query("SELECT * FROM air_qualities WHERE station_id = :stationId")
-    fun getByStationId(stationId: Int): LiveData<AirQuality>
+    suspend fun getByStationId(stationId: Int): AirQuality
 
     @Query("SELECT * FROM air_qualities WHERE is_current_location_quality = 1")
-    fun getHere(): LiveData<AirQuality>
+    suspend fun getHere(): AirQuality
 
     @Transaction
     suspend fun upsertHere(airQuality: AirQuality) {

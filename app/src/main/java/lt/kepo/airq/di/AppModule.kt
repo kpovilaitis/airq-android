@@ -1,7 +1,7 @@
 package lt.kepo.airq.di
 
 import androidx.room.Room
-import lt.kepo.airq.db.AppDatabase
+import lt.kepo.airq.data.db.AppDatabase
 import lt.kepo.airq.di.api.createApiClientService
 import lt.kepo.airq.di.api.createHttpClient
 import lt.kepo.airq.utility.AIR_Q_DATABASE_NAME

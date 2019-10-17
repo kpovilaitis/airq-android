@@ -21,14 +21,14 @@ class UpdateLocalStationsWorker(
         val stations = repository.getLocalAllStations()
 
         val jobs = stations.map {
-            async {
+            async(Dispatchers.IO) {
                 when (val response = repository.getRemoteStation(it.id)) {
                     is ApiSuccessResponse -> {
                         val responseStation = response.data
 
                         stations.find{ it.id == responseStation.stationId }?.airQualityIndex = responseStation.airQualityIndex
 
-                        withContext(Dispatchers.IO) { repository.insertLocalStation( it ) }
+                        repository.insertLocalStation( it )
                     }
                     else -> Result.failure()
                 }

@@ -20,5 +20,5 @@ interface StationDao {
     }
 
     @Query("SELECT * FROM stations")
-    suspend fun getAll() : List<Station>
+    suspend fun getAll() : MutableList<Station>
 }

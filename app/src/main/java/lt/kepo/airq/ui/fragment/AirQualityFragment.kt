@@ -28,7 +28,6 @@ class AirQualityFragment : Fragment() {
 
         viewModel.airQuality.observe(this, airQualityObserver)
         viewModel.errorMessage.observe(this, errorMessageObserver)
-        viewModel.isLocationFound.observe(this, isLocationFoundObserver )
 
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent)
         swipeToRefreshLayout.setOnRefreshListener {
@@ -37,6 +36,8 @@ class AirQualityFragment : Fragment() {
         }
 
         swipeToRefreshLayout.isRefreshing = true
+
+        viewModel.getLocalAirQualityHere()
         viewModel.getRemoteAirQualityHere(requireContext())
     }
 
@@ -84,9 +85,5 @@ class AirQualityFragment : Fragment() {
         swipeToRefreshLayout.isRefreshing = false
 
         textError.text = errorMessage
-    }
-
-    private val isLocationFoundObserver = Observer<Boolean> { isLocationFound ->
-        if (isLocationFound) textLocation.visibility = View.VISIBLE else textLocation.visibility = View.GONE
     }
 }

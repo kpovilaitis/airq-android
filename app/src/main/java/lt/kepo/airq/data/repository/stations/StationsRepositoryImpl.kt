@@ -19,7 +19,7 @@ class StationsRepositoryImpl internal constructor(
         }
     }
 
-    override suspend fun getRemoteStations(query: String): ApiResponse<List<Station>> {
+    override suspend fun getRemoteStations(query: String): ApiResponse<MutableList<Station>> {
         return try {
             ApiResponse.parse(httpClient.getStations(query))
         } catch (exception: Exception) {
@@ -27,7 +27,7 @@ class StationsRepositoryImpl internal constructor(
         }
     }
 
-    override suspend fun getLocalAllStations(): List<Station> = stationDao.getAll()
+    override suspend fun getLocalAllStations(): MutableList<Station> = stationDao.getAll()
 
     override suspend fun insertLocalStation(station: Station) = stationDao.upsert(station)
 

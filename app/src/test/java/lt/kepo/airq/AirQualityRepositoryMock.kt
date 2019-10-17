@@ -2,18 +2,12 @@ package lt.kepo.airq
 
 import android.location.Location
 import lt.kepo.airq.data.api.ApiResponse
-import lt.kepo.airq.db.model.AirQuality
-import lt.kepo.airq.db.model.City
-import lt.kepo.airq.db.model.IndividualIndices
-import lt.kepo.airq.db.model.Property
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
+import lt.kepo.airq.db.model.*
+import java.util.*
 
 class AirQualityRepositoryMock : AirQualityRepository{
-    override suspend fun getRemoteAirQualityHere(): ApiResponse<AirQualityDto> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun getRemoteAirQualityHere(location: Location): ApiResponse<AirQualityDto> {
+    override suspend fun getRemoteAirQualityHere(location: Location?): ApiResponse<AirQuality> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -45,6 +39,7 @@ class AirQualityRepositoryMock : AirQualityRepository{
                 Property(4.0)
             ),
             City("Test City"),
+            Time(Date()),
             true
         )
     }

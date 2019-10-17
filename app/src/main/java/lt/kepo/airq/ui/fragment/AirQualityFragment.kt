@@ -84,7 +84,6 @@ class AirQualityFragment : Fragment() {
 
     private val errorMessageObserver = Observer<String> { errorMessage ->
         swipeToRefreshLayout.isRefreshing = false
-
         textError.text = errorMessage
     }
 }

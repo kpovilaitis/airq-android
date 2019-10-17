@@ -13,6 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import lt.kepo.airq.R
 import lt.kepo.airq.utility.AIR_Q_DATE_FORMAT
 import java.text.SimpleDateFormat
+import java.util.*
 
 class AirQualityFragment : Fragment() {
     private val viewModel: AirQualityViewModel by viewModel()
@@ -78,7 +79,7 @@ class AirQualityFragment : Fragment() {
         textDominatingPollutant.text = newAirQuality?.dominatingPollutant
 
         if (newAirQuality?.time?.localTime != null)
-            textTimeRecorded.text = SimpleDateFormat(AIR_Q_DATE_FORMAT).format(newAirQuality.time.localTime)
+            textTimeRecorded.text = SimpleDateFormat(AIR_Q_DATE_FORMAT, Locale.getDefault()).format(newAirQuality.time.localTime)
     }
 
     private val errorMessageObserver = Observer<String> { errorMessage ->

@@ -10,9 +10,9 @@ interface AirQualityRepository {
 
     suspend fun getRemoteAirQuality(stationId: Int): AirQuality
 
-    suspend fun getLocalAirQualityHere(): AirQuality
+    fun getLocalAirQualityHere(): LiveData<AirQuality>
 
-    suspend fun getLocalAirQuality(stationId: Int): AirQuality
+    fun getLocalAirQuality(stationId: Int): LiveData<AirQuality>
 
     suspend fun upsertLocalAirQualityHere(airQuality: AirQuality)
 }

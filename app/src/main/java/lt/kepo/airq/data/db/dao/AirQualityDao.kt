@@ -1,4 +1,4 @@
-package lt.kepo.airq.db.dao
+package lt.kepo.airq.data.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
@@ -7,10 +7,10 @@ import lt.kepo.airq.db.model.AirQuality
 @Dao
 interface AirQualityDao {
     @Query("SELECT * FROM air_qualities WHERE station_id = :stationId")
-    suspend fun getByStationId(stationId: Int): AirQuality
+    fun getByStationId(stationId: Int): LiveData<AirQuality>
 
     @Query("SELECT * FROM air_qualities WHERE is_current_location_quality = 1")
-    suspend fun getHere(): AirQuality
+    fun getHere(): LiveData<AirQuality>
 
     @Transaction
     suspend fun upsertHere(airQuality: AirQuality) {

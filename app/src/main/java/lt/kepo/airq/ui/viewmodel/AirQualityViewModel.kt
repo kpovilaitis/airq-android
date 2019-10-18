@@ -17,10 +17,10 @@ class AirQualityViewModel(
     private val airQualityRepository: AirQualityRepository,
     application: Application
 ) : AndroidViewModel(application) {
-    private val _airQuality = MutableLiveData<AirQuality>()
+//    private val _airQuality = MutableLiveData<AirQuality>()
     private val _errorMessage = MutableLiveData<String>()
 
-    val airQuality: LiveData<AirQuality> get() = _airQuality
+    val airQuality: LiveData<AirQuality> = Transformations.switchMap( airQualityRepository.getLocalAirQualityHere() ) { liveData { emit(it) } }
     val errorMessage: LiveData<String> get() = _errorMessage
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -37,9 +37,9 @@ class AirQualityViewModel(
         viewModelScope.cancel()
     }
 
-    fun getLocalAirQualityHere() {
-        viewModelScope.launch { _airQuality.value =  airQualityRepository.getLocalAirQualityHere() }
-    }
+//    fun getLocalAirQualityHere() {
+//        viewModelScope.launch { _airQuality.value =  airQualityRepository.getLocalAirQualityHere() }
+//    }
 
     fun getRemoteAirQualityHere(context: Context) {
         if (shouldUseLocation(context)) {
@@ -64,8 +64,8 @@ class AirQualityViewModel(
 
                     airQualityResponse.isCurrentLocationQuality = true
 
-                    _airQuality.value = airQualityResponse
-                    airQualityRepository.upsertLocalAirQualityHere(_airQuality.value!!)
+//                    _airQuality.value = airQualityResponse
+                    airQualityRepository.upsertLocalAirQualityHere(airQualityResponse)
                 }
                 is ApiErrorResponse -> _errorMessage.value = response.errorMessage
             }

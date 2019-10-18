@@ -4,7 +4,7 @@ import android.location.Location
 import androidx.lifecycle.LiveData
 import lt.kepo.airq.data.api.ApiResponse
 import lt.kepo.airq.data.api.HttpClient
-import lt.kepo.airq.db.dao.AirQualityDao
+import lt.kepo.airq.data.db.dao.AirQualityDao
 import lt.kepo.airq.db.model.AirQuality
 import java.lang.Exception
 
@@ -28,9 +28,9 @@ class AirQualityRepositoryImpl internal constructor(
         TODO("not implemented")
     }
 
-    override suspend fun getLocalAirQualityHere(): AirQuality = airQualityDao.getHere()
+    override fun getLocalAirQualityHere(): LiveData<AirQuality> = airQualityDao.getHere()
 
-    override suspend fun getLocalAirQuality(stationId: Int): AirQuality = airQualityDao.getByStationId(stationId)
+    override fun getLocalAirQuality(stationId: Int): LiveData<AirQuality> = airQualityDao.getByStationId(stationId)
 
     override suspend fun upsertLocalAirQualityHere(airQuality: AirQuality) = airQualityDao.upsertHere(airQuality)
 }

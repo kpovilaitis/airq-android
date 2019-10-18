@@ -35,19 +35,16 @@ class AirQualityFragment : Fragment() {
             swipeToRefreshLayout.isRefreshing = true
             viewModel.getRemoteAirQualityHere(requireContext())
         }
-
-        swipeToRefreshLayout.isRefreshing = true
-
-        viewModel.getLocalAirQualityHere()
-        viewModel.getRemoteAirQualityHere(requireContext())
     }
 
     override fun onStart() {
         super.onStart()
 
         airQualityObserver.onChanged(viewModel.airQuality.value)
-
         activity?.title = viewModel.airQuality.value?.city?.name ?: resources.getString(R.string.app_name)
+
+        swipeToRefreshLayout.isRefreshing = true
+        viewModel.getRemoteAirQualityHere(requireContext())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

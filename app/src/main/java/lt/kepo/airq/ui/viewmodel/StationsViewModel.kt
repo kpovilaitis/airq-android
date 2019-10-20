@@ -3,7 +3,7 @@ package lt.kepo.airq.ui.viewmodel
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import lt.kepo.airq.data.api.ApiSuccessResponse
-import lt.kepo.airq.db.model.Station
+import lt.kepo.airq.data.model.Station
 import lt.kepo.airq.data.repository.stations.StationsRepository
 
 class StationsViewModel(private val stationsRepository: StationsRepository) : ViewModel() {
@@ -25,8 +25,28 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
         }
     }
 
-    fun addStationToLocalStorage(station: Station) {
-        viewModelScope.launch { stationsRepository.insertLocalStation(station) }
+    fun updateLocalStations() {
+        viewModelScope.launch {
+            val localStations = stationsRepository.getLocalAllStations()
+
+            localStations.forEach { station ->
+                when (val response = stationsRepository.getRemoteStation(station.id)) {
+                    is ApiSuccessResponse -> {
+                        val responseStation = response.data
+
+                        station.airQualityIndex = responseStation.airQualityIndex
+
+                        stationsRepository.updateLocalStation(station)
+
+                        _stations.value = localStations
+                    }
+                }
+            }
+        }
+    }
+
+    fun addLocalStation(station: Station) {
+        viewModelScope.launch { stationsRepository.upsertLocalStation(station) }
     }
 
     fun getLocalAllStations() {

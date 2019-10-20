@@ -15,7 +15,6 @@ class AirQualityApplication : Application() {
 
         startKoin {
             androidContext(this@AirQualityApplication)
-            androidFileProperties()
             modules(
                 listOf(
                     appModule,

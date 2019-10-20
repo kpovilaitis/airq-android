@@ -2,9 +2,9 @@ package lt.kepo.airq.data.repository.stations
 
 import lt.kepo.airq.data.api.ApiResponse
 import lt.kepo.airq.data.api.HttpClient
-import lt.kepo.airq.db.dao.StationDao
-import lt.kepo.airq.db.model.AirQuality
-import lt.kepo.airq.db.model.Station
+import lt.kepo.airq.data.db.dao.StationDao
+import lt.kepo.airq.data.model.AirQuality
+import lt.kepo.airq.data.model.Station
 import java.lang.Exception
 
 class StationsRepositoryImpl internal constructor(
@@ -27,9 +27,11 @@ class StationsRepositoryImpl internal constructor(
         }
     }
 
-    override suspend fun getLocalAllStations(): MutableList<Station> = stationDao.getAll()
+    override suspend fun getLocalAllStations() = stationDao.getAll()
 
-    override suspend fun insertLocalStation(station: Station) = stationDao.upsert(station)
+    override suspend fun upsertLocalStation(station: Station) = stationDao.upsert(station)
+
+    override suspend fun updateLocalStation(station: Station) = stationDao.update(station)
 
     override suspend fun deleteLocalStation(station: Station) = stationDao.delete(station)
 }

@@ -6,9 +6,6 @@ import okhttp3.Response
 
 class ApiTokenInterceptor: Interceptor {
 
-    /**
-     * Interceptor class for adding auth tokens to every request
-     */
     override fun intercept(chain: Interceptor.Chain): Response {
         val url = chain.request().url().newBuilder()
             .addQueryParameter("token", API_AUTH_TOKEN)

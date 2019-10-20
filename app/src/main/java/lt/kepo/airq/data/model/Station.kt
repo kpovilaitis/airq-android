@@ -1,4 +1,4 @@
-package lt.kepo.airq.db.model
+package lt.kepo.airq.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded

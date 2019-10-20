@@ -12,7 +12,7 @@
 
         <action
                 android:id="@+id/action_stations"
-                app:destination="@id/stations_fragment" />
+                app:destination="@id/stations_fragment"/>
 
     </fragment>
 

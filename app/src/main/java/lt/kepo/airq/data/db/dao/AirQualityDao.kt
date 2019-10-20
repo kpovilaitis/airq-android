@@ -2,7 +2,7 @@ package lt.kepo.airq.data.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import lt.kepo.airq.db.model.AirQuality
+import lt.kepo.airq.data.model.AirQuality
 
 @Dao
 interface AirQualityDao {
@@ -20,7 +20,7 @@ interface AirQualityDao {
                 airQuality.dominatingPollutant,
                 airQuality.isCurrentLocationQuality,
                 airQuality.city.name,
-                airQuality.time.localTime.time,
+                airQuality.time.localTimeRecorded.time,
                 airQuality.individualIndices.sulfurOxide.value,
                 airQuality.individualIndices.ozone.value,
                 airQuality.individualIndices.particle10.value,
@@ -34,7 +34,7 @@ interface AirQualityDao {
             "dominating_pollutant = :dominatingPollutant, " +
             "is_current_location_quality = :isCurrentLocationQuality, " +
             "city_name = :cityName, " +
-            "time_local = :localTime, " +
+            "time_local_recorded = :localTimeRecorder, " +
             "sulfur_oxide_value = :sulfurOxideValue, " +
             "ozone_value = :ozoneValue, " +
             "particle_10_value = :particle10Value, " +
@@ -46,7 +46,7 @@ interface AirQualityDao {
         dominatingPollutant: String,
         isCurrentLocationQuality: Boolean,
         cityName: String,
-        localTime: Long,
+        localTimeRecorder: Long,
         sulfurOxideValue: Double,
         ozoneValue: Double,
         particle10Value: Double,

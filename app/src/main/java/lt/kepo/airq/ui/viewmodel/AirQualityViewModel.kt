@@ -9,7 +9,7 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.*
 import lt.kepo.airq.data.api.ApiErrorResponse
 import lt.kepo.airq.data.api.ApiSuccessResponse
-import lt.kepo.airq.db.model.AirQuality
+import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 import lt.kepo.airq.utility.isLocationEnabled
 
@@ -17,13 +17,12 @@ class AirQualityViewModel(
     private val airQualityRepository: AirQualityRepository,
     application: Application
 ) : AndroidViewModel(application) {
-//    private val _airQuality = MutableLiveData<AirQuality>()
     private val _errorMessage = MutableLiveData<String>()
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     val airQuality: LiveData<AirQuality> = Transformations.switchMap( airQualityRepository.getLocalAirQualityHere() ) { liveData { emit(it) } }
     val errorMessage: LiveData<String> get() = _errorMessage
-
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     init {
         if (shouldUseLocation(application)) {
@@ -36,10 +35,6 @@ class AirQualityViewModel(
 
         viewModelScope.cancel()
     }
-
-//    fun getLocalAirQualityHere() {
-//        viewModelScope.launch { _airQuality.value =  airQualityRepository.getLocalAirQualityHere() }
-//    }
 
     fun getRemoteAirQualityHere(context: Context) {
         if (shouldUseLocation(context)) {
@@ -55,16 +50,15 @@ class AirQualityViewModel(
     }
 
     private fun updateRemoteAirQualityHere(location: Location?) {
-        viewModelScope.launch {
-            _errorMessage.value = ""
+        _errorMessage.value = ""
 
+        viewModelScope.launch {
             when (val response = airQualityRepository.getRemoteAirQualityHere(location)) {
                 is ApiSuccessResponse -> {
                     val airQualityResponse = response.data
 
                     airQualityResponse.isCurrentLocationQuality = true
 
-//                    _airQuality.value = airQualityResponse
                     airQualityRepository.upsertLocalAirQualityHere(airQualityResponse)
                 }
                 is ApiErrorResponse -> _errorMessage.value = response.errorMessage

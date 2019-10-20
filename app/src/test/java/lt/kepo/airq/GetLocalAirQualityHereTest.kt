@@ -8,7 +8,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
-import lt.kepo.airq.db.model.AirQuality
+import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.rule.CoroutineTestRule
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import org.junit.After

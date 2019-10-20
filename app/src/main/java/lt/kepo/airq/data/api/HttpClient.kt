@@ -1,7 +1,7 @@
 package lt.kepo.airq.data.api
 
-import lt.kepo.airq.db.model.AirQuality
-import lt.kepo.airq.db.model.Station
+import lt.kepo.airq.data.model.AirQuality
+import lt.kepo.airq.data.model.Station
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

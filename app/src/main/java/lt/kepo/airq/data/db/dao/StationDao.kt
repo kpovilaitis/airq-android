@@ -1,7 +1,7 @@
-package lt.kepo.airq.db.dao
+package lt.kepo.airq.data.db.dao
 
 import androidx.room.*
-import lt.kepo.airq.db.model.Station
+import lt.kepo.airq.data.model.Station
 
 @Dao
 interface StationDao {

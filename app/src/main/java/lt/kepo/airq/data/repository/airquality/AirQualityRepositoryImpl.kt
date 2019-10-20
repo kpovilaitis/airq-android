@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import lt.kepo.airq.data.api.ApiResponse
 import lt.kepo.airq.data.api.HttpClient
 import lt.kepo.airq.data.db.dao.AirQualityDao
-import lt.kepo.airq.db.model.AirQuality
+import lt.kepo.airq.data.model.AirQuality
 import java.lang.Exception
 
 class AirQualityRepositoryImpl internal constructor(

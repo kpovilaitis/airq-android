@@ -15,7 +15,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.Compat">
 
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".ui.activity.MainActivity"
+                android:theme="@style/MainActivityTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

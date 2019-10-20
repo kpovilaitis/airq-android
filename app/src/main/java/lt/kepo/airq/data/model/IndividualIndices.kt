@@ -1,4 +1,4 @@
-package lt.kepo.airq.db.model
+package lt.kepo.airq.data.model
 
 import androidx.room.Embedded
 import com.google.gson.annotations.SerializedName

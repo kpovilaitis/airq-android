@@ -7,9 +7,15 @@
         android:orientation="vertical"
         tools:context=".ui.activity.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-            style="@style/ToolBarStyle"
-            android:id="@+id/toolbar"/>
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+                style="@style/ToolBarStyle"
+                android:id="@+id/toolbar"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <fragment
             android:id="@+id/nav_fragment"

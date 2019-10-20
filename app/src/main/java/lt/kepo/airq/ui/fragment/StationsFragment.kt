@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_search_stations.*
 import lt.kepo.airq.R
-import lt.kepo.airq.db.model.Station
+import lt.kepo.airq.data.model.Station
 import lt.kepo.airq.ui.activity.SearchStationsActivity
 import lt.kepo.airq.ui.adapter.StationsAdapter
 import lt.kepo.airq.ui.viewmodel.StationsViewModel
@@ -28,12 +28,13 @@ class StationsFragment : Fragment() {
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        stationsAdapter = StationsAdapter(ArrayList(), listClickListener, R.drawable.ic_delete)
+        stationsAdapter = StationsAdapter(listClickListener, R.drawable.ic_delete)
 
         stationsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         stationsRecyclerView.adapter = stationsAdapter
 
         viewModel.stations.observe(this, stationsObserver)
+        viewModel.updateLocalStations()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -69,7 +70,6 @@ class StationsFragment : Fragment() {
     }
 
     private val stationsObserver = Observer<List<Station>> { stations ->
-        stationsAdapter.stations = stations
-        stationsAdapter.notifyDataSetChanged()
+        stationsAdapter.submitList(stations)
     }
 }

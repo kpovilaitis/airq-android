@@ -2,6 +2,7 @@ package lt.kepo.airq
 
 import android.location.Location
 import lt.kepo.airq.data.api.ApiResponse
+import lt.kepo.airq.data.model.*
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 import lt.kepo.airq.db.model.*
 import java.util.*

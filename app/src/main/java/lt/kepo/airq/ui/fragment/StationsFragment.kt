@@ -70,6 +70,8 @@ class StationsFragment : Fragment() {
     }
 
     private val stationsObserver = Observer<List<Station>> { stations ->
+        println("Station update observed")
+
         stationsAdapter.submitList(stations)
     }
 }

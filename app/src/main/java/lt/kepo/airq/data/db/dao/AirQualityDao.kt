@@ -21,10 +21,10 @@ interface AirQualityDao {
                 airQuality.isCurrentLocationQuality,
                 airQuality.city.name,
                 airQuality.time.localTimeRecorded.time,
-                airQuality.individualIndices.sulfurOxide.value,
-                airQuality.individualIndices.ozone.value,
-                airQuality.individualIndices.particle10.value,
-                airQuality.individualIndices.particle25.value) == 0)
+                airQuality.individualIndices.sulfurOxide?.value ?: 0.0,
+                airQuality.individualIndices.ozone?.value ?: 0.0,
+                airQuality.individualIndices.particle10?.value ?: 0.0,
+                airQuality.individualIndices.particle25?.value ?: 0.0) == 0)
             upsert(airQuality)
     }
 

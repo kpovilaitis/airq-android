@@ -29,19 +29,22 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
         viewModelScope.launch {
             val localStations = stationsRepository.getLocalAllStations()
 
-            localStations.forEach { station ->
-                when (val response = stationsRepository.getRemoteStation(station.id)) {
-                    is ApiSuccessResponse -> {
-                        val responseStation = response.data
+            val updates = localStations.map {station ->
+                async(Dispatchers.IO) { when (val response = stationsRepository.getRemoteStation(station.id)) {
+                        is ApiSuccessResponse -> {
+                            val responseStation = response.data
 
-                        station.airQualityIndex = responseStation.airQualityIndex
+                            station.airQualityIndex = responseStation.airQualityIndex
 
-                        stationsRepository.updateLocalStation(station)
-
-                        _stations.value = localStations
+                            stationsRepository.updateLocalStation(station)
+                        }
                     }
                 }
             }
+
+            updates.awaitAll()
+
+            _stations.value = localStations
         }
     }
 

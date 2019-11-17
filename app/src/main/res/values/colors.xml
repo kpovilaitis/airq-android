@@ -2,5 +2,13 @@
 <resources>
     <color name="colorPrimary">#64b5f6</color>
     <color name="colorPrimaryDark">#2286c3</color>
-    <color name="colorAccent">#ffca28</color>
+    <color name="colorAccent">#e7e7e7</color>
+
+    <color name="colorTextPrimary">#323232</color>
+    <color name="colorAccentTint">@color/colorTextPrimary</color>
+    <color name="colorStatusBar">#EDEDED</color>
+    <color name="colorNavigationBar">#FFFFFF</color>
+
+    <color name="colorPollution">#999999</color>
+
 </resources>

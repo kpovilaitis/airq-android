@@ -25,7 +25,7 @@
 
         </activity>
 
-        <activity android:name=".ui.activity.SearchStationsActivity"/>
+        <activity android:name=".ui.activity.StationsActivity"/>
 
     </application>
 

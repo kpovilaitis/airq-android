@@ -5,19 +5,19 @@
     <font
             android:fontStyle="normal"
             android:fontWeight="400"
-            android:font="@font/red_hat_regular" />
+            android:font="@font/rubik_light" />
     <font
             android:fontStyle="normal"
             android:fontWeight="400"
-            android:font="@font/red_hat_bold" />
+            android:font="@font/rubik_regular" />
 
     <font
             app:fontStyle="normal"
             app:fontWeight="400"
-            app:font="@font/red_hat_regular" />
+            app:font="@font/rubik_light" />
     <font
             app:fontStyle="normal"
             app:fontWeight="400"
-            app:font="@font/red_hat_bold" />
+            app:font="@font/rubik_regular" />
 
 </font-family>

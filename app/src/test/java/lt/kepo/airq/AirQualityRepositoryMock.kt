@@ -24,7 +24,7 @@ class AirQualityRepositoryMock : AirQualityRepository{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun upsertLocalAirQualityHere(airQuality: AirQuality) {
+    override suspend fun insertLocalAirQuality(airQuality: AirQuality) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

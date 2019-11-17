@@ -4,12 +4,18 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.Station
+import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 import lt.kepo.airq.data.repository.stations.StationsRepository
 
-class StationsViewModel(private val stationsRepository: StationsRepository) : ViewModel() {
+class StationsViewModel(
+    private val airQualityRepository: AirQualityRepository,
+    private val stationsRepository: StationsRepository
+) : ViewModel() {
     private val _stations = MutableLiveData<MutableList<Station>>()
+    private val _isLoading = MutableLiveData<Boolean>(false)
 
     val stations: LiveData<MutableList<Station>> get() = _stations
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     override fun onCleared() {
         super.onCleared()
@@ -25,38 +31,23 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
         }
     }
 
-    fun updateLocalStations() {
+    fun addAirQuality(station: Station) {
         viewModelScope.launch {
-            val localStations = stationsRepository.getLocalAllStations()
+            _isLoading.value = true
 
-            val updates = localStations.map {station ->
-                async(Dispatchers.IO) { when (val response = stationsRepository.getRemoteStation(station.id)) {
-                        is ApiSuccessResponse -> {
-                            val responseStation = response.data
+            when (val response = airQualityRepository.getRemoteAirQuality(station.id)) {
+                is ApiSuccessResponse -> {
+                    val responseAirQuality = response.data
 
-                            station.airQualityIndex = responseStation.airQualityIndex
+                    airQualityRepository.upsertLocalAirQuality(responseAirQuality)
 
-                            stationsRepository.updateLocalStation(station)
-                        }
-                    }
+                    _stations.value?.remove(station)
+                    _stations.value = _stations.value
                 }
+
             }
 
-            updates.awaitAll()
-
-            _stations.value = localStations
+            _isLoading.value = false
         }
-    }
-
-    fun addLocalStation(station: Station) {
-        viewModelScope.launch { stationsRepository.upsertLocalStation(station) }
-    }
-
-    fun getLocalAllStations() {
-        viewModelScope.launch { _stations.value = stationsRepository.getLocalAllStations() }
-    }
-
-    fun removeLocalStation(station: Station) {
-        viewModelScope.launch { stationsRepository.deleteLocalStation(station) }
     }
 }

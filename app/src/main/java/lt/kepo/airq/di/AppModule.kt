@@ -14,8 +14,4 @@ val appModule : Module = module {
     single { createApiClientService(createHttpClient(), API_BASE_URL) }
 
     single { Room.databaseBuilder(get(), AppDatabase::class.java, AIR_Q_DATABASE_NAME).build() }
-
-    single { get<AppDatabase>().airQualityDao() }
-
-    single { get<AppDatabase>().stationDao() }
 }

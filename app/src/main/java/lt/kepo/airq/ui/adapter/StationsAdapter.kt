@@ -3,35 +3,32 @@ package lt.kepo.airq.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.list_item_station.view.*
+import kotlinx.android.synthetic.main.view_air_quality_item.view.*
 import lt.kepo.airq.R
 import lt.kepo.airq.data.model.Station
 
 class StationsAdapter(
-    private val clickListener: (Int) -> Unit,
-    private val actionDrawable: Int
-) : ListAdapter<Station, StationsAdapter.ViewHolder>(StationDiffCallback()) {
+    var stations: List<Station>?,
+    private val clickListener: (Int) -> Unit
+) : RecyclerView.Adapter<StationsAdapter.ViewHolder>() {
+    override fun getItemCount(): Int = stations?.size ?: 0
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_station, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.list_item_air_quality, parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position), position, clickListener, actionDrawable)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(stations?.get(position), position, clickListener)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(item: Station, pos: Int, listener: (Int) -> Unit, actionDrawable: Int) = with(itemView) {
-            textStationName.text = item.station.name
-            textStationAirQuality.text = resources.getString(R.string.label_station_air_quality, item.airQualityIndex)
-            buttonAddStation.setImageResource(actionDrawable)
-            buttonAddStation.setOnClickListener { listener(pos) }
+        fun bind(item: Station?, pos: Int, listener: (Int) -> Unit) = with(itemView) {
+            val splitName = item?.station?.name?.split(",")?.toMutableList()
+            val countryName = splitName?.removeAt(splitName.size - 1)
+
+            textCity.text = splitName?.joinToString()?.trimEnd()
+            textCountry.text = countryName?.trimStart()
+            textIndex.text = item?.airQualityIndex
+
+            itemView.setOnLongClickListener { listener(pos); true}
         }
     }
-}
-
-private class StationDiffCallback : DiffUtil.ItemCallback<Station>() {
-
-    override fun areItemsTheSame(oldItem: Station, newItem: Station): Boolean = oldItem.id == newItem.id
-
-    override fun areContentsTheSame(oldItem: Station, newItem: Station): Boolean = oldItem.airQualityIndex == newItem.airQualityIndex
 }

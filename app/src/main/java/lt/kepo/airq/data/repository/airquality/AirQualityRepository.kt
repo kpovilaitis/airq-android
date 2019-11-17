@@ -8,11 +8,13 @@ import lt.kepo.airq.data.model.AirQuality
 interface AirQualityRepository {
     suspend fun getRemoteAirQualityHere(location: Location?): ApiResponse<AirQuality>
 
-    suspend fun getRemoteAirQuality(stationId: Int): AirQuality
+    suspend fun getRemoteAirQuality(stationId: Int): ApiResponse<AirQuality>
 
-    fun getLocalAirQualityHere(): LiveData<AirQuality>
+    suspend fun getLocalAirQualities(): List<AirQuality>
 
-    fun getLocalAirQuality(stationId: Int): LiveData<AirQuality>
+    suspend fun insertLocalAirQuality(airQuality: AirQuality): Long
 
-    suspend fun upsertLocalAirQualityHere(airQuality: AirQuality)
+    suspend fun deleteLocalAirQualityHere()
+
+    suspend fun upsertLocalAirQuality(airQuality: AirQuality)
 }

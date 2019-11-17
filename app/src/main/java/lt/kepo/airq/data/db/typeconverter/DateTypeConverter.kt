@@ -1,4 +1,4 @@
-package lt.kepo.airq.db.typeconverter
+package lt.kepo.airq.data.db.typeconverter
 
 import androidx.room.TypeConverter
 import java.util.*

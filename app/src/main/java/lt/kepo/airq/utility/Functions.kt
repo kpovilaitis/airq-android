@@ -10,6 +10,9 @@ import android.provider.Settings.Secure.LOCATION_MODE
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import lt.kepo.airq.R
 
 fun isLocationEnabled(context: Context): Boolean {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // This is new method provided in API 28
@@ -19,4 +22,12 @@ fun isLocationEnabled(context: Context): Boolean {
     } else { // This is Deprecated in API 28
         Secure.getInt(context.contentResolver, LOCATION_MODE, LOCATION_MODE_OFF) != LOCATION_MODE_OFF
     }
+}
+
+fun getListDivider(context: Context): DividerItemDecoration {
+    val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+
+    divider.setDrawable(context.getDrawable(R.drawable.list_divider)!!)
+
+    return divider
 }

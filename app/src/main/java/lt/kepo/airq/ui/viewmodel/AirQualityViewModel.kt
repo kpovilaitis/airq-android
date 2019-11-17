@@ -1,6 +1,5 @@
 package lt.kepo.airq.ui.viewmodel
 
-import android.app.Application
 import android.content.Context
 import android.location.Location
 import androidx.lifecycle.*
@@ -15,20 +14,15 @@ import lt.kepo.airq.utility.isLocationEnabled
 
 class AirQualityViewModel(
     private val airQualityRepository: AirQualityRepository,
-    application: Application
-) : AndroidViewModel(application) {
+    initAirQuality: AirQuality
+) : ViewModel() {
+    private val _airQuality = MutableLiveData<AirQuality>(initAirQuality)
     private val _errorMessage = MutableLiveData<String>()
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    val airQuality: LiveData<AirQuality> = Transformations.switchMap( airQualityRepository.getLocalAirQualityHere() ) { liveData { emit(it) } }
+    val airQuality: LiveData<AirQuality> get() = _airQuality
     val errorMessage: LiveData<String> get() = _errorMessage
-
-    init {
-        if (shouldUseLocation(application)) {
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
-        }
-    }
 
     override fun onCleared() {
         super.onCleared()
@@ -59,7 +53,7 @@ class AirQualityViewModel(
 
                     airQualityResponse.isCurrentLocationQuality = true
 
-                    airQualityRepository.upsertLocalAirQualityHere(airQualityResponse)
+                    airQualityRepository.insertLocalAirQuality(airQualityResponse)
                 }
                 is ApiErrorResponse -> _errorMessage.value = response.errorMessage
             }

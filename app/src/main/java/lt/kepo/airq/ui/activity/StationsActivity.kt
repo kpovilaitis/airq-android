@@ -1,0 +1,89 @@
+package lt.kepo.airq.ui.activity
+
+import android.os.Bundle
+import android.view.Menu
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_stations.*
+import lt.kepo.airq.R
+import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import lt.kepo.airq.data.model.Station
+import lt.kepo.airq.ui.adapter.StationsAdapter
+import lt.kepo.airq.ui.viewmodel.StationsViewModel
+import lt.kepo.airq.utility.getListDivider
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+class StationsActivity : AppCompatActivity() {
+    private val viewModel: StationsViewModel by viewModel()
+    private lateinit var stationsAdapter: StationsAdapter
+    private var menuItemProgress: MenuItem? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_stations)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        stationsAdapter = StationsAdapter(viewModel.stations.value, listClickListener)
+
+        stationsRecyclerView.layoutManager = LinearLayoutManager(this)
+        stationsRecyclerView.addItemDecoration(getListDivider(this))
+        stationsRecyclerView.adapter = stationsAdapter
+
+        viewModel.isLoading.observe(this, progressObserver)
+        viewModel.stations.observe(this, stationsObserver)
+
+        search.setOnQueryTextListener(queryTextListener)
+        search.requestFocus()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.stations_activity_menu, menu)
+
+        menuItemProgress = menu?.findItem(R.id.action_progress)
+        menuItemProgress?.isVisible = false
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> false
+        }
+    }
+
+    private val listClickListener: (Int) -> Unit = { position ->
+        viewModel.addAirQuality(viewModel.stations.value!![position])
+        viewModel.stations.value?.removeAt(position)
+        stationsAdapter.notifyDataSetChanged()
+    }
+
+    private val queryTextListener = object: SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean = false
+
+        override fun onQueryTextChange(newText: String): Boolean {
+            if (newText.length > 1)
+                viewModel.getRemoteStations(newText)
+
+            return true
+        }
+    }
+
+    private val progressObserver = Observer<Boolean> { isLoading ->
+        menuItemProgress?.isVisible = isLoading
+    }
+
+    private val stationsObserver = Observer<MutableList<Station>> { stations ->
+        stationsAdapter.stations = stations
+        stationsAdapter.notifyDataSetChanged()
+    }
+}

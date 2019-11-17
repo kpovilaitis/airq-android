@@ -14,6 +14,9 @@ interface HttpClient {
     @GET("/feed/{geo}/")
     suspend fun getAirQualityHere(@Path("geo") geolocation: String): Response<ApiHttpResponse<AirQuality>>
 
+    @GET("/feed/{geo}/")
+    suspend fun getAirQuality(@Path("geo") geolocation: String): Response<ApiHttpResponse<AirQuality>>
+
     @GET("/search/")
     suspend fun getStations(@Query("keyword") query: String): Response<ApiHttpResponse<MutableList<Station>>>
 

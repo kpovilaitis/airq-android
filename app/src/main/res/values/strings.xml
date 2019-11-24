@@ -14,10 +14,12 @@
     <string name="label_pm_10">Particulate matter 10</string>
     <string name="label_sulfur_dioxide">Sulfur dioxide</string>
 
+    <string name="template_hours">%s h</string>
+    <string name="template_ppb">%s ppb</string>
+    <string name="template_μgm">%s μg/m\u00B3</string>
 
     <string name="transition_city_name">city name shared element</string>
     <string name="transition_country_name">country name shared element</string>
     <string name="transition_index">index shared element</string>
-    <string name="transition_action_icon">action shared element</string>
 
 </resources>

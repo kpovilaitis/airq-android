@@ -30,6 +30,10 @@ class AirQualityViewModel(
         viewModelScope.cancel()
     }
 
+    fun removeAirQuality() {
+        viewModelScope.launch { airQualityRepository.deleteLocalAirQuality(airQuality.value!!.stationId) }
+    }
+
     fun getRemoteAirQualityHere(context: Context) {
         if (shouldUseLocation(context)) {
             fusedLocationClient.locationAvailability.addOnSuccessListener { locationAvailability ->

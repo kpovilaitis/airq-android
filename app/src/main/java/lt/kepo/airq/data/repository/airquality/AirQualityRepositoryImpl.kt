@@ -1,9 +1,6 @@
 package lt.kepo.airq.data.repository.airquality
 
 import android.location.Location
-import androidx.lifecycle.LiveData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import lt.kepo.airq.data.api.ApiResponse
 import lt.kepo.airq.data.api.HttpClient
 import lt.kepo.airq.data.db.dao.AirQualityDao
@@ -14,6 +11,8 @@ class AirQualityRepositoryImpl internal constructor(
     private val airQualityDao: AirQualityDao,
     private val httpClient: HttpClient
 ) : AirQualityRepository {
+    override suspend fun deleteLocalAirQuality(stationId: Int) = airQualityDao.delete(stationId)
+
     override suspend fun getRemoteAirQualityHere(location: Location?): ApiResponse<AirQuality> {
         return try {
             return if (location != null) {

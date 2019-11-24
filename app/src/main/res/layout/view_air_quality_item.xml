@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content">
 
@@ -14,6 +13,8 @@
             android:text="Paris"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +26,8 @@
             android:text="France"
             android:textSize="20sp"
             android:gravity="top"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toStartOf="@+id/textCity"
             app:layout_constraintTop_toBottomOf="@+id/textCity" />
 
@@ -45,21 +48,10 @@
             app:layout_constraintStart_toStartOf="@+id/textCountry"
             app:layout_constraintTop_toBottomOf="@+id/textCountry" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/buildingsImageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textIndex"
-            tools:srcCompat="@tools:sample/avatars[0]" />
-
     <View
             android:id="@+id/pollutionView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/gradient_pollution"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

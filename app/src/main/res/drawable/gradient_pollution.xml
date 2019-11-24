@@ -7,6 +7,5 @@
             android:startColor="@android:color/transparent"
             android:centerColor="@android:color/transparent"
             android:endColor="@color/colorPollution"
-            android:centerY="0.75"
-            android:type="linear" />
+            android:centerY="0.75"/>
 </shape>

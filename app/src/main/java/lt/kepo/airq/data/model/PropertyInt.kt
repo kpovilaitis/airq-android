@@ -5,6 +5,6 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Property (
-    @SerializedName("v") val value: Double
+data class PropertyInt (
+    @SerializedName("v") val value: Int
 ) : Parcelable

@@ -34,10 +34,10 @@ class AirQualityRepositoryMock : AirQualityRepository{
             "15",
             "o3",
             IndividualIndices(
-                Property(1.0),
-                Property(2.0),
-                Property(3.0),
-                Property(4.0)
+                PropertyDouble(1.0),
+                PropertyDouble(2.0),
+                PropertyDouble(3.0),
+                PropertyDouble(4.0)
             ),
             City("Test City"),
             Time(Date()),

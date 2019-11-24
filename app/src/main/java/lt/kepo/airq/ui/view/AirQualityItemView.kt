@@ -1,19 +1,23 @@
 package lt.kepo.airq.ui.view
 
 import android.content.Context
+import android.graphics.LinearGradient
 import android.util.AttributeSet
 import android.view.View
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import lt.kepo.airq.R
+import android.graphics.Shader.TileMode
+import android.graphics.Shader
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
+import android.graphics.drawable.PaintDrawable
 
 
 class AirQualityItemView : ConstraintLayout {
     private lateinit var textCity: AppCompatTextView
     private lateinit var textCountry: AppCompatTextView
     private lateinit var textIndex: AppCompatTextView
-    private lateinit var imageBuildings: AppCompatImageView
     private lateinit var imagePollution: View
 
     constructor(context: Context) : super(context){
@@ -28,15 +32,33 @@ class AirQualityItemView : ConstraintLayout {
         inflate()
     }
 
+    fun setPollution(index: Int) {
+        val paintDrawable = PaintDrawable()
+
+        paintDrawable.shape = RectShape()
+        paintDrawable.shaderFactory = object : ShapeDrawable.ShaderFactory() {
+            override fun resize(width: Int, height: Int): Shader {
+                return LinearGradient(
+                    0f,
+                    height.toFloat(),
+                    0f,
+                    height.toFloat() - ((height.toFloat()) * index.toFloat() / resources.getInteger(R.integer.pollution_max_value).toFloat()),
+                    intArrayOf(resources.getColor(R.color.colorPollution, null), resources.getColor(android.R.color.transparent, null)),
+                    null,
+                    TileMode.CLAMP
+                )
+            }
+        }
+
+        background = paintDrawable
+    }
+
     private fun inflate() {
         val view = View.inflate(context, R.layout.view_air_quality_item, this)
 
         textCity = view.findViewById(R.id.textCity)
         textCountry = view.findViewById(R.id.textCountry)
         textIndex = view.findViewById(R.id.textIndex)
-        imageBuildings = view.findViewById(R.id.buildingsImageView)
         imagePollution = view.findViewById(R.id.pollutionView)
-
-//        view.setBackgroundResource(R.drawable.gradient_station_background)
     }
 }

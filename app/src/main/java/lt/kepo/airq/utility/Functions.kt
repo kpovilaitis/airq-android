@@ -9,6 +9,7 @@ import android.provider.Settings.Secure.LOCATION_MODE_OFF
 import android.provider.Settings.Secure.LOCATION_MODE
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,4 +31,13 @@ fun getListDivider(context: Context): DividerItemDecoration {
     divider.setDrawable(context.getDrawable(R.drawable.list_divider)!!)
 
     return divider
+}
+
+fun setFullName(locationName: String?, textCity: AppCompatTextView, textCountry: AppCompatTextView) {
+    val splitName = locationName?.split(",")?.toMutableList()
+    val countryName = splitName?.removeAt(splitName.size - 1)
+    val cityName = splitName?.joinToString()?.trimEnd()
+
+    textCity.text = if (cityName?.isEmpty() == true) countryName else cityName
+    textCountry.text = countryName?.trimStart()
 }

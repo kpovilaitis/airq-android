@@ -7,7 +7,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
+            android:layout_width="wrap_content"
+            android:background="@drawable/gradient_main_activity_window_background">
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textError"
@@ -21,22 +22,30 @@
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textCity"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
                 android:textSize="30sp"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintEnd_toStartOf="@id/btnRemoveAirQuality"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textCountry"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="30sp"
+                android:layout_marginEnd="16dp"
                 android:gravity="top"
+                android:textSize="30sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintEnd_toStartOf="@+id/btnRemoveAirQuality"
                 app:layout_constraintStart_toStartOf="@+id/textCity"
                 app:layout_constraintTop_toBottomOf="@+id/textCity" />
 
@@ -191,6 +200,16 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/textPM25Label"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnRemoveAirQuality"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="24dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textCity"
+                app:srcCompat="@drawable/ic_delete" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

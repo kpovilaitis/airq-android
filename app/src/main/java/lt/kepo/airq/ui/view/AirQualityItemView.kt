@@ -22,14 +22,17 @@ class AirQualityItemView : ConstraintLayout {
 
     constructor(context: Context) : super(context){
         inflate()
+        setPollution(0)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs){
         inflate()
+        setPollution(0)
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         inflate()
+        setPollution(0)
     }
 
     fun setPollution(index: Int) {

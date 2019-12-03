@@ -24,7 +24,8 @@ class AirQualitiesAdapter(
         fun bind(item: AirQuality?, pos: Int, listener: (Int, View) -> Unit) = with(itemView) {
             setFullName(item?.city?.name, textCity, textCountry)
 
-            itemView.findViewById<AirQualityItemView>(R.id.stationView).setPollution(item?.airQualityIndex?.toInt() ?: 0)
+            if (item?.airQualityIndex?.equals("-") == false)
+                itemView.findViewById<AirQualityItemView>(R.id.stationView).setPollution(item.airQualityIndex.toInt())
 
             textIndex.text = item?.airQualityIndex
 

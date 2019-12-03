@@ -17,7 +17,7 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class AirQualityFragment : Fragment() {
-    private val viewModel: AirQualityViewModel by inject { parametersOf(arguments?.getParcelable(AirQuality::class.java.simpleName))}
+    private val viewModel: AirQualityViewModel by inject { parametersOf(arguments?.getParcelable(AirQuality::class.java.simpleName)) }
 
     private lateinit var navBarColorAnimation: ValueAnimator
     private lateinit var textCity: AppCompatTextView

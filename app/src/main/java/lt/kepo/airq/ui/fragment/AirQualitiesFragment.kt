@@ -1,5 +1,6 @@
 package lt.kepo.airq.ui.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -19,6 +20,7 @@ import lt.kepo.airq.ui.activity.StationsActivity
 import lt.kepo.airq.ui.adapter.AirQualitiesAdapter
 import lt.kepo.airq.ui.viewmodel.AirQualitiesViewModel
 import lt.kepo.airq.utility.POSITION_PARCELABLE_KEY
+import lt.kepo.airq.utility.STATIONS_ACTIVITY_REQUEST_CODE
 import lt.kepo.airq.utility.getListDivider
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -46,7 +48,7 @@ class AirQualitiesFragment : Fragment() {
 
         fab.setOnClickListener { animateFAB() }
         fab1.setOnClickListener {
-            startActivity(Intent(requireContext(), StationsActivity::class.java))
+            startActivityForResult(Intent(requireContext(), StationsActivity::class.java), STATIONS_ACTIVITY_REQUEST_CODE)
             animateFAB()
         }
         fab2.setOnClickListener { animateFAB() }
@@ -62,6 +64,14 @@ class AirQualitiesFragment : Fragment() {
         super.onStart()
 
         viewModel.getLocalAirQualities()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == STATIONS_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            viewModel.getLocalAirQualities()
+        }
     }
 
     private fun animateFAB() {

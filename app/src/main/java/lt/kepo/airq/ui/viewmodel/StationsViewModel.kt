@@ -31,6 +31,10 @@ class StationsViewModel(
         }
     }
 
+    fun clearStations() {
+        _stations.value = arrayListOf()
+    }
+
     fun addAirQuality(station: Station) {
         viewModelScope.launch {
             _isLoading.value = true

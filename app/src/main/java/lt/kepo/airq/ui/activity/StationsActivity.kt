@@ -1,7 +1,7 @@
 package lt.kepo.airq.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
-import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_stations.*
 import lt.kepo.airq.R
@@ -18,7 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class StationsActivity : AppCompatActivity() {
     private val viewModel: StationsViewModel by viewModel()
     private lateinit var stationsAdapter: StationsAdapter
-    private var menuItemProgress: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,18 +41,10 @@ class StationsActivity : AppCompatActivity() {
         search.requestFocus()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.stations_activity_menu, menu)
-
-        menuItemProgress = menu?.findItem(R.id.action_progress)
-        menuItemProgress?.isVisible = false
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
+                setResult(Activity.RESULT_OK)
                 finish()
                 true
             }
@@ -71,6 +62,8 @@ class StationsActivity : AppCompatActivity() {
         override fun onQueryTextSubmit(query: String?): Boolean = false
 
         override fun onQueryTextChange(newText: String): Boolean {
+            if (newText.isEmpty())
+                viewModel.clearStations()
             if (newText.length > 1)
                 viewModel.getRemoteStations(newText)
 
@@ -79,7 +72,6 @@ class StationsActivity : AppCompatActivity() {
     }
 
     private val progressObserver = Observer<Boolean> { isLoading ->
-        menuItemProgress?.isVisible = isLoading
     }
 
     private val stationsObserver = Observer<MutableList<Station>> { stations ->

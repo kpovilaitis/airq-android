@@ -25,7 +25,7 @@ class AirQualitiesViewModel(
         if (canUseLocation(context))
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-        getLocalAirQualities()
+        updateLocalAirQualities()
     }
 
     override fun onCleared() {
@@ -35,19 +35,21 @@ class AirQualitiesViewModel(
     }
 
     fun getLocalAirQualities() {
-        viewModelScope.launch { updateLocalAirQualities(airQualityRepository.getLocalAirQualities().toMutableList()) }
+        viewModelScope.launch { _airQualities.value = airQualityRepository.getLocalAirQualities().toMutableList() }
     }
 
-    private suspend fun updateLocalAirQualities(qualities: MutableList<AirQuality>) {
-        _airQualities.value = qualities
+    private fun updateLocalAirQualities() {
+        viewModelScope.launch {
+            _airQualities.value = airQualityRepository.getLocalAirQualities().toMutableList()
 
-        when {
-            _airQualities.value == null -> return
-            _airQualities.value!!.isEmpty() -> getLocation()
-            else -> _airQualities.value?.forEach { airQuality ->
-                when (airQuality.isCurrentLocationQuality) {
-                    true -> getLocation()
-                    false -> viewModelScope.launch { updateLocalAirQuality(airQuality) }
+            when {
+                _airQualities.value === null -> return@launch
+                _airQualities.value!!.isEmpty() -> getLocation()
+                else -> _airQualities.value?.forEach { airQuality ->
+                    when (airQuality.isCurrentLocationQuality) {
+                        true -> getLocation()
+                        false -> viewModelScope.launch { updateLocalAirQuality(airQuality) }
+                    }
                 }
             }
         }
@@ -86,7 +88,12 @@ class AirQualitiesViewModel(
 
                 airQualityResponse.isCurrentLocationQuality = true
 
-                _airQualities.value?.find { it.isCurrentLocationQuality } .also { it?.update(airQualityResponse) }
+                _airQualities.value?.find { it.isCurrentLocationQuality } .also {
+                    if (it == null)
+                        _airQualities.value!!.add(airQualityResponse)
+                    else
+                        it.update(airQualityResponse)
+                }
                 _airQualities.value = _airQualities.value
 
                 airQualityRepository.deleteLocalAirQualityHere()

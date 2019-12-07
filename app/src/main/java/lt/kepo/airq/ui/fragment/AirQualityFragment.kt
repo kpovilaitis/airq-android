@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.*
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_air_quality.*
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
@@ -19,6 +19,7 @@ import org.koin.core.parameter.parametersOf
 class AirQualityFragment : Fragment() {
     private val viewModel: AirQualityViewModel by inject { parametersOf(arguments?.getParcelable(AirQuality::class.java.simpleName)) }
 
+    private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var textCity: AppCompatTextView
     private lateinit var textCountry: AppCompatTextView
     private lateinit var textIndex: AppCompatTextView
@@ -26,9 +27,19 @@ class AirQualityFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val fragmentView = inflater.inflate(R.layout.fragment_air_quality, container, false)
 
+        swipeToRefreshLayout = fragmentView.findViewById(R.id.swipeToRefreshLayout)
         textCity  = fragmentView.findViewById(R.id.textCity)
         textCountry  = fragmentView.findViewById(R.id.textCountry)
         textIndex  = fragmentView.findViewById(R.id.textIndex)
+
+        fragmentView.setOnApplyWindowInsetsListener { v, insets ->
+            val statusBarHeight = insets.systemWindowInsetTop
+
+            swipeToRefreshLayout.setProgressViewOffset(false, 0, statusBarHeight * 2)
+
+            v.setPadding(0, statusBarHeight, 0 ,0)
+            insets
+        }
 
         setTransitionNames()
 
@@ -37,11 +48,6 @@ class AirQualityFragment : Fragment() {
 
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        view.setOnApplyWindowInsetsListener { v, insets ->
-            v.setPadding(0, insets.systemWindowInsetTop /*status bar height*/, 0 ,0)
-            insets
-        }
 
         if (viewModel.airQuality.value?.isCurrentLocationQuality == true) {
             btnRemoveAirQuality.visibility = View.GONE

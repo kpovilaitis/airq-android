@@ -1,10 +1,10 @@
 package lt.kepo.airq.ui.fragment
 
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_air_quality.*
@@ -19,7 +19,6 @@ import org.koin.core.parameter.parametersOf
 class AirQualityFragment : Fragment() {
     private val viewModel: AirQualityViewModel by inject { parametersOf(arguments?.getParcelable(AirQuality::class.java.simpleName)) }
 
-    private lateinit var navBarColorAnimation: ValueAnimator
     private lateinit var textCity: AppCompatTextView
     private lateinit var textCountry: AppCompatTextView
     private lateinit var textIndex: AppCompatTextView
@@ -39,6 +38,11 @@ class AirQualityFragment : Fragment() {
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.setOnApplyWindowInsetsListener { v, insets ->
+            v.setPadding(0, insets.systemWindowInsetTop /*status bar height*/, 0 ,0)
+            insets
+        }
+
         if (viewModel.airQuality.value?.isCurrentLocationQuality == true) {
             btnRemoveAirQuality.visibility = View.GONE
         } else {
@@ -48,27 +52,18 @@ class AirQualityFragment : Fragment() {
             }
         }
 
-        setNavBarColorAnim()
-
         viewModel.airQuality.observe(this, airQualityObserver)
         viewModel.errorMessage.observe(this, errorMessageObserver)
 
         swipeToRefreshLayout.setOnRefreshListener {
             swipeToRefreshLayout.isRefreshing = true
-            viewModel.getRemoteAirQualityHere(requireContext())
+            viewModel.updateAirQuality()
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        navBarColorAnimation.start()
     }
 
     override fun onStop() {
         super.onStop()
 
-        navBarColorAnimation.reverse()
         textCity.visibility = View.GONE
         textCountry.visibility = View.GONE
         textIndex.visibility = View.GONE
@@ -80,17 +75,6 @@ class AirQualityFragment : Fragment() {
         textCity.transitionName = requireContext().getString(R.string.transition_city_name) + elementPosition
         textCountry.transitionName = requireContext().getString(R.string.transition_country_name) + elementPosition
         textIndex.transitionName = requireContext().getString(R.string.transition_index) + elementPosition
-    }
-
-    private fun setNavBarColorAnim() {
-        val window = activity?.window
-        val from = window?.navigationBarColor
-        val to = requireContext().getColor(R.color.colorPollution)
-
-        navBarColorAnimation = ValueAnimator.ofArgb(from!!, to)
-
-        navBarColorAnimation.addUpdateListener { animator -> window.navigationBarColor = animator.animatedValue as Int }
-        navBarColorAnimation.duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
     }
 
     private fun setAirQualityText(newAirQuality: AirQuality?) {

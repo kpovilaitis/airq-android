@@ -27,6 +27,9 @@
 
         <activity android:name=".ui.activity.StationsActivity"/>
 
+        <activity android:name=".ui.activity.SettingsActivity"
+                android:theme="@style/SettingsActivityTheme"/>
+
     </application>
 
 </manifest>

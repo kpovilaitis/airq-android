@@ -1,37 +1,22 @@
 package lt.kepo.airq.ui.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.location.Location
 import androidx.lifecycle.*
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.coroutines.*
 import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
-import lt.kepo.airq.utility.isLocationEnabled
 
 class AirQualitiesViewModel(
-    private val airQualityRepository: AirQualityRepository,
-    private val context: Application
-) : AndroidViewModel(context) {
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    airQualityRepository: AirQualityRepository,
+    context: Application
+) : BaseAirQualityViewModel(airQualityRepository, context) {
     private val _airQualities = MutableLiveData<MutableList<AirQuality>>()
     val airQualities: LiveData<MutableList<AirQuality>> get() = _airQualities
 
     init {
-        if (canUseLocation(context))
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-
         updateLocalAirQualities()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        viewModelScope.cancel()
     }
 
     fun getLocalAirQualities() {
@@ -44,10 +29,10 @@ class AirQualitiesViewModel(
 
             when {
                 _airQualities.value === null -> return@launch
-                _airQualities.value!!.isEmpty() -> getLocation()
+                _airQualities.value!!.isEmpty() -> fetchLocationAirQuality()
                 else -> _airQualities.value?.forEach { airQuality ->
                     when (airQuality.isCurrentLocationQuality) {
-                        true -> getLocation()
+                        true -> fetchLocationAirQuality()
                         false -> viewModelScope.launch { updateLocalAirQuality(airQuality) }
                     }
                 }
@@ -68,20 +53,7 @@ class AirQualitiesViewModel(
         }
     }
 
-    private fun getLocation() {
-        if (canUseLocation(context)) {
-            fusedLocationClient.locationAvailability.addOnSuccessListener { locationAvailability ->
-                if (locationAvailability.isLocationAvailable)
-                    fusedLocationClient.lastLocation.addOnSuccessListener { loc -> viewModelScope.launch { updateLocalAirQualityHere(loc) } }
-                else
-                    viewModelScope.launch { updateLocalAirQualityHere(null) }
-            }
-        } else {
-            viewModelScope.launch { updateLocalAirQualityHere(null) }
-        }
-    }
-
-    private suspend fun updateLocalAirQualityHere(location: Location?) {
+    override suspend fun updateLocalAirQualityHere(location: Location?) {
         when (val response = airQualityRepository.getRemoteAirQualityHere(location)) {
             is ApiSuccessResponse -> {
                 val airQualityResponse = response.data
@@ -100,15 +72,5 @@ class AirQualitiesViewModel(
                 airQualityRepository.insertLocalAirQuality(airQualityResponse)
             }
         }
-    }
-
-    private fun canUseLocation(context: Context): Boolean {
-        return if (isLocationEnabled(context)) {
-            if (!::fusedLocationClient.isInitialized)
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-
-            true
-        } else
-            false
     }
 }

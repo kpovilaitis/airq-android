@@ -16,6 +16,7 @@ import androidx.transition.TransitionSet
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import lt.kepo.airq.R
 import lt.kepo.airq.data.model.AirQuality
+import lt.kepo.airq.ui.activity.SettingsActivity
 import lt.kepo.airq.ui.activity.StationsActivity
 import lt.kepo.airq.ui.adapter.AirQualitiesAdapter
 import lt.kepo.airq.ui.viewmodel.AirQualitiesViewModel
@@ -51,7 +52,10 @@ class AirQualitiesFragment : Fragment() {
             startActivityForResult(Intent(requireContext(), StationsActivity::class.java), STATIONS_ACTIVITY_REQUEST_CODE)
             animateFAB()
         }
-        fab2.setOnClickListener { animateFAB() }
+        fab2.setOnClickListener {
+            startActivity(Intent(requireContext(), SettingsActivity::class.java))
+            animateFAB()
+        }
 
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext()))

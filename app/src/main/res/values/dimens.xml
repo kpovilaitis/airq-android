@@ -3,6 +3,9 @@
 
     <dimen name="margin_fab">16dp</dimen>
 
+    <dimen name="padding_default">24dp</dimen>
+    <dimen name="margin_nav_bar">-24dp</dimen>
+
     <dimen name="text_size_title">20sp</dimen>
 
 </resources>

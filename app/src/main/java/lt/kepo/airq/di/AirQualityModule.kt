@@ -18,5 +18,5 @@ val airQualityModule : Module = module {
 
     viewModel { AirQualitiesViewModel(get(), get()) }
 
-    viewModel { (airQuality: AirQuality) -> AirQualityViewModel(get(), airQuality) }
+    viewModel { (airQuality: AirQuality) -> AirQualityViewModel(airQuality, get(), get()) }
 }

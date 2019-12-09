@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
-        fragmentTransaction.add(R.id.main_content, AirQualitiesFragment())
+        fragmentTransaction.replace(R.id.main_content, AirQualitiesFragment())
         fragmentTransaction.commit()
     }
 }

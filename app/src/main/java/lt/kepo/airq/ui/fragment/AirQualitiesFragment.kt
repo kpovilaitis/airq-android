@@ -21,6 +21,7 @@ import lt.kepo.airq.ui.activity.StationsActivity
 import lt.kepo.airq.ui.adapter.AirQualitiesAdapter
 import lt.kepo.airq.ui.viewmodel.AirQualitiesViewModel
 import lt.kepo.airq.utility.POSITION_PARCELABLE_KEY
+import lt.kepo.airq.utility.RECYCLERVIEW_SCROLL_DIRECTION_UP
 import lt.kepo.airq.utility.STATIONS_ACTIVITY_REQUEST_CODE
 import lt.kepo.airq.utility.getListDivider
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -60,6 +61,9 @@ class AirQualitiesFragment : Fragment() {
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext()))
         airQualitiesRecyclerView.adapter = stationsAdapter
+        airQualitiesRecyclerView.setOnScrollChangeListener { _, _, _, _, _ ->
+            textAppName.isSelected = airQualitiesRecyclerView.canScrollVertically(RECYCLERVIEW_SCROLL_DIRECTION_UP)
+        }
 
         viewModel.airQualities.observe(this, stationsObserver)
     }

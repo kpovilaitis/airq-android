@@ -27,7 +27,9 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/textAppName"
                 android:paddingTop="@dimen/padding_default"
-                android:clipToPadding="false"/>
+                android:paddingBottom="@dimen/padding_nav_bar"
+                android:clipToPadding="false"
+                android:background="@drawable/background_window"/>
 
     </RelativeLayout>
 
@@ -64,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/margin_fab"
-            android:src="@drawable/ic_menu"
+            android:src="@drawable/ic_search"
             app:layout_anchorGravity="bottom|end"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

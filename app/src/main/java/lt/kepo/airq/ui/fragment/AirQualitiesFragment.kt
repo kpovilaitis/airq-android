@@ -30,9 +30,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AirQualitiesFragment : Fragment() {
     private val viewModel: AirQualitiesViewModel by viewModel()
 
-    private var isFabOpen = false
-    private lateinit var openFabAnimation: Animation
-    private lateinit var closeFabAnimation: Animation
+//    private var isFabOpen = false
+//    private lateinit var openFabAnimation: Animation
+//    private lateinit var closeFabAnimation: Animation
 
     private lateinit var stationsAdapter : AirQualitiesAdapter
 
@@ -45,18 +45,21 @@ class AirQualitiesFragment : Fragment() {
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        openFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
-        closeFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
+//        openFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
+//        closeFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
 
-        fab.setOnClickListener { animateFAB() }
-        fab1.setOnClickListener {
+        fab.setOnClickListener {
             startActivityForResult(Intent(requireContext(), StationsActivity::class.java), STATIONS_ACTIVITY_REQUEST_CODE)
-            animateFAB()
+//            animateFAB()
         }
-        fab2.setOnClickListener {
-            startActivity(Intent(requireContext(), SettingsActivity::class.java))
-            animateFAB()
-        }
+//        fab1.setOnClickListener {
+//            startActivityForResult(Intent(requireContext(), StationsActivity::class.java), STATIONS_ACTIVITY_REQUEST_CODE)
+//            animateFAB()
+//        }
+//        fab2.setOnClickListener {
+//            startActivity(Intent(requireContext(), SettingsActivity::class.java))
+//            animateFAB()
+//        }
 
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext()))
@@ -82,24 +85,24 @@ class AirQualitiesFragment : Fragment() {
         }
     }
 
-    private fun animateFAB() {
-
-        if (isFabOpen) {
-            fab.setImageResource(R.drawable.ic_menu)
-            fab1.startAnimation(closeFabAnimation)
-            fab2.startAnimation(closeFabAnimation)
-            fab1.isClickable = false
-            fab2.isClickable = false
-            isFabOpen = false
-        } else {
-            fab.setImageResource(R.drawable.ic_remove)
-            fab1.startAnimation(openFabAnimation)
-            fab2.startAnimation(openFabAnimation)
-            fab1.isClickable = true
-            fab2.isClickable = true
-            isFabOpen = true
-        }
-    }
+//    private fun animateFAB() {
+//
+//        if (isFabOpen) {
+//            fab.setImageResource(R.drawable.ic_menu)
+//            fab1.startAnimation(closeFabAnimation)
+//            fab2.startAnimation(closeFabAnimation)
+//            fab1.isClickable = false
+//            fab2.isClickable = false
+//            isFabOpen = false
+//        } else {
+//            fab.setImageResource(R.drawable.ic_remove)
+//            fab1.startAnimation(openFabAnimation)
+//            fab2.startAnimation(openFabAnimation)
+//            fab1.isClickable = true
+//            fab2.isClickable = true
+//            isFabOpen = true
+//        }
+//    }
 
     private val listClickListener: (Int, View) -> Unit = { position, itemView ->
         val nextFragment = AirQualityFragment()

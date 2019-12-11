@@ -7,7 +7,7 @@
 
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@color/colorStatusBar</item>
-        <item name="android:windowBackground">@drawable/gradient_main_activity_window_background</item>
+        <item name="android:windowBackground">@drawable/background_window</item>
 
         <item name="android:textColor">@color/colorTextPrimary</item>
 

@@ -5,33 +5,40 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/margin_nav_bar">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeToRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_nav_bar">
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textAppName"
+        <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text="@string/app_name"
-                android:textSize="@dimen/text_size_title"
-                android:layout_alignParentTop="true"
-                android:gravity="center"
-                android:background="@color/colorStatusBar"
-                android:stateListAnimator="@animator/toolbar_animator"/>
+                android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/airQualitiesRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/textAppName"
-                android:paddingTop="@dimen/padding_default"
-                android:paddingBottom="@dimen/padding_nav_bar"
-                android:clipToPadding="false"
-                android:background="@drawable/background_window"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textAppName"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/text_size_title"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:background="@color/colorStatusBar"
+                    android:stateListAnimator="@animator/toolbar_animator"/>
 
-    </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/airQualitiesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/textAppName"
+                    android:paddingTop="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_nav_bar"
+                    android:clipToPadding="false"
+                    android:background="@drawable/background_window"/>
+
+        </RelativeLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab2"

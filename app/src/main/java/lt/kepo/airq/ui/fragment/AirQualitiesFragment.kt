@@ -61,6 +61,11 @@ class AirQualitiesFragment : Fragment() {
 //            animateFAB()
 //        }
 
+        swipeToRefreshLayout.setOnRefreshListener {
+            swipeToRefreshLayout.isRefreshing = true
+            viewModel.updateLocalAirQualities()
+        }
+
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext()))
         airQualitiesRecyclerView.adapter = stationsAdapter
@@ -134,6 +139,7 @@ class AirQualitiesFragment : Fragment() {
 
     private val stationsObserver = Observer<List<AirQuality>> { airQualities ->
         stationsAdapter.stations = airQualities
+        swipeToRefreshLayout.isRefreshing = false
         stationsAdapter.notifyDataSetChanged()
     }
 }

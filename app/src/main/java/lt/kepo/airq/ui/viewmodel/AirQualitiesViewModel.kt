@@ -23,7 +23,7 @@ class AirQualitiesViewModel(
         viewModelScope.launch { _airQualities.value = airQualityRepository.getLocalAirQualities().toMutableList() }
     }
 
-    private fun updateLocalAirQualities() {
+    fun updateLocalAirQualities() {
         viewModelScope.launch {
             _airQualities.value = airQualityRepository.getLocalAirQualities().toMutableList()
 

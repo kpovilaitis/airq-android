@@ -28,10 +28,10 @@ class StationsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        stationsAdapter = StationsAdapter(viewModel.stations.value, listClickListener)
+        stationsAdapter = StationsAdapter(viewModel.stations.value!!, listClickListener)
 
         stationsRecyclerView.layoutManager = LinearLayoutManager(this)
-        stationsRecyclerView.addItemDecoration(getListDivider(this))
+        stationsRecyclerView.addItemDecoration(getListDivider(this, R.drawable.divider_stations))
         stationsRecyclerView.adapter = stationsAdapter
 
         viewModel.isLoading.observe(this, progressObserver)
@@ -53,9 +53,11 @@ class StationsActivity : AppCompatActivity() {
     }
 
     private val listClickListener: (Int) -> Unit = { position ->
-        viewModel.addAirQuality(viewModel.stations.value!![position])
-        viewModel.stations.value?.removeAt(position)
-        stationsAdapter.notifyDataSetChanged()
+        if (position >= 0) {
+            viewModel.addAirQuality(viewModel.stations.value!![position])
+            viewModel.stations.value?.removeAt(position)
+            stationsAdapter.notifyItemRemoved(position)
+        }
     }
 
     private val queryTextListener = object: SearchView.OnQueryTextListener {

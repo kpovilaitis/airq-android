@@ -3,14 +3,11 @@ package lt.kepo.airq.ui.viewmodel
 import android.app.Application
 import android.location.Location
 import androidx.lifecycle.*
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.*
 import lt.kepo.airq.data.api.ApiErrorResponse
 import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
-import lt.kepo.airq.utility.isLocationEnabled
 
 class AirQualityViewModel(
     initAirQuality: AirQuality,
@@ -61,7 +58,7 @@ class AirQualityViewModel(
 
                     airQualityRepository.insertLocalAirQuality(fetchedAirQuality)
                 }
-                is ApiErrorResponse -> _errorMessage.value = response.errorMessage
+                is ApiErrorResponse -> _errorMessage.value = response.error
             }
         }
     }

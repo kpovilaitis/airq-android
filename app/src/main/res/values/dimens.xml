@@ -6,7 +6,10 @@
     <dimen name="padding_default">24dp</dimen>
     <dimen name="padding_nav_bar">48dp</dimen>
     <dimen name="margin_nav_bar">-48dp</dimen>
+    <dimen name="margin_toolbar_overflow">-16dp</dimen>
 
-    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_label">20sp</dimen>
+    <dimen name="text_size_title">30sp</dimen>
+    <dimen name="text_size_index">120sp</dimen>
 
 </resources>

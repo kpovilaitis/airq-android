@@ -20,7 +20,7 @@ sealed class ApiResponse<T> {
 
                     body.status == ApiResponseStatus.OK -> ApiSuccessResponse(data = body.data)
 
-                    else -> ApiErrorResponse(body.data?.toString() ?: "unknown error")
+                    else -> ApiErrorResponse(body.message ?: "unknown error")
                 }
             } else {
                 val msg = response.errorBody()?.string()
@@ -37,8 +37,8 @@ sealed class ApiResponse<T> {
     }
 }
 
-data class ApiErrorResponse<T>(val errorMessage: String) : ApiResponse<T>()
+data class ApiErrorResponse<T>(val error: String) : ApiResponse<T>()
 
 data class ApiSuccessResponse<T>(val data: T) : ApiResponse<T>()
 
-data class ApiHttpResponse<T> (val status: ApiResponseStatus, val data: T)
+data class ApiHttpResponse<T> (val status: ApiResponseStatus, val data: T, val message: String?)

@@ -4,6 +4,7 @@ import android.app.Application
 import android.location.Location
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
+import lt.kepo.airq.data.api.ApiErrorResponse
 import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
@@ -13,6 +14,9 @@ class AirQualitiesViewModel(
     context: Application
 ) : BaseAirQualityViewModel(airQualityRepository, context) {
     private val _airQualities = MutableLiveData<MutableList<AirQuality>>()
+    private val _errorMessage = MutableLiveData<String>()
+
+    val errorMessage: LiveData<String> get() = _errorMessage
     val airQualities: LiveData<MutableList<AirQuality>> get() = _airQualities
 
     init {
@@ -50,6 +54,7 @@ class AirQualitiesViewModel(
 
                 airQualityRepository.upsertLocalAirQuality(fetchedAirQuality)
             }
+            is ApiErrorResponse -> _errorMessage.value = response.error
         }
     }
 
@@ -71,6 +76,7 @@ class AirQualitiesViewModel(
                 airQualityRepository.deleteLocalAirQualityHere()
                 airQualityRepository.insertLocalAirQuality(airQualityResponse)
             }
+            is ApiErrorResponse -> _errorMessage.value = response.error
         }
     }
 }

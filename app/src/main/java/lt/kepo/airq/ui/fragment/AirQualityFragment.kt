@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_air_quality.*
 import kotlinx.android.synthetic.main.fragment_air_quality.pollutionView
-import kotlinx.android.synthetic.main.view_air_quality_item.*
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import lt.kepo.airq.R

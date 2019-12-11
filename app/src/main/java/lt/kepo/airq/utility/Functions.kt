@@ -25,16 +25,18 @@ fun isLocationEnabled(context: Context): Boolean {
     }
 }
 
-fun getListDivider(context: Context): DividerItemDecoration {
+fun getListDivider(context: Context, drawableId : Int): DividerItemDecoration {
     val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
 
-    divider.setDrawable(context.getDrawable(R.drawable.list_divider)!!)
+    divider.setDrawable(context.getDrawable(drawableId)!!)
 
     return divider
 }
 
 fun setFullName(locationName: String?, textCity: AppCompatTextView, textCountry: AppCompatTextView) {
-    val splitName = locationName?.split(",")?.toMutableList()
+    var bracelessLocationName = locationName?.replace("(", "")
+    bracelessLocationName = bracelessLocationName?.replace(")", "")
+    val splitName = bracelessLocationName?.split(",")?.toMutableList()
     val countryName = splitName?.removeAt(splitName.size - 1)
     val cityName = splitName?.joinToString()?.trimEnd()
 

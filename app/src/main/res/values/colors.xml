@@ -4,11 +4,13 @@
     <color name="colorPrimaryDark">#2286c3</color>
     <color name="colorAccent">#e7e7e7</color>
 
-    <color name="colorTextPrimary">#323232</color>
     <color name="colorAccentTint">@color/colorTextPrimary</color>
     <color name="colorStatusBar">#EDEDED</color>
     <color name="colorNavigationBar">#FFFFFF</color>
 
     <color name="colorPollution">#999999</color>
+
+    <color name="colorTextPrimary">#323232</color>
+    <color name="colorTextError">#a85d6e</color>
 
 </resources>

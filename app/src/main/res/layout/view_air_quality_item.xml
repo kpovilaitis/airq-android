@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textCity"
@@ -10,8 +8,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:text="Paris"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_label"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
@@ -23,8 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="France"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_label"
             android:gravity="top"
             android:maxLines="1"
             android:ellipsize="end"
@@ -40,8 +36,7 @@
             android:gravity="top"
             android:padding="0dp"
             android:paddingTop="0dp"
-            android:text="230"
-            android:textSize="120sp"
+            android:textSize="@dimen/text_size_index"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/currentLocationImageView"
@@ -68,4 +63,4 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_location" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</merge>

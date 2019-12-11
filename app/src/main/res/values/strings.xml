@@ -8,6 +8,7 @@
 
     <string name="title_saved_stations">Saved stations</string>
 
+    <string name="label_station_air_quality">Air quality index: %s</string>
     <string name="label_time_recorded">Recorded at</string>
     <string name="label_ozone">Ozone</string>
     <string name="label_pm_25">Particulate matter 2.5</string>

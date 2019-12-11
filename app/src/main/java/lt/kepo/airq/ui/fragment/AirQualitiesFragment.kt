@@ -3,9 +3,10 @@ package lt.kepo.airq.ui.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
@@ -13,15 +14,15 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionSet
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import lt.kepo.airq.R
 import lt.kepo.airq.data.model.AirQuality
-import lt.kepo.airq.ui.activity.SettingsActivity
 import lt.kepo.airq.ui.activity.StationsActivity
 import lt.kepo.airq.ui.adapter.AirQualitiesAdapter
 import lt.kepo.airq.ui.viewmodel.AirQualitiesViewModel
 import lt.kepo.airq.utility.POSITION_PARCELABLE_KEY
-import lt.kepo.airq.utility.RECYCLERVIEW_SCROLL_DIRECTION_UP
+import lt.kepo.airq.utility.RECYCLER_VIEW_SCROLL_DIRECTION_UP
 import lt.kepo.airq.utility.STATIONS_ACTIVITY_REQUEST_CODE
 import lt.kepo.airq.utility.getListDivider
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -67,13 +68,14 @@ class AirQualitiesFragment : Fragment() {
         }
 
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext()))
+        airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext(), R.drawable.divider_air_qualities))
         airQualitiesRecyclerView.adapter = stationsAdapter
         airQualitiesRecyclerView.setOnScrollChangeListener { _, _, _, _, _ ->
-            textAppName.isSelected = airQualitiesRecyclerView.canScrollVertically(RECYCLERVIEW_SCROLL_DIRECTION_UP)
+            textAppName.isSelected = airQualitiesRecyclerView.canScrollVertically(RECYCLER_VIEW_SCROLL_DIRECTION_UP)
         }
 
-        viewModel.airQualities.observe(this, stationsObserver)
+        viewModel.airQualities.observe(this, airQualitiesObserver)
+        viewModel.errorMessage.observe(this, errorMessageObserver)
     }
 
     override fun onStart() {
@@ -137,9 +139,19 @@ class AirQualitiesFragment : Fragment() {
             .commit()
     }
 
-    private val stationsObserver = Observer<List<AirQuality>> { airQualities ->
+    private val airQualitiesObserver = Observer<List<AirQuality>> { airQualities ->
         stationsAdapter.stations = airQualities
         swipeToRefreshLayout.isRefreshing = false
         stationsAdapter.notifyDataSetChanged()
+    }
+
+    private val errorMessageObserver = Observer<String> { errorMessage ->
+        val snack = Snackbar.make(container, errorMessage, Snackbar.LENGTH_LONG)
+        val tv = snack.view.findViewById(R.id.snackbar_text) as TextView
+
+        tv.setTextColor(resources.getColor(R.color.colorTextError, null))
+        snack.show()
+
+        swipeToRefreshLayout.isRefreshing = false
     }
 }

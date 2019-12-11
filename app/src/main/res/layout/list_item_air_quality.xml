@@ -9,7 +9,7 @@
         app:cardCornerRadius="@dimen/padding_default"
         app:cardElevation="8dp">
 
-    <lt.kepo.airq.ui.view.AirQualityItemView
+    <lt.kepo.airq.ui.view.AirQualityView
             android:id="@+id/stationView"
             android:layout_height="match_parent"
             android:layout_width="match_parent"/>

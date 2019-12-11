@@ -12,9 +12,10 @@ import android.graphics.Shader
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.graphics.drawable.PaintDrawable
+import lt.kepo.airq.utility.setPollution
 
 
-class AirQualityItemView : ConstraintLayout {
+class AirQualityView : ConstraintLayout {
     private lateinit var textCity: AppCompatTextView
     private lateinit var textCountry: AppCompatTextView
     private lateinit var textIndex: AppCompatTextView
@@ -33,27 +34,6 @@ class AirQualityItemView : ConstraintLayout {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         inflate()
         setPollution(0)
-    }
-
-    fun setPollution(index: Int) {
-        val paintDrawable = PaintDrawable()
-
-        paintDrawable.shape = RectShape()
-        paintDrawable.shaderFactory = object : ShapeDrawable.ShaderFactory() {
-            override fun resize(width: Int, height: Int): Shader {
-                return LinearGradient(
-                    0f,
-                    height.toFloat(),
-                    0f,
-                    height.toFloat() - ((height.toFloat()) * index.toFloat() / resources.getInteger(R.integer.pollution_max_value).toFloat()),
-                    intArrayOf(resources.getColor(R.color.colorPollution, null), resources.getColor(android.R.color.transparent, null)),
-                    null,
-                    TileMode.CLAMP
-                )
-            }
-        }
-
-        background = paintDrawable
     }
 
     private fun inflate() {

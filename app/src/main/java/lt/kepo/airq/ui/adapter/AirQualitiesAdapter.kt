@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_air_quality_item.view.*
 import lt.kepo.airq.R
 import lt.kepo.airq.data.model.AirQuality
-import lt.kepo.airq.ui.view.AirQualityItemView
+import lt.kepo.airq.ui.view.AirQualityView
 import lt.kepo.airq.utility.setFullName
+import lt.kepo.airq.utility.setPollution
 
 class AirQualitiesAdapter(
     var stations: List<AirQuality>?,
@@ -25,7 +26,7 @@ class AirQualitiesAdapter(
             setFullName(item?.city?.name, textCity, textCountry)
 
             if (item?.airQualityIndex?.equals("-") == false)
-                itemView.findViewById<AirQualityItemView>(R.id.stationView).setPollution(item.airQualityIndex.toInt())
+                itemView.findViewById<AirQualityView>(R.id.stationView).setPollution(item.airQualityIndex.toInt())
 
             textIndex.text = item?.airQualityIndex
 

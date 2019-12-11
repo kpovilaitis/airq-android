@@ -1,5 +1,10 @@
 package lt.kepo.airq.ui.fragment
 
+import android.graphics.LinearGradient
+import android.graphics.Shader
+import android.graphics.drawable.PaintDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.NonNull
@@ -8,11 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_air_quality.*
+import kotlinx.android.synthetic.main.fragment_air_quality.pollutionView
+import kotlinx.android.synthetic.main.view_air_quality_item.*
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import lt.kepo.airq.R
 import lt.kepo.airq.utility.POSITION_PARCELABLE_KEY
 import lt.kepo.airq.utility.setFullName
+import lt.kepo.airq.utility.setPollution
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -48,6 +56,8 @@ class AirQualityFragment : Fragment() {
 
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        pollutionView.setPollution(viewModel.airQuality.value?.airQualityIndex?.toInt() ?: 0)
 
         if (viewModel.airQuality.value?.isCurrentLocationQuality == true) {
             btnRemoveAirQuality.visibility = View.GONE

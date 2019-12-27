@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/textAppName"
-                    android:paddingTop="@dimen/padding_default"
+                    android:paddingTop="@dimen/card_elevation"
                     android:paddingBottom="@dimen/padding_nav_bar"
                     android:clipToPadding="false"
                     android:background="@drawable/background_window"/>

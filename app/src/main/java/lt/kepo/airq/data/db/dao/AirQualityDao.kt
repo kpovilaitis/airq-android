@@ -18,6 +18,9 @@ interface AirQualityDao {
 //            upsert(airQuality)
 //    }
 
+    @Query("SELECT * FROM air_qualities WHERE is_current_location_quality = 1")
+    suspend fun getHere(): AirQuality
+
     @Query("DELETE FROM air_qualities WHERE is_current_location_quality = 1")
     suspend fun deleteHere()
 

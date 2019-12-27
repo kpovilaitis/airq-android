@@ -37,6 +37,8 @@ class AirQualityRepositoryImpl internal constructor(
 
     override suspend fun insertLocalAirQuality(airQuality: AirQuality) = airQualityDao.insert(airQuality)
 
+    override suspend fun getLocalAirQualityHere() = airQualityDao.getHere()
+
     override suspend fun deleteLocalAirQualityHere() = airQualityDao.deleteHere()
 
     override suspend fun upsertLocalAirQuality(airQuality: AirQuality) = airQualityDao.upsert(airQuality)

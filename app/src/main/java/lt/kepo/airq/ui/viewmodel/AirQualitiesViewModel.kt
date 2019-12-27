@@ -32,12 +32,18 @@ class AirQualitiesViewModel(
             _airQualities.value = airQualityRepository.getLocalAirQualities().toMutableList()
 
             when {
-                _airQualities.value === null -> return@launch
+                _airQualities.value == null -> return@launch
                 _airQualities.value!!.isEmpty() -> fetchLocationAirQuality()
-                else -> _airQualities.value?.forEach { airQuality ->
-                    when (airQuality.isCurrentLocationQuality) {
-                        true -> fetchLocationAirQuality()
-                        false -> viewModelScope.launch { updateLocalAirQuality(airQuality) }
+                else -> {
+                    _airQualities.value!!.forEach { airQuality ->
+                        when (airQuality.isCurrentLocationQuality) {
+                            true -> fetchLocationAirQuality()
+                            false -> viewModelScope.launch { updateLocalAirQuality(airQuality) }
+                        }
+                    }
+
+                    if (_airQualities.value!!.none { it.isCurrentLocationQuality } ) {
+                        fetchLocationAirQuality()
                     }
                 }
             }

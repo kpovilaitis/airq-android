@@ -1,10 +1,5 @@
 package lt.kepo.airq.ui.fragment
 
-import android.graphics.LinearGradient
-import android.graphics.Shader
-import android.graphics.drawable.PaintDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RectShape
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.NonNull
@@ -39,15 +34,6 @@ class AirQualityFragment : Fragment() {
         textCountry  = fragmentView.findViewById(R.id.textCountry)
         textIndex  = fragmentView.findViewById(R.id.textIndex)
 
-        fragmentView.setOnApplyWindowInsetsListener { v, insets ->
-            val statusBarHeight = insets.systemWindowInsetTop
-
-            swipeToRefreshLayout.setProgressViewOffset(false, 0, statusBarHeight * 2)
-
-            v.setPadding(0, statusBarHeight, 0 ,0)
-            insets
-        }
-
         setTransitionNames()
 
         return fragmentView
@@ -55,6 +41,17 @@ class AirQualityFragment : Fragment() {
 
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        view.setOnApplyWindowInsetsListener { v, insets ->
+            val statusBarHeight = insets.systemWindowInsetTop
+
+            swipeToRefreshLayout.setProgressViewOffset(false, 0, statusBarHeight * 2)
+
+            textTimeRecordedLabel.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
+            textTimeRecordedValue.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
+            v.setPadding(0, statusBarHeight, 0 , 0)
+            insets
+        }
 
         pollutionView.setPollution(viewModel.airQuality.value?.airQualityIndex?.toInt() ?: 0)
 

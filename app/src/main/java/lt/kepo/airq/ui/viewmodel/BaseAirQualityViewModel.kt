@@ -23,12 +23,6 @@ abstract class BaseAirQualityViewModel(
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-
-        viewModelScope.cancel()
-    }
-
     abstract suspend fun updateLocalAirQualityHere(location: Location?)
 
     fun fetchLocationAirQuality() {

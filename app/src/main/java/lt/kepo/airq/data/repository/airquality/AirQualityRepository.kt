@@ -13,6 +13,8 @@ interface AirQualityRepository {
 
     suspend fun insertLocalAirQuality(airQuality: AirQuality): Long
 
+    suspend fun getLocalAirQualityHere(): AirQuality
+
     suspend fun deleteLocalAirQualityHere()
 
     suspend fun deleteLocalAirQuality(stationId: Int)

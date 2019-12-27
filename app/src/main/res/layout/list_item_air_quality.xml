@@ -7,7 +7,7 @@
         android:layout_marginEnd="@dimen/padding_default"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         app:cardCornerRadius="@dimen/padding_default"
-        app:cardElevation="8dp">
+        app:cardElevation="@dimen/card_elevation">
 
     <lt.kepo.airq.ui.view.AirQualityView
             android:id="@+id/stationView"

@@ -3,6 +3,7 @@ package lt.kepo.airq.ui.viewmodel
 import android.app.Application
 import android.location.Location
 import androidx.lifecycle.*
+import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.*
 import lt.kepo.airq.data.api.ApiErrorResponse
 import lt.kepo.airq.data.api.ApiSuccessResponse
@@ -11,9 +12,10 @@ import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 
 class AirQualityViewModel(
     initAirQuality: AirQuality,
+    application: Application,
     airQualityRepository: AirQualityRepository,
-    context: Application
-) : BaseAirQualityViewModel(airQualityRepository, context) {
+    locationClient: FusedLocationProviderClient
+) : BaseAirQualityViewModel(application, airQualityRepository, locationClient) {
     private val _airQuality = MutableLiveData<AirQuality>(initAirQuality)
     private val _errorMessage = MutableLiveData<String>()
 

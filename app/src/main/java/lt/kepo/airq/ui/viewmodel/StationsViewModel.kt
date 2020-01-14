@@ -6,11 +6,11 @@ import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.model.Station
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
-import lt.kepo.airq.data.repository.stations.StationsRepository
+import lt.kepo.airq.domain.GetFilteredStationsUseCase
 
 class StationsViewModel(
     private val airQualityRepository: AirQualityRepository,
-    private val stationsRepository: StationsRepository
+    private val getStations: GetFilteredStationsUseCase
 ) : ViewModel() {
     private val _stations = MutableLiveData<MutableList<Station>>(mutableListOf())
     private val _isLoading = MutableLiveData<Boolean>(false)
@@ -28,14 +28,8 @@ class StationsViewModel(
 
     fun getRemoteStations(query: String) {
         viewModelScope.launch {
-            when (val response = stationsRepository.getRemoteStations(query)) {
-                is ApiSuccessResponse -> {
-                    val list = response.data
-
-                    list.removeAll { it.id == airQualityHere.stationId }
-
-                    _stations.value = list
-                }
+            when (val response = getStations(query, airQualityHere.stationId)) {
+                is ApiSuccessResponse -> _stations.value = response.data
             }
         }
     }

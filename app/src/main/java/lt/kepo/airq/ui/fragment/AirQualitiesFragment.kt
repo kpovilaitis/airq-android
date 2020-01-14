@@ -38,13 +38,19 @@ class AirQualitiesFragment : Fragment() {
     private lateinit var stationsAdapter : AirQualitiesAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        stationsAdapter = AirQualitiesAdapter(viewModel.airQualities.value, listClickListener)
-
         return inflater.inflate(R.layout.fragment_air_qualities, container, false)
     }
 
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        stationsAdapter = AirQualitiesAdapter(viewModel.airQualities.value, listClickListener)
 
 //        openFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
 //        closeFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)

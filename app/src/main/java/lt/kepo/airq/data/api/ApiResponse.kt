@@ -3,6 +3,8 @@ package lt.kepo.airq.data.api
 import retrofit2.Response
 import java.lang.Exception
 
+data class ApiHttpResponse<T> (val status: ApiResponseStatus, val data: T, val message: String?)
+
 sealed class ApiResponse<T> {
     companion object {
         fun <T> parse(error: Exception): ApiErrorResponse<T> {
@@ -41,4 +43,14 @@ data class ApiErrorResponse<T>(val error: String) : ApiResponse<T>()
 
 data class ApiSuccessResponse<T>(val data: T) : ApiResponse<T>()
 
-data class ApiHttpResponse<T> (val status: ApiResponseStatus, val data: T, val message: String?)
+/**
+ * @param transform transformation applied on success result
+ *
+ * @return - onSuccess - transformed result
+ * - onError - same error
+ */
+inline fun <T> ApiResponse<T>.mapOnSuccess(transform: (T) -> T): ApiResponse<T> =
+    when (this) {
+        is ApiSuccessResponse -> ApiSuccessResponse(transform(this.data))
+        is ApiErrorResponse -> this
+    }

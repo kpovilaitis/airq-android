@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import lt.kepo.airq.data.model.Station
 import lt.kepo.airq.ui.adapter.StationsAdapter
 import lt.kepo.airq.ui.viewmodel.StationsViewModel
+import lt.kepo.airq.utility.RECYCLER_VIEW_SCROLL_DIRECTION_UP
 import lt.kepo.airq.utility.getListDivider
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StationsActivity : AppCompatActivity() {
     private val viewModel: StationsViewModel by viewModel()
+
     private lateinit var stationsAdapter: StationsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,11 +30,14 @@ class StationsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        stationsAdapter = StationsAdapter(viewModel.stations.value!!, listClickListener)
+        stationsAdapter = StationsAdapter(emptyList(), listClickListener)
 
         stationsRecyclerView.layoutManager = LinearLayoutManager(this)
         stationsRecyclerView.addItemDecoration(getListDivider(this, R.drawable.divider_stations))
         stationsRecyclerView.adapter = stationsAdapter
+        stationsRecyclerView.setOnScrollChangeListener { _, _, _, _, _ ->
+            toolbar.isSelected = stationsRecyclerView.canScrollVertically(RECYCLER_VIEW_SCROLL_DIRECTION_UP)
+        }
 
         viewModel.isLoading.observe(this, progressObserver)
         viewModel.stations.observe(this, stationsObserver)
@@ -52,12 +57,10 @@ class StationsActivity : AppCompatActivity() {
         }
     }
 
-    private val listClickListener: (Int) -> Unit = { position ->
-        if (position >= 0) {
-            viewModel.addAirQuality(viewModel.stations.value!![position])
-            viewModel.stations.value?.removeAt(position)
-            stationsAdapter.notifyItemRemoved(position)
-        }
+    private val listClickListener: (Station, Int) -> Unit = { station, position->
+        viewModel.addStationAirQuality(station)
+        viewModel.stations.value?.remove(station)
+        stationsAdapter.notifyItemRemoved(position)
     }
 
     private val queryTextListener = object: SearchView.OnQueryTextListener {
@@ -73,11 +76,11 @@ class StationsActivity : AppCompatActivity() {
         }
     }
 
-    private val progressObserver = Observer<Boolean> { isLoading ->
-    }
+    private val progressObserver = Observer<Boolean> { isLoading -> }
 
-    private val stationsObserver = Observer<MutableList<Station>> { stations ->
-        stationsAdapter.stations = stations
-        stationsAdapter.notifyDataSetChanged()
+    private val stationsObserver = Observer<MutableList<Station>> { it?.let { stations ->
+            stationsAdapter.stations = stations
+            stationsAdapter.notifyDataSetChanged()
+        }
     }
 }

@@ -3,38 +3,30 @@ package lt.kepo.airq.data.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import lt.kepo.airq.data.model.AirQuality
+import java.util.*
 
 @Dao
-interface AirQualityDao {
+abstract class AirQualityDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insert(airQuality: AirQuality): Long
+
+    suspend fun insertWithTimeStamp(airQuality: AirQuality) = insert(airQuality.apply { updatedAt = Date() })
+
     @Query("SELECT * FROM air_qualities WHERE station_id = :stationId")
-    fun get(stationId: Int): LiveData<AirQuality>
+    abstract fun get(stationId: Int): LiveData<AirQuality>
 
-    @Query("SELECT * FROM air_qualities ORDER BY is_current_location_quality DESC, city_name ASC")
-    suspend fun getAll(): List<AirQuality>
-
-//    @Transaction
-//    suspend fun upsertHere(airQuality: AirQuality) {
-//        if (update(airQuality) == 0)
-//            upsert(airQuality)
-//    }
+    @Query("SELECT * FROM air_qualities WHERE is_current_location_quality = 0 ORDER BY city_name ASC")
+    abstract fun getAll(): LiveData<List<AirQuality>>
 
     @Query("SELECT * FROM air_qualities WHERE is_current_location_quality = 1")
-    suspend fun getHere(): AirQuality
+    abstract fun getHere(): LiveData<AirQuality>
+
+    @Query("SELECT station_id FROM air_qualities WHERE is_current_location_quality = 1")
+    abstract fun getHereId(): Int
 
     @Query("DELETE FROM air_qualities WHERE is_current_location_quality = 1")
-    suspend fun deleteHere()
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(airQuality: AirQuality): Long
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(airQuality: AirQuality): Int
+    abstract suspend fun deleteHere()
 
     @Query("DELETE FROM air_qualities WHERE station_id = :stationId")
-    suspend fun delete(stationId: Int)
-
-    @Transaction
-    suspend fun upsert(airQuality: AirQuality) {
-        if (insert(airQuality) == -1L) update(airQuality)
-    }
+    abstract suspend fun delete(stationId: Int)
 }

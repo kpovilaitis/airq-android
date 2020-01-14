@@ -1,17 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_height="216dp"
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_default"
         android:layout_marginEnd="@dimen/padding_default"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         app:cardCornerRadius="@dimen/padding_default"
         app:cardElevation="@dimen/card_elevation">
 
-    <lt.kepo.airq.ui.view.AirQualityView
-            android:id="@+id/stationView"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="216dp">
+
+        <View
+                android:id="@+id/pollutionView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="@dimen/text_size_label"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textCountry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:gravity="top"
+                android:maxLines="1"
+                android:textSize="@dimen/text_size_label"
+                app:layout_constraintStart_toStartOf="@+id/textCity"
+                app:layout_constraintTop_toBottomOf="@+id/textCity" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textIndex"
+                android:layout_width="0dp"
+                android:layout_height="148dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="top"
+                android:padding="0dp"
+                android:paddingTop="0dp"
+                android:textSize="@dimen/text_size_index"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/currentLocationImageView"
+                app:layout_constraintStart_toStartOf="@+id/textCountry"
+                app:layout_constraintTop_toBottomOf="@+id/textCountry" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/currentLocationImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_location"
+                android:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
+

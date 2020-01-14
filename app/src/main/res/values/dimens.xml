@@ -5,7 +5,8 @@
 
     <dimen name="card_elevation">4dp</dimen>
 
-    <dimen name="padding_default">24dp</dimen>
+    <dimen name="padding_default">16dp</dimen>
+    <dimen name="padding_toolbar_overflow">24dp</dimen>
     <dimen name="padding_nav_bar">48dp</dimen>
     <dimen name="margin_nav_bar">-48dp</dimen>
     <dimen name="margin_toolbar_overflow">-16dp</dimen>

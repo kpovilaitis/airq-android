@@ -1,6 +1,5 @@
 package lt.kepo.airq.ui.fragment
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,55 +7,48 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.NonNull
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.TransitionInflater
-import androidx.transition.TransitionSet
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
+import kotlinx.android.synthetic.main.fragment_air_qualities.container
+import kotlinx.android.synthetic.main.fragment_air_qualities.swipeToRefreshLayout
+import kotlinx.android.synthetic.main.list_item_air_quality.*
+import kotlinx.android.synthetic.main.list_item_air_quality.textCity
+import kotlinx.android.synthetic.main.list_item_air_quality.textCountry
+import kotlinx.android.synthetic.main.list_item_air_quality.textIndex
+import kotlinx.android.synthetic.main.list_item_air_quality.view.*
 import lt.kepo.airq.R
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.ui.activity.StationsActivity
 import lt.kepo.airq.ui.adapter.AirQualitiesAdapter
 import lt.kepo.airq.ui.viewmodel.AirQualitiesViewModel
-import lt.kepo.airq.utility.POSITION_PARCELABLE_KEY
-import lt.kepo.airq.utility.RECYCLER_VIEW_SCROLL_DIRECTION_UP
-import lt.kepo.airq.utility.STATIONS_ACTIVITY_REQUEST_CODE
-import lt.kepo.airq.utility.getListDivider
+import lt.kepo.airq.utility.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AirQualitiesFragment : Fragment() {
     private val viewModel: AirQualitiesViewModel by viewModel()
 
+    private lateinit var adapter: AirQualitiesAdapter
+
 //    private var isFabOpen = false
 //    private lateinit var openFabAnimation: Animation
 //    private lateinit var closeFabAnimation: Animation
 
-    private lateinit var stationsAdapter : AirQualitiesAdapter
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_air_qualities, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+        = inflater.inflate(R.layout.fragment_air_qualities, container, false)
 
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        stationsAdapter = AirQualitiesAdapter(viewModel.airQualities.value, listClickListener)
 
 //        openFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
 //        closeFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
 
         fab.setOnClickListener {
-            startActivityForResult(Intent(requireContext(), StationsActivity::class.java), STATIONS_ACTIVITY_REQUEST_CODE)
+            startActivity(Intent(requireContext(), StationsActivity::class.java))
 //            animateFAB()
         }
 //        fab1.setOnClickListener {
@@ -70,32 +62,25 @@ class AirQualitiesFragment : Fragment() {
 
         swipeToRefreshLayout.setOnRefreshListener {
             swipeToRefreshLayout.isRefreshing = true
+
+            viewModel.updateLocalAirQualityHere()
             viewModel.updateLocalAirQualities()
         }
 
+        viewAirQualityHere.setOnClickListener { viewModel.airQualityHere.value?.let { listClickListener(it) } }
+
+        adapter = AirQualitiesAdapter(emptyList(), listClickListener)
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext(), R.drawable.divider_air_qualities))
-        airQualitiesRecyclerView.adapter = stationsAdapter
-        airQualitiesRecyclerView.setOnScrollChangeListener { _, _, _, _, _ ->
-            textAppName.isSelected = airQualitiesRecyclerView.canScrollVertically(RECYCLER_VIEW_SCROLL_DIRECTION_UP)
+        airQualitiesRecyclerView.adapter = adapter
+
+        scrollView.setOnScrollChangeListener { _, _, _, _, _ ->
+            textAppName.isSelected = scrollView.canScrollVertically(RECYCLER_VIEW_SCROLL_DIRECTION_UP)
         }
 
-        viewModel.airQualities.observe(this, airQualitiesObserver)
-        viewModel.errorMessage.observe(this, errorMessageObserver)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        viewModel.getLocalAirQualities()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == STATIONS_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            viewModel.getLocalAirQualities()
-        }
+        viewModel.airQualityHere.observe(viewLifecycleOwner, airQualityHereObserver)
+        viewModel.airQualities.observe(viewLifecycleOwner, airQualitiesObserver)
+        viewModel.errorMessage.observe(viewLifecycleOwner, errorMessageObserver)
     }
 
 //    private fun animateFAB() {
@@ -117,38 +102,46 @@ class AirQualitiesFragment : Fragment() {
 //        }
 //    }
 
-    private val listClickListener: (Int, View) -> Unit = { position, itemView ->
+    private val listClickListener: (AirQuality) -> Unit = { airQuality ->
         val nextFragment = AirQualityFragment()
         val bundle = Bundle()
-        val city = itemView.findViewById<AppCompatTextView>(R.id.textCity)
-        val country = itemView.findViewById<AppCompatTextView>(R.id.textCountry)
-        val index = itemView.findViewById<AppCompatTextView>(R.id.textIndex)
 
-        bundle.putInt(POSITION_PARCELABLE_KEY, position)
-        bundle.putParcelable(AirQuality::class.java.simpleName, viewModel.airQualities.value?.get(position))
+        bundle.putParcelable(AirQuality::class.java.simpleName, airQuality)
 
         nextFragment.arguments = bundle
 
-        val enterTransitionSet = TransitionSet()
-        enterTransitionSet.addTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move))
-        enterTransitionSet.duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
-        nextFragment.sharedElementEnterTransition = enterTransitionSet
-
         parentFragmentManager
             .beginTransaction()
-            .setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_exit, R.anim.fragment_pop_enter, R.anim.fragment_exit)
-            .addSharedElement(city, city.transitionName)
-            .addSharedElement(country, country.transitionName)
-            .addSharedElement(index, index.transitionName)
+            .setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_exit, R.anim.fragment_pop_enter, R.anim.fragment_pop_exit)
             .replace(R.id.main_content, nextFragment)
             .addToBackStack(null)
             .commit()
     }
 
-    private val airQualitiesObserver = Observer<List<AirQuality>> { airQualities ->
-        stationsAdapter.stations = airQualities
-        swipeToRefreshLayout.isRefreshing = false
-        stationsAdapter.notifyDataSetChanged()
+    private val airQualitiesObserver = Observer<List<AirQuality>> { it?.let { airQualities ->
+            swipeToRefreshLayout.isRefreshing = false
+
+            adapter.airQualities = airQualities
+            adapter.notifyDataSetChanged()
+
+            if (airQualities.any { quality -> quality.shouldUpdate() }) {
+                viewModel.updateLocalAirQualities()
+            }
+        }
+    }
+
+    private val airQualityHereObserver = Observer<AirQuality> { airQuality ->
+        if (airQuality == null || airQuality.shouldUpdate()) {
+            viewModel.updateLocalAirQualityHere()
+        }
+
+        airQuality?.let{
+            viewAirQualityHere.isVisible = true
+            currentLocationImageView.visibility = View.VISIBLE
+            setFullName(airQuality.city.name, textCity, textCountry)
+            viewAirQualityHere.pollutionView.setPollution(airQuality.airQualityIndex)
+            textIndex.text = airQuality.airQualityIndex
+        }
     }
 
     private val errorMessageObserver = Observer<String> { errorMessage ->

@@ -5,6 +5,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias = 'AirQKeystoreKey'
+            storeFile file('/Users/kestutispovilaitis/Documents/Android Projects/airq-kotlin/app/release/app-release.aab')
+            storePassword 'abc19961216'
+            keyPassword 'a1b2c3d4e5++'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
     defaultConfig {
@@ -19,6 +27,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     // work-runtime-ktx 2.1.0 and above now requires Java 8
@@ -42,15 +51,15 @@ dependencies {
 
     implementation "androidx.fragment:fragment-ktx:1.1.0"
 
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-beta01"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-beta01"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-beta01"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-rc03"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-rc03"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03"
 
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
 
-    kapt "androidx.room:room-compiler:2.2.0"
-    implementation "androidx.room:room-runtime:2.2.0"
-    implementation "androidx.room:room-ktx:2.2.0"
+    kapt "androidx.room:room-compiler:2.2.3"
+    implementation "androidx.room:room-runtime:2.2.3"
+    implementation "androidx.room:room-ktx:2.2.3"
 
     implementation "androidx.work:work-runtime-ktx:2.2.0"
 

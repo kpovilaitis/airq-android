@@ -4,42 +4,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.view_air_quality_item.view.*
+import kotlinx.android.synthetic.main.list_item_air_quality.view.*
 import lt.kepo.airq.R
 import lt.kepo.airq.data.model.AirQuality
-import lt.kepo.airq.ui.view.AirQualityView
 import lt.kepo.airq.utility.setFullName
 import lt.kepo.airq.utility.setPollution
 
 class AirQualitiesAdapter(
-    var stations: List<AirQuality>?,
-    private val clickListener: (Int, View) -> Unit
+    var airQualities: List<AirQuality>,
+    private val clickListener: (AirQuality) -> Unit
 ) : RecyclerView.Adapter<AirQualitiesAdapter.ViewHolder>() {
-    override fun getItemCount(): Int = stations?.size ?: 0
+    override fun getItemCount(): Int = airQualities.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_air_quality, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
+            = ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_air_quality, parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(stations?.get(position), position, clickListener)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(airQualities[position], clickListener)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(item: AirQuality?, pos: Int, listener: (Int, View) -> Unit) = with(itemView) {
-            setFullName(item?.city?.name, textCity, textCountry)
+        fun bind(item: AirQuality, listener: (AirQuality) -> Unit) = with(itemView) {
+            setFullName(item.city.name, textCity, textCountry)
 
-            if (item?.airQualityIndex?.equals("-") == false)
-                itemView.findViewById<AirQualityView>(R.id.stationView).setPollution(item.airQualityIndex.toInt())
+            textIndex.text = item.airQualityIndex
 
-            textIndex.text = item?.airQualityIndex
-
-            textCity.transitionName = context.getString(R.string.transition_city_name) + pos
-            textCountry.transitionName = context.getString(R.string.transition_country_name) + pos
-            textIndex.transitionName = context.getString(R.string.transition_index) + pos
-
-            if (item?.isCurrentLocationQuality == true)
-                currentLocationImageView.visibility = View.VISIBLE
-            else
-                currentLocationImageView.visibility = View.GONE
-
-            itemView.setOnClickListener { listener(pos, itemView) }
+            itemView.pollutionView.setPollution(item.airQualityIndex)
+            itemView.setOnClickListener { listener(item) }
         }
     }
 }

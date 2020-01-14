@@ -1,6 +1,7 @@
 package lt.kepo.airq.data.repository.airquality
 
 import android.location.Location
+import androidx.lifecycle.LiveData
 import lt.kepo.airq.data.api.ApiResponse
 import lt.kepo.airq.data.model.AirQuality
 
@@ -9,15 +10,17 @@ interface AirQualityRepository {
 
     suspend fun getRemoteAirQuality(stationId: Int): ApiResponse<AirQuality>
 
-    suspend fun getLocalAirQualities(): List<AirQuality>
+    fun getLocalAirQualities(): LiveData<List<AirQuality>>
 
     suspend fun insertLocalAirQuality(airQuality: AirQuality): Long
 
-    suspend fun getLocalAirQualityHere(): AirQuality
+    fun getLocalAirQualityHere(): LiveData<AirQuality>
+
+    suspend fun getLocalAirQualityHereId(): Int
+
+    fun getLocalAirQuality(stationId: Int): LiveData<AirQuality>
 
     suspend fun deleteLocalAirQualityHere()
 
     suspend fun deleteLocalAirQuality(stationId: Int)
-
-    suspend fun upsertLocalAirQuality(airQuality: AirQuality)
 }

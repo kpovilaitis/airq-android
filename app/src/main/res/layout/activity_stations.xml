@@ -10,16 +10,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_toolbar_overflow"
             android:layout_below="@id/toolbar"
-            android:paddingTop="@dimen/padding_default"
-            android:clipToPadding="false"/>
+            android:paddingTop="@dimen/padding_toolbar_overflow"
+            android:clipToPadding="false"
+            android:overScrollMode="never" />
 
     <androidx.appcompat.widget.Toolbar
-            style="@style/ToolBarStyle"
             android:id="@+id/toolbar"
+            style="@style/ToolBarStyle"
             android:background="@drawable/background_toolbar"
             android:contentInsetLeft="0dp"
             android:contentInsetStart="0dp"
             android:layout_alignParentTop="true"
+            android:stateListAnimator="@animator/toolbar_animator"
             app:navigationIcon="@drawable/ic_back"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp">
@@ -31,6 +33,7 @@
                 app:searchIcon="@null"
                 app:iconifiedByDefault="false"
                 app:queryHint="@string/hint_search"
+                app:queryBackground="@android:color/transparent"
                 app:searchHintIcon="@null"
                 app:closeIcon="@drawable/ic_remove"/>
 

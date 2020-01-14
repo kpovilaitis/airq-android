@@ -5,6 +5,8 @@ import lt.kepo.airq.data.db.AppDatabase
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 import lt.kepo.airq.data.repository.airquality.AirQualityRepositoryImpl
+import lt.kepo.airq.domain.UpdateAirQualitiesUseCase
+import lt.kepo.airq.domain.UpdateAirQualityHereUseCase
 import lt.kepo.airq.ui.viewmodel.AirQualitiesViewModel
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -24,16 +26,31 @@ val airQualityModule : Module = module {
 
     single { LocationServices.getFusedLocationProviderClient(androidContext()) }
 
+    factory { UpdateAirQualitiesUseCase(
+        airQualityRepository = get(),
+        httpClient = get())
+    }
+
+    factory { UpdateAirQualityHereUseCase(
+        airQualityRepository = get(),
+        httpClient = get())
+    }
+
     viewModel { AirQualitiesViewModel(
         application = androidApplication(),
         airQualityRepository = get(),
-        locationClient = get())
+        locationClient = get(),
+        updateAirQualitiesUseCase = get(),
+        updateAirQualityHereUseCase = get()
+        )
     }
 
     viewModel { (airQuality: AirQuality) -> AirQualityViewModel(
         initAirQuality = airQuality,
         application = androidApplication(),
         airQualityRepository = get(),
-        locationClient = get())
+        locationClient = get(),
+        updateAirQualitiesUseCase = get(),
+        updateAirQualityHereUseCase = get())
     }
 }

@@ -61,10 +61,8 @@ class AirQualitiesFragment : Fragment() {
 //        }
 
         swipeToRefreshLayout.setOnRefreshListener {
-            swipeToRefreshLayout.isRefreshing = true
-
-            viewModel.updateLocalAirQualityHere()
-            viewModel.updateLocalAirQualities()
+            viewModel.updateLocalAirQualityHere(true)
+            viewModel.updateLocalAirQualities(true)
         }
 
         viewAirQualityHere.setOnClickListener { viewModel.airQualityHere.value?.let { listClickListener(it) } }
@@ -81,6 +79,7 @@ class AirQualitiesFragment : Fragment() {
         viewModel.airQualityHere.observe(viewLifecycleOwner, airQualityHereObserver)
         viewModel.airQualities.observe(viewLifecycleOwner, airQualitiesObserver)
         viewModel.errorMessage.observe(viewLifecycleOwner, errorMessageObserver)
+        viewModel.isLoading.observe(viewLifecycleOwner, progressObserver)
     }
 
 //    private fun animateFAB() {
@@ -102,6 +101,13 @@ class AirQualitiesFragment : Fragment() {
 //        }
 //    }
 
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.updateLocalAirQualities()
+        viewModel.updateLocalAirQualityHere()
+    }
+
     private val listClickListener: (AirQuality) -> Unit = { airQuality ->
         val nextFragment = AirQualityFragment()
         val bundle = Bundle()
@@ -119,23 +125,12 @@ class AirQualitiesFragment : Fragment() {
     }
 
     private val airQualitiesObserver = Observer<List<AirQuality>> { it?.let { airQualities ->
-            swipeToRefreshLayout.isRefreshing = false
-
             adapter.airQualities = airQualities
             adapter.notifyDataSetChanged()
-
-            if (airQualities.any { quality -> quality.shouldUpdate() }) {
-                viewModel.updateLocalAirQualities()
-            }
         }
     }
 
-    private val airQualityHereObserver = Observer<AirQuality> { airQuality ->
-        if (airQuality == null || airQuality.shouldUpdate()) {
-            viewModel.updateLocalAirQualityHere()
-        }
-
-        airQuality?.let{
+    private val airQualityHereObserver = Observer<AirQuality> { it?.let { airQuality ->
             viewAirQualityHere.isVisible = true
             currentLocationImageView.visibility = View.VISIBLE
             setFullName(airQuality.city.name, textCity, textCountry)
@@ -150,7 +145,7 @@ class AirQualitiesFragment : Fragment() {
 
         tv.setTextColor(resources.getColor(R.color.colorTextError, null))
         snack.show()
-
-        swipeToRefreshLayout.isRefreshing = false
     }
+
+    private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

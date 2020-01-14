@@ -5,7 +5,9 @@ import android.view.*
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import kotlinx.android.synthetic.main.fragment_air_quality.*
+import kotlinx.android.synthetic.main.fragment_air_quality.container
 import kotlinx.android.synthetic.main.fragment_air_quality.swipeToRefreshLayout
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
@@ -41,13 +43,18 @@ class AirQualityFragment : Fragment() {
         }
 
         swipeToRefreshLayout.setOnRefreshListener {
-            swipeToRefreshLayout.isRefreshing = true
-
-            viewModel.updateAirQuality()
+            viewModel.updateAirQuality(true)
         }
 
         viewModel.airQuality.observe(viewLifecycleOwner, airQualityObserver)
         viewModel.errorMessage.observe(viewLifecycleOwner, errorMessageObserver)
+        viewModel.isLoading.observe(viewLifecycleOwner, progressObserver)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.updateAirQuality()
     }
 
     private fun formatText(templateResId: Int, value: Any?): String {
@@ -64,8 +71,6 @@ class AirQualityFragment : Fragment() {
                 }
             }
 
-            swipeToRefreshLayout.isRefreshing = false
-
             setFullName(newAirQuality.city.name, textCity, textCountry)
             textIndex.text = newAirQuality.airQualityIndex
 
@@ -75,15 +80,10 @@ class AirQualityFragment : Fragment() {
             textOzoneValue.text = formatText(R.string.template_ppb, newAirQuality.individualIndices.ozone?.value)
             textTimeRecordedValue.text = newAirQuality.time.toString()
             pollutionView.setPollution(newAirQuality.airQualityIndex)
-
-            if (newAirQuality.shouldUpdate()) {
-                viewModel.updateAirQuality()
-            }
         }
     }
 
-    private val errorMessageObserver = Observer<String> { errorMessage ->
-        swipeToRefreshLayout.isRefreshing = false
-        textError.text = errorMessage
-    }
+    private val errorMessageObserver = Observer<String> { textError.text = it }
+
+    private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

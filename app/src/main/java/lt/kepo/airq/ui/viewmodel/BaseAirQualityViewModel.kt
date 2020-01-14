@@ -12,50 +12,49 @@ import lt.kepo.airq.data.api.ApiErrorResponse
 import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
+import lt.kepo.airq.domain.UpdateAirQualityHereUseCase
 import lt.kepo.airq.utility.isLocationEnabled
 import java.util.*
 
 abstract class BaseAirQualityViewModel(
     context: Application,
-    val airQualityRepository: AirQualityRepository,
-    private val fusedLocationClient : FusedLocationProviderClient
+    private val fusedLocationClient : FusedLocationProviderClient,
+    private val updateAirQualityHereUseCase: UpdateAirQualityHereUseCase
 ) : AndroidViewModel(context) {
     val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    fun fetchLocationAirQuality() {
+    val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    fun updateLocalAirQualityHere(force: Boolean, airQualityHere: AirQuality?) {
+        _isLoading.value = true
+
         if (isLocationEnabled(getApplication())) {
             fusedLocationClient.locationAvailability.addOnSuccessListener { locationAvailability ->
                 if (locationAvailability.isLocationAvailable)
                     fusedLocationClient.lastLocation.addOnSuccessListener { loc ->
-                        viewModelScope.launch { updateLocalAirQualityHere(loc) }
+                        viewModelScope.launch { invokeUseCase(force, airQualityHere, loc) }
                     }
                 else
-                    viewModelScope.launch { updateLocalAirQualityHere(null) }
+                    viewModelScope.launch { invokeUseCase(force, airQualityHere,null) }
             }
         } else {
-            viewModelScope.launch { updateLocalAirQualityHere(null) }
+            viewModelScope.launch { invokeUseCase(force, airQualityHere,null) }
         }
     }
 
-    suspend fun updateLocalAirQuality(quality: AirQuality) {
-        when (val response = airQualityRepository.getRemoteAirQuality(quality.stationId)) {
-            is ApiSuccessResponse -> airQualityRepository.insertLocalAirQuality(response.data)
-            is ApiErrorResponse -> _errorMessage.value = response.error
-        }
-    }
-
-    private suspend fun updateLocalAirQualityHere(location: Location?) {
-        when (val response = airQualityRepository.getRemoteAirQualityHere(location)) {
-            is ApiSuccessResponse -> {
-                val airQualityResponse = response.data
-
-                airQualityResponse.isCurrentLocationQuality = true
-
-                airQualityRepository.deleteLocalAirQualityHere()
-                airQualityRepository.insertLocalAirQuality(airQualityResponse)
+    private suspend fun invokeUseCase(
+        force: Boolean,
+        airQualityHere: AirQuality?,
+        location: Location?
+    ) {
+        when (val result = updateAirQualityHereUseCase(force, airQualityHere, location)) {
+            is ApiSuccessResponse -> _isLoading.value = false
+            is ApiErrorResponse<*> -> {
+                _isLoading.value = false
+                _errorMessage.value = result.error
             }
-            is ApiErrorResponse -> _errorMessage.value = response.error
         }
     }
 }

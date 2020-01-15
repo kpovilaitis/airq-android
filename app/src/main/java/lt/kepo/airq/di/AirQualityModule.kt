@@ -26,15 +26,9 @@ val airQualityModule : Module = module {
 
     single { LocationServices.getFusedLocationProviderClient(androidContext()) }
 
-    factory { UpdateAirQualitiesUseCase(
-        airQualityRepository = get(),
-        httpClient = get())
-    }
+    factory { UpdateAirQualitiesUseCase(airQualityRepository = get()) }
 
-    factory { UpdateAirQualityHereUseCase(
-        airQualityRepository = get(),
-        httpClient = get())
-    }
+    factory { UpdateAirQualityHereUseCase(airQualityRepository = get()) }
 
     viewModel { AirQualitiesViewModel(
         application = androidApplication(),

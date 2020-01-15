@@ -8,11 +8,11 @@ import lt.kepo.airq.db.model.*
 import java.util.*
 
 class AirQualityRepositoryMock : AirQualityRepository{
-    override suspend fun getRemoteAirQualityHere(location: Location?): ApiResponse<AirQuality> {
+    override suspend fun updateAirQualityHere(location: Location?): ApiResponse<AirQuality> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun getRemoteAirQuality(stationId: Int): AirQuality {
+    override suspend fun addAirQualityWithTimestamp(stationId: Int): AirQuality {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

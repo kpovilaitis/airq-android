@@ -19,11 +19,11 @@ class AirQualityViewModel(
     private val updateAirQualitiesUseCase: UpdateAirQualitiesUseCase,
     updateAirQualityHereUseCase: UpdateAirQualityHereUseCase
 ) : BaseAirQualityViewModel(application, locationClient, updateAirQualityHereUseCase) {
-    val airQuality: LiveData<AirQuality> = airQualityRepository.getLocalAirQuality(initAirQuality.stationId)
+    val airQuality: LiveData<AirQuality> = airQualityRepository.getCachedAirQuality(initAirQuality.stationId)
 
     fun removeAirQuality() {
         viewModelScope.launch {
-            airQuality.value?.let { airQualityRepository.deleteLocalAirQuality(it.stationId) }
+            airQuality.value?.let { airQualityRepository.deleteCachedAirQuality(it.stationId) }
         }
     }
 
@@ -31,18 +31,17 @@ class AirQualityViewModel(
         if (airQuality.value?.isCurrentLocationQuality == true)
             updateLocalAirQualityHere(force, airQuality.value)
         else {
-            _isLoading.value = true
-
             viewModelScope.launch {
+                _isLoading.value = true
+
                 airQuality.value?.let {
                     when (val result = updateAirQualitiesUseCase(force, listOf(it))) {
-                        is ApiSuccessResponse -> _isLoading.value = false
-                        is ApiErrorResponse<*> -> {
-                            _isLoading.value = false
-                            _errorMessage.value = result.error
-                        }
+                        is ApiSuccessResponse -> _errorMessage.value = null
+                        is ApiErrorResponse<*> -> _errorMessage.value = result.error
                     }
                 }
+
+                _isLoading.value = false
             }
         }
     }

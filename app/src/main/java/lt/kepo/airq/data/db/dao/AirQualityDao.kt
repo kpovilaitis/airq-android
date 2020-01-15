@@ -22,7 +22,7 @@ abstract class AirQualityDao {
     abstract fun getHere(): LiveData<AirQuality>
 
     @Query("SELECT station_id FROM air_qualities WHERE is_current_location_quality = 1")
-    abstract fun getHereId(): Int
+    abstract suspend fun getHereId(): Int
 
     @Query("DELETE FROM air_qualities WHERE is_current_location_quality = 1")
     abstract suspend fun deleteHere()

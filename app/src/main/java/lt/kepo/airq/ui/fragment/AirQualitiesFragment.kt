@@ -139,12 +139,13 @@ class AirQualitiesFragment : Fragment() {
         }
     }
 
-    private val errorMessageObserver = Observer<String> { errorMessage ->
-        val snack = Snackbar.make(container, errorMessage, Snackbar.LENGTH_LONG)
-        val tv = snack.view.findViewById(R.id.snackbar_text) as TextView
+    private val errorMessageObserver = Observer<String> { it?.let { errorMessage ->
+            val snack = Snackbar.make(container, errorMessage, Snackbar.LENGTH_LONG)
+            val tv = snack.view.findViewById(R.id.snackbar_text) as TextView
 
-        tv.setTextColor(resources.getColor(R.color.colorTextError, null))
-        snack.show()
+            tv.setTextColor(resources.getColor(R.color.colorTextError, null))
+            snack.show()
+        }
     }
 
     private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }

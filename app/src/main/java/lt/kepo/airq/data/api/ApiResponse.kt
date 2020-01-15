@@ -54,3 +54,8 @@ inline fun <T> ApiResponse<T>.mapOnSuccess(transform: (T) -> T): ApiResponse<T> 
         is ApiSuccessResponse -> ApiSuccessResponse(transform(this.data))
         is ApiErrorResponse -> this
     }
+
+enum class ApiResponseStatus {
+    OK,
+    ERROR
+}

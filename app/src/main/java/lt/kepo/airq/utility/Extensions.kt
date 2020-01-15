@@ -7,8 +7,6 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.view.View
 import lt.kepo.airq.R
-import lt.kepo.airq.data.model.AirQuality
-import java.util.*
 
 fun View.setPollution(airQualityIndex: String?) {
     if (airQualityIndex != null && airQualityIndex != "-") {

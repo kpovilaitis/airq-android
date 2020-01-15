@@ -40,7 +40,7 @@ class StationsViewModel(
         viewModelScope.launch {
             _isLoading.value = true
 
-            airQualityRepository.addAirQualityWithTimestamp(station.id)
+            airQualityRepository.addAirQuality(station.id)
 
             _isLoading.value = false
         }

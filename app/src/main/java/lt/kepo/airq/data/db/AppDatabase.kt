@@ -5,15 +5,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.db.dao.AirQualityDao
-import lt.kepo.airq.data.model.Station
 import lt.kepo.airq.data.db.typeconverter.DateTypeConverter
 
 @TypeConverters(DateTypeConverter::class)
 @Database(
-    entities = [
-        AirQuality::class,
-        Station::class
-    ],
+    entities = [ AirQuality::class ],
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -7,7 +7,6 @@ import lt.kepo.airq.data.api.HttpClient
 import lt.kepo.airq.utility.AIR_Q_DATE_FORMAT
 import okhttp3.OkHttpClient
 
-
 fun createApiClientService(okHttpClient: OkHttpClient, baseUrl: String): HttpClient {
     val gson = GsonBuilder()
         .setDateFormat(AIR_Q_DATE_FORMAT)

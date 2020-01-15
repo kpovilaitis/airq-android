@@ -23,7 +23,6 @@
 
     <style name="SettingsActivityTheme" parent="AppTheme.Compat"/>
 
-
     <style name="ActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textStyle">bold</item>
     </style>

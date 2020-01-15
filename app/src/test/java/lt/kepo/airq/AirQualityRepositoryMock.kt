@@ -12,7 +12,7 @@ class AirQualityRepositoryMock : AirQualityRepository{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun addAirQualityWithTimestamp(stationId: Int): AirQuality {
+    override suspend fun addAirQuality(stationId: Int): AirQuality {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

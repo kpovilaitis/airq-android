@@ -26,45 +26,19 @@
                 android:id="@+id/swipeToRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/textAppName">
+                android:layout_below="@+id/textAppName"
+                android:background="@drawable/background_window">
 
 
-            <androidx.core.widget.NestedScrollView
-                    android:id="@+id/scrollView"
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/airQualitiesRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/background_window"
                     android:layout_below="@id/textAppName"
-                    android:overScrollMode="ifContentScrolls">
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    <include
-                            android:id="@+id/viewAirQualityHere"
-                            layout="@layout/list_item_air_quality"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/padding_default"
-                            android:layout_marginTop="@dimen/card_elevation"
-                            android:layout_marginEnd="@dimen/padding_default"
-                            android:visibility="gone"/>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/airQualitiesRecyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_below="@id/viewAirQualityHere"
-                            android:clipToPadding="false"
-                            android:paddingTop="@dimen/padding_default"
-                            android:paddingBottom="@dimen/padding_nav_bar"
-                            android:overScrollMode="never" />
-
-                </LinearLayout>
-
-            </androidx.core.widget.NestedScrollView>
+                    android:clipToPadding="false"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="@dimen/padding_nav_bar"
+                    android:overScrollMode="never" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -12,8 +12,6 @@ interface AirQualityRepository {
 
     fun getCachedAirQualities(): LiveData<List<AirQuality>>
 
-    fun getCachedAirQualityHere(): LiveData<AirQuality>
-
 
 
     fun getCachedAirQuality(stationId: Int): LiveData<AirQuality>
@@ -24,5 +22,5 @@ interface AirQualityRepository {
 
     suspend fun getCachedAirQualityHereId(): Int
 
-    suspend fun addAirQualityWithTimestamp(stationId: Int): ApiResponse<AirQuality>
+    suspend fun addAirQuality(stationId: Int): ApiResponse<AirQuality>
 }

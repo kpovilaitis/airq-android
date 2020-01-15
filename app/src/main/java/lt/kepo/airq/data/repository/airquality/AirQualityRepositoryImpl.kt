@@ -6,7 +6,9 @@ import lt.kepo.airq.data.api.HttpClient
 import lt.kepo.airq.data.api.mapOnSuccess
 import lt.kepo.airq.data.db.dao.AirQualityDao
 import lt.kepo.airq.data.model.AirQuality
+import lt.kepo.airq.utility.AIR_QUALITY_HERE_STATION_ID
 import java.lang.Exception
+import java.util.*
 
 class AirQualityRepositoryImpl internal constructor(
     private val airQualityDao: AirQualityDao,
@@ -21,23 +23,29 @@ class AirQualityRepositoryImpl internal constructor(
             }
 
             response.mapOnSuccess {
-                it.isCurrentLocationQuality = true
+                val quality = it.copy(
+                    stationId = AIR_QUALITY_HERE_STATION_ID,
+                    isCurrentLocationQuality = true,
+                    updatedAt = Date()
+                )
 
                 airQualityDao.deleteHere()
-                airQualityDao.insertWithTimeStamp(it)
+                airQualityDao.insert(quality)
 
-                it
+                quality
             }
         } catch (exception: Exception) {
             ApiResponse.parse(exception)
         }
     }
 
-    override suspend fun addAirQualityWithTimestamp(stationId: Int): ApiResponse<AirQuality> {
+    override suspend fun addAirQuality(stationId: Int): ApiResponse<AirQuality> {
         return try {
             ApiResponse.parse(httpClient.getAirQuality("@${stationId}")).mapOnSuccess {
-                airQualityDao.insertWithTimeStamp(it)
-                it
+                val quality = it.copy(updatedAt = Date())
+
+                airQualityDao.insert(quality)
+                quality
             }
         } catch (exception: Exception) {
             ApiResponse.parse(exception)
@@ -47,8 +55,10 @@ class AirQualityRepositoryImpl internal constructor(
     override suspend fun updateAirQuality(stationId: Int): ApiResponse<AirQuality> {
         return try {
             ApiResponse.parse(httpClient.getAirQuality("@${stationId}")).mapOnSuccess {
-                airQualityDao.insertWithTimeStamp(it)
-                it
+                val quality = it.copy(updatedAt = Date())
+
+                airQualityDao.insert(quality)
+                quality
             }
         } catch (exception: Exception) {
             ApiResponse.parse(exception)
@@ -56,8 +66,6 @@ class AirQualityRepositoryImpl internal constructor(
     }
 
     override fun getCachedAirQualities() = airQualityDao.getAll()
-
-    override fun getCachedAirQualityHere() = airQualityDao.getHere()
 
     override fun getCachedAirQuality(stationId: Int) = airQualityDao.get(stationId)
 

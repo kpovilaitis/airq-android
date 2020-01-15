@@ -61,22 +61,18 @@ class AirQualitiesFragment : Fragment() {
 //        }
 
         swipeToRefreshLayout.setOnRefreshListener {
-            viewModel.updateLocalAirQualityHere(true)
             viewModel.updateLocalAirQualities(true)
         }
-
-        viewAirQualityHere.setOnClickListener { viewModel.airQualityHere.value?.let { listClickListener(it) } }
 
         adapter = AirQualitiesAdapter(emptyList(), listClickListener)
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext(), R.drawable.divider_air_qualities))
         airQualitiesRecyclerView.adapter = adapter
 
-        scrollView.setOnScrollChangeListener { _, _, _, _, _ ->
-            textAppName.isSelected = scrollView.canScrollVertically(RECYCLER_VIEW_SCROLL_DIRECTION_UP)
+        airQualitiesRecyclerView.setOnScrollChangeListener { _, _, _, _, _ ->
+            textAppName.isSelected = airQualitiesRecyclerView.canScrollVertically(RECYCLER_VIEW_SCROLL_DIRECTION_UP)
         }
 
-        viewModel.airQualityHere.observe(viewLifecycleOwner, airQualityHereObserver)
         viewModel.airQualities.observe(viewLifecycleOwner, airQualitiesObserver)
         viewModel.errorMessage.observe(viewLifecycleOwner, errorMessageObserver)
         viewModel.isLoading.observe(viewLifecycleOwner, progressObserver)
@@ -105,7 +101,6 @@ class AirQualitiesFragment : Fragment() {
         super.onStart()
 
         viewModel.updateLocalAirQualities()
-        viewModel.updateLocalAirQualityHere()
     }
 
     private val listClickListener: (AirQuality) -> Unit = { airQuality ->
@@ -127,15 +122,6 @@ class AirQualitiesFragment : Fragment() {
     private val airQualitiesObserver = Observer<List<AirQuality>> { it?.let { airQualities ->
             adapter.airQualities = airQualities
             adapter.notifyDataSetChanged()
-        }
-    }
-
-    private val airQualityHereObserver = Observer<AirQuality> { it?.let { airQuality ->
-            viewAirQualityHere.isVisible = true
-            currentLocationImageView.visibility = View.VISIBLE
-            setFullName(airQuality.city.name, textCity, textCountry)
-            viewAirQualityHere.pollutionView.setPollution(airQuality.airQualityIndex)
-            textIndex.text = airQuality.airQualityIndex
         }
     }
 

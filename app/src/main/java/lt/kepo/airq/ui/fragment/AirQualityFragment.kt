@@ -57,9 +57,8 @@ class AirQualityFragment : Fragment() {
         viewModel.updateAirQuality()
     }
 
-    private fun formatText(templateResId: Int, value: Any?): String {
-        return resources.getString(templateResId, value?.toString() ?: "-")
-    }
+    private fun formatText(templateResId: Int, value: Any?) =
+        resources.getString(templateResId, value?.toString() ?: "-")
 
     private val airQualityObserver = Observer<AirQuality> { it?.let { newAirQuality ->
             if (newAirQuality.isCurrentLocationQuality) {

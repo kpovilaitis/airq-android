@@ -11,10 +11,8 @@ import kotlinx.coroutines.launch
 import lt.kepo.airq.data.api.ApiErrorResponse
 import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.AirQuality
-import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 import lt.kepo.airq.domain.UpdateAirQualityHereUseCase
 import lt.kepo.airq.utility.isLocationEnabled
-import java.util.*
 
 abstract class BaseAirQualityViewModel(
     context: Application,

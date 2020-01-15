@@ -3,6 +3,7 @@ package lt.kepo.airq.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_item_air_quality.view.*
 import lt.kepo.airq.R
@@ -24,6 +25,7 @@ class AirQualitiesAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: AirQuality, listener: (AirQuality) -> Unit) = with(itemView) {
             setFullName(item.city.name, textCity, textCountry)
+            currentLocationImageView.isVisible = item.isCurrentLocationQuality
 
             textIndex.text = item.airQualityIndex
 

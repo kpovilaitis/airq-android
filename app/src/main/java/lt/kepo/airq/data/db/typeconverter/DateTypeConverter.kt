@@ -3,7 +3,6 @@ package lt.kepo.airq.data.db.typeconverter
 import androidx.room.TypeConverter
 import java.util.*
 
-
 class DateTypeConverter {
     @TypeConverter
     fun toDate(value: Long?): Date? = if (value == null) null else Date(value)

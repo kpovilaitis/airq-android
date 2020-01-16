@@ -11,16 +11,13 @@ interface AirQualityDao {
     suspend fun insert(airQuality: AirQuality): Long
 
     @Query("SELECT * FROM air_qualities WHERE station_id = :stationId")
-    fun get(stationId: Int): LiveData<AirQuality>
+    fun getLive(stationId: Int): LiveData<AirQuality>
 
-    @Query("SELECT * FROM air_qualities ORDER BY is_current_location_quality DESC, city_name ASC")
-    fun getAll(): LiveData<List<AirQuality>>
+    @Query("SELECT * FROM air_qualities ORDER BY station_id == $AIR_QUALITY_HERE_STATION_ID DESC, city_name ASC")
+    fun getAllLive(): LiveData<List<AirQuality>>
 
-    @Query("SELECT station_id FROM air_qualities WHERE is_current_location_quality = 1")
-    suspend fun getHereId(): Int
-
-    @Query("DELETE FROM air_qualities WHERE is_current_location_quality = 1 AND station_id = $AIR_QUALITY_HERE_STATION_ID")
-    suspend fun deleteHere()
+    @Query("SELECT * FROM air_qualities ORDER BY station_id == $AIR_QUALITY_HERE_STATION_ID DESC, city_name ASC")
+    suspend fun getAll(): List<AirQuality>
 
     @Query("DELETE FROM air_qualities WHERE station_id = :stationId")
     suspend fun delete(stationId: Int)

@@ -41,11 +41,7 @@ data class AirQuality (
 
     @Expose(deserialize = false, serialize = false)
     @ColumnInfo(name = "updated_at")
-    val updatedAt: Date?,
-
-    @Expose(deserialize = false, serialize = false)
-    @ColumnInfo(name = "is_current_location_quality")
-    val isCurrentLocationQuality: Boolean
+    val updatedAt: Date?
 ) : Parcelable {
     fun shouldUpdate() = updatedAt?.before(Date(Date().time - AIR_QUALITY_UPDATE_THRESHOLD)) == true
 }

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.NonNull
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,11 +14,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import kotlinx.android.synthetic.main.fragment_air_qualities.container
 import kotlinx.android.synthetic.main.fragment_air_qualities.swipeToRefreshLayout
-import kotlinx.android.synthetic.main.list_item_air_quality.*
-import kotlinx.android.synthetic.main.list_item_air_quality.textCity
-import kotlinx.android.synthetic.main.list_item_air_quality.textCountry
-import kotlinx.android.synthetic.main.list_item_air_quality.textIndex
-import kotlinx.android.synthetic.main.list_item_air_quality.view.*
 import lt.kepo.airq.R
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.ui.activity.StationsActivity
@@ -61,7 +55,7 @@ class AirQualitiesFragment : Fragment() {
 //        }
 
         swipeToRefreshLayout.setOnRefreshListener {
-            viewModel.updateLocalAirQualities(true)
+            viewModel.updateCachedAirQualities(true)
         }
 
         adapter = AirQualitiesAdapter(emptyList(), listClickListener)
@@ -100,7 +94,7 @@ class AirQualitiesFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        viewModel.updateLocalAirQualities()
+        viewModel.updateCachedAirQualities()
     }
 
     private val listClickListener: (AirQuality) -> Unit = { airQuality ->

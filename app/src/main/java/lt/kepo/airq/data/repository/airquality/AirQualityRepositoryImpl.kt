@@ -10,7 +10,7 @@ import lt.kepo.airq.utility.AIR_QUALITY_HERE_STATION_ID
 import java.lang.Exception
 import java.util.*
 
-class AirQualityRepositoryImpl internal constructor(
+class AirQualityRepositoryImpl (
     private val airQualityDao: AirQualityDao,
     private val httpClient: HttpClient
 ) : AirQualityRepository {
@@ -25,26 +25,11 @@ class AirQualityRepositoryImpl internal constructor(
             response.mapOnSuccess {
                 val quality = it.copy(
                     stationId = AIR_QUALITY_HERE_STATION_ID,
-                    isCurrentLocationQuality = true,
                     updatedAt = Date()
                 )
 
-                airQualityDao.deleteHere()
                 airQualityDao.insert(quality)
 
-                quality
-            }
-        } catch (exception: Exception) {
-            ApiResponse.parse(exception)
-        }
-    }
-
-    override suspend fun addAirQuality(stationId: Int): ApiResponse<AirQuality> {
-        return try {
-            ApiResponse.parse(httpClient.getAirQuality("@${stationId}")).mapOnSuccess {
-                val quality = it.copy(updatedAt = Date())
-
-                airQualityDao.insert(quality)
                 quality
             }
         } catch (exception: Exception) {
@@ -65,11 +50,28 @@ class AirQualityRepositoryImpl internal constructor(
         }
     }
 
-    override fun getCachedAirQualities() = airQualityDao.getAll()
+    override fun getCachedAirQualitiesLive() = airQualityDao.getAllLive()
 
-    override fun getCachedAirQuality(stationId: Int) = airQualityDao.get(stationId)
+    override suspend fun getCachedAirQualities() = airQualityDao.getAll()
 
-    override suspend fun getCachedAirQualityHereId() = airQualityDao.getHereId()
+
+
+    override fun getCachedAirQuality(stationId: Int) = airQualityDao.getLive(stationId)
 
     override suspend fun deleteCachedAirQuality(stationId: Int) = airQualityDao.delete(stationId)
+
+
+
+    override suspend fun addAirQuality(stationId: Int): ApiResponse<AirQuality> {
+        return try {
+            ApiResponse.parse(httpClient.getAirQuality("@${stationId}")).mapOnSuccess {
+                val quality = it.copy(updatedAt = Date())
+
+                airQualityDao.insert(quality)
+                quality
+            }
+        } catch (exception: Exception) {
+            ApiResponse.parse(exception)
+        }
+    }
 }

@@ -12,10 +12,7 @@ val stationsModule : Module = module {
 
     factory<StationsRepository> { StationsRepositoryImpl(httpClient = get()) }
 
-    factory { GetFilteredStationsUseCase(
-        stationsRepository = get(),
-        airQualityRepository = get())
-    }
+    factory { GetFilteredStationsUseCase(stationsRepository = get()) }
 
     viewModel { StationsViewModel(
         airQualityRepository = get(),

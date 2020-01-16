@@ -10,7 +10,9 @@ interface AirQualityRepository {
 
     suspend fun updateAirQuality(stationId: Int): ApiResponse<AirQuality>
 
-    fun getCachedAirQualities(): LiveData<List<AirQuality>>
+    fun getCachedAirQualitiesLive(): LiveData<List<AirQuality>>
+
+    suspend fun getCachedAirQualities(): List<AirQuality>
 
 
 
@@ -19,8 +21,6 @@ interface AirQualityRepository {
     suspend fun deleteCachedAirQuality(stationId: Int)
 
 
-
-    suspend fun getCachedAirQualityHereId(): Int
 
     suspend fun addAirQuality(stationId: Int): ApiResponse<AirQuality>
 }

@@ -9,16 +9,15 @@ import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 import lt.kepo.airq.domain.UpdateAirQualitiesUseCase
-import lt.kepo.airq.domain.UpdateAirQualityHereUseCase
+import lt.kepo.airq.utility.AIR_QUALITY_HERE_STATION_ID
 
 class AirQualityViewModel(
     initAirQuality: AirQuality,
     application: Application,
-    private val airQualityRepository: AirQualityRepository,
+    airQualityRepository: AirQualityRepository,
     locationClient: FusedLocationProviderClient,
-    private val updateAirQualitiesUseCase: UpdateAirQualitiesUseCase,
-    updateAirQualityHereUseCase: UpdateAirQualityHereUseCase
-) : BaseAirQualityViewModel(application, locationClient, updateAirQualityHereUseCase) {
+    private val updateAirQualitiesUseCase: UpdateAirQualitiesUseCase
+) : BaseAirQualityViewModel(application, locationClient, airQualityRepository) {
     val airQuality: LiveData<AirQuality> = airQualityRepository.getCachedAirQuality(initAirQuality.stationId)
 
     fun removeAirQuality() {
@@ -28,8 +27,8 @@ class AirQualityViewModel(
     }
 
     fun updateAirQuality(force: Boolean = false) {
-        if (airQuality.value?.isCurrentLocationQuality == true)
-            updateLocalAirQualityHere(force, airQuality.value)
+        if (airQuality.value?.stationId == AIR_QUALITY_HERE_STATION_ID)
+            updateCachedAirQualityHere(force, airQuality.value)
         else {
             viewModelScope.launch {
                 _isLoading.value = true

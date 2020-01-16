@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_air_quality.swipeToRefreshLayout
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import lt.kepo.airq.R
+import lt.kepo.airq.utility.AIR_QUALITY_HERE_STATION_ID
 import lt.kepo.airq.utility.setFullName
 import lt.kepo.airq.utility.setPollution
 import org.koin.android.ext.android.inject
@@ -61,7 +62,7 @@ class AirQualityFragment : Fragment() {
         resources.getString(templateResId, value?.toString() ?: "-")
 
     private val airQualityObserver = Observer<AirQuality> { it?.let { newAirQuality ->
-            if (newAirQuality.isCurrentLocationQuality) {
+            if (newAirQuality.stationId == AIR_QUALITY_HERE_STATION_ID) {
                 btnRemoveAirQuality.visibility = View.GONE
             } else {
                 btnRemoveAirQuality.setOnClickListener {

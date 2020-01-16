@@ -6,7 +6,6 @@ import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.data.repository.airquality.AirQualityRepository
 import lt.kepo.airq.data.repository.airquality.AirQualityRepositoryImpl
 import lt.kepo.airq.domain.UpdateAirQualitiesUseCase
-import lt.kepo.airq.domain.UpdateAirQualityHereUseCase
 import lt.kepo.airq.ui.viewmodel.AirQualitiesViewModel
 import lt.kepo.airq.ui.viewmodel.AirQualityViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -28,15 +27,11 @@ val airQualityModule : Module = module {
 
     factory { UpdateAirQualitiesUseCase(airQualityRepository = get()) }
 
-    factory { UpdateAirQualityHereUseCase(airQualityRepository = get()) }
-
     viewModel { AirQualitiesViewModel(
         application = androidApplication(),
         airQualityRepository = get(),
         locationClient = get(),
-        updateAirQualitiesUseCase = get(),
-        updateAirQualityHereUseCase = get()
-        )
+        updateAirQualitiesUseCase = get())
     }
 
     viewModel { (airQuality: AirQuality) -> AirQualityViewModel(
@@ -44,7 +39,6 @@ val airQualityModule : Module = module {
         application = androidApplication(),
         airQualityRepository = get(),
         locationClient = get(),
-        updateAirQualitiesUseCase = get(),
-        updateAirQualityHereUseCase = get())
+        updateAirQualitiesUseCase = get())
     }
 }

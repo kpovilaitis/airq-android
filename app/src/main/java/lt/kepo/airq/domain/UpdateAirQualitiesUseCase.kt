@@ -10,9 +10,9 @@ class UpdateAirQualitiesUseCase (private val airQualityRepository: AirQualityRep
 
         qualities.filter { force || it.shouldUpdate() }
             .forEach {
-                when (val apiResponse = airQualityRepository.updateAirQuality(it.stationId)) {
-                    is ApiSuccessResponse -> fetchedQualities.add(apiResponse.data)
-                    is ApiErrorResponse -> return ApiErrorResponse(apiResponse.error)
+                when (val response = airQualityRepository.updateAirQuality(it.stationId)) {
+                    is ApiSuccessResponse -> fetchedQualities.add(response.data)
+                    is ApiErrorResponse -> return ApiErrorResponse(response.error)
                 }
             }
 

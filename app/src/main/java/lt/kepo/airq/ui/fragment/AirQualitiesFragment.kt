@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import kotlinx.android.synthetic.main.fragment_air_qualities.container
 import kotlinx.android.synthetic.main.fragment_air_qualities.swipeToRefreshLayout
+import kotlinx.android.synthetic.main.fragment_air_quality.*
 import lt.kepo.airq.R
 import lt.kepo.airq.data.model.AirQuality
 import lt.kepo.airq.ui.activity.StationsActivity
@@ -54,9 +55,9 @@ class AirQualitiesFragment : Fragment() {
 //            animateFAB()
 //        }
 
-        swipeToRefreshLayout.setOnRefreshListener {
-            viewModel.updateCachedAirQualities(true)
-        }
+        swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
+        swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
+        swipeToRefreshLayout.setOnRefreshListener { viewModel.updateCachedAirQualities(true) }
 
         adapter = AirQualitiesAdapter(emptyList(), listClickListener)
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -119,14 +120,7 @@ class AirQualitiesFragment : Fragment() {
         }
     }
 
-    private val errorMessageObserver = Observer<String> { it?.let { errorMessage ->
-            val snack = Snackbar.make(container, errorMessage, Snackbar.LENGTH_LONG)
-            val tv = snack.view.findViewById(R.id.snackbar_text) as TextView
-
-            tv.setTextColor(resources.getColor(R.color.colorTextError, null))
-            snack.show()
-        }
-    }
+    private val errorMessageObserver = Observer<String> { it?.let { errorMessage -> showError(errorMessage, container) } }
 
     private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

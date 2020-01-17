@@ -12,8 +12,7 @@
             android:layout_marginTop="@dimen/margin_toolbar_overflow"
             android:layout_below="@id/toolbar"
             android:paddingTop="@dimen/padding_toolbar_overflow"
-            android:clipToPadding="false"
-            android:overScrollMode="never" />
+            android:clipToPadding="false" />
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

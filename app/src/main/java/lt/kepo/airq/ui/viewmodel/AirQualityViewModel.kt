@@ -26,7 +26,7 @@ class AirQualityViewModel(
         }
     }
 
-    fun updateAirQuality(force: Boolean = false) {
+    fun updateCachedAirQuality(force: Boolean = false) {
         if (airQuality.value?.stationId == AIR_QUALITY_HERE_STATION_ID)
             updateCachedAirQualityHere(force, airQuality.value)
         else {

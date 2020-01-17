@@ -37,8 +37,7 @@
                     android:layout_below="@id/textAppName"
                     android:clipToPadding="false"
                     android:paddingTop="4dp"
-                    android:paddingBottom="@dimen/padding_nav_bar"
-                    android:overScrollMode="never" />
+                    android:paddingBottom="@dimen/padding_nav_bar" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

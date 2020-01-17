@@ -5,7 +5,6 @@ import android.view.*
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import kotlinx.android.synthetic.main.fragment_air_quality.*
 import kotlinx.android.synthetic.main.fragment_air_quality.container
 import kotlinx.android.synthetic.main.fragment_air_quality.swipeToRefreshLayout
@@ -15,6 +14,7 @@ import lt.kepo.airq.R
 import lt.kepo.airq.utility.AIR_QUALITY_HERE_STATION_ID
 import lt.kepo.airq.utility.setFullName
 import lt.kepo.airq.utility.setPollution
+import lt.kepo.airq.utility.showError
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -43,9 +43,9 @@ class AirQualityFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        swipeToRefreshLayout.setOnRefreshListener {
-            viewModel.updateAirQuality(true)
-        }
+        swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
+        swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
+        swipeToRefreshLayout.setOnRefreshListener { viewModel.updateCachedAirQuality(true) }
 
         viewModel.airQuality.observe(viewLifecycleOwner, airQualityObserver)
         viewModel.errorMessage.observe(viewLifecycleOwner, errorMessageObserver)
@@ -55,7 +55,7 @@ class AirQualityFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        viewModel.updateAirQuality()
+        viewModel.updateCachedAirQuality()
     }
 
     private fun formatText(templateResId: Int, value: Any?) =
@@ -83,7 +83,7 @@ class AirQualityFragment : Fragment() {
         }
     }
 
-    private val errorMessageObserver = Observer<String> { textError.text = it }
+    private val errorMessageObserver = Observer<String> { it?.let { errorMessage -> showError(errorMessage, container) } }
 
     private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

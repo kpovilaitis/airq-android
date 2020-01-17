@@ -15,6 +15,9 @@
         <item name="android:actionOverflowButtonStyle">@style/ActionButtonOverflow</item>
 
         <item name="android:fontFamily">@font/rubik</item>
+
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="android:colorEdgeEffect">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.Compat"/>

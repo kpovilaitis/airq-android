@@ -1,10 +1,15 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-        android:duration="@android:integer/config_shortAnimTime">
-
-    <alpha
-            android:fromAlpha="0"
-            android:toAlpha="1"
-            android:interpolator="@android:anim/decelerate_interpolator"
-            />
-
+        android:shareInterpolator="false">
+    <scale
+            android:fromXScale="1.1"
+            android:toXScale="1"
+            android:fromYScale="1.1"
+            android:toYScale="1"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:fillEnabled="true"
+            android:fillBefore="true"
+            android:fillAfter="true"
+            android:interpolator="@android:interpolator/fast_out_extra_slow_in"
+            android:duration="400"/>
 </set>

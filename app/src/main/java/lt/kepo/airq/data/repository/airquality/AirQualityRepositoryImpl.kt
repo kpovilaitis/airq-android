@@ -59,19 +59,4 @@ class AirQualityRepositoryImpl (
     override fun getCachedAirQuality(stationId: Int) = airQualityDao.getLive(stationId)
 
     override suspend fun deleteCachedAirQuality(stationId: Int) = airQualityDao.delete(stationId)
-
-
-
-    override suspend fun addAirQuality(stationId: Int): ApiResponse<AirQuality> {
-        return try {
-            ApiResponse.parse(httpClient.getAirQuality("@${stationId}")).mapOnSuccess {
-                val quality = it.copy(updatedAt = Date())
-
-                airQualityDao.insert(quality)
-                quality
-            }
-        } catch (exception: Exception) {
-            ApiResponse.parse(exception)
-        }
-    }
 }

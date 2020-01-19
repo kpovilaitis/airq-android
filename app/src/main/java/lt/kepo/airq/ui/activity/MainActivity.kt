@@ -8,10 +8,10 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.commit
 import lt.kepo.airq.R
 import lt.kepo.airq.ui.fragment.AirQualitiesFragment
 import lt.kepo.airq.utility.COARSE_LOCATION_PERMISSION_CODE
+import lt.kepo.airq.utility.commitWithAnimations
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,8 +29,10 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), COARSE_LOCATION_PERMISSION_CODE)
         }
 
-        supportFragmentManager.commit {
+        supportFragmentManager.commitWithAnimations {
             replace(R.id.main_content, AirQualitiesFragment())
         }
+
+        window.setBackgroundDrawableResource(R.drawable.background_window_inverted)
     }
 }

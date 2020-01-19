@@ -4,13 +4,9 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import lt.kepo.airq.data.api.ApiSuccessResponse
 import lt.kepo.airq.data.model.Station
-import lt.kepo.airq.data.repository.airquality.AirQualityRepository
-import lt.kepo.airq.domain.GetFilteredStationsUseCase
+import lt.kepo.airq.data.repository.stations.StationsRepository
 
-class StationsViewModel(
-    private val airQualityRepository: AirQualityRepository,
-    private val getStations: GetFilteredStationsUseCase
-) : ViewModel() {
+class StationsViewModel(private val stationsRepository: StationsRepository) : ViewModel() {
     private val _stations = MutableLiveData<MutableList<Station>>(mutableListOf())
     private val _isLoading = MutableLiveData<Boolean>(false)
 
@@ -23,7 +19,7 @@ class StationsViewModel(
         getStationsJob = viewModelScope.launch {
             _isLoading.value = true
 
-            when (val response = getStations(query)) {
+            when (val response = stationsRepository.getRemoteStations(query)) {
                 is ApiSuccessResponse -> _stations.value = response.data
             }
 
@@ -40,7 +36,7 @@ class StationsViewModel(
         viewModelScope.launch {
             _isLoading.value = true
 
-            airQualityRepository.addAirQuality(station.id)
+            stationsRepository.addAirQuality(station.id)
 
             _isLoading.value = false
         }

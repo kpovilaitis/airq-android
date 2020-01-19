@@ -19,8 +19,4 @@ interface AirQualityRepository {
     fun getCachedAirQuality(stationId: Int): LiveData<AirQuality>
 
     suspend fun deleteCachedAirQuality(stationId: Int)
-
-
-
-    suspend fun addAirQuality(stationId: Int): ApiResponse<AirQuality>
 }

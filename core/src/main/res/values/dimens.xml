@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="text_size_label">20sp</dimen>
+    <dimen name="text_size_title">30sp</dimen>
+    <dimen name="text_size_index">120sp</dimen>
+
+    <dimen name="padding_default">16dp</dimen>
+    <dimen name="padding_nav_bar">48dp</dimen>
+    <dimen name="margin_nav_bar">-48dp</dimen>
+
+</resources>

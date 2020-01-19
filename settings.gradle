@@ -1,1 +1,1 @@
-include ':app', ':stations'
+include ':airq', ':stations', ':core', ':airquality'

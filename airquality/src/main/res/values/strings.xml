@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="label_time_recorded">Recorded at</string>
+    <string name="label_ozone">Ozone</string>
+    <string name="label_pm_25">Particulate matter 2.5</string>
+    <string name="label_pm_10">Particulate matter 10</string>
+    <string name="label_sulfur_dioxide">Sulfur dioxide</string>
+
+    <string name="template_ppb">%s ppb</string>
+    <string name="template_μgm">%s μg/m\u00B3</string>
+
+</resources>

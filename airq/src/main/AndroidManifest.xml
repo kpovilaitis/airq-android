@@ -15,8 +15,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.Compat">
 
-        <activity android:name=".MainActivity"
-                android:theme="@style/MainActivityTheme">
+        <activity android:name=".SplashActivity"
+                android:theme="@style/SplashActivityTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,6 +25,9 @@
             </intent-filter>
 
         </activity>
+
+        <activity android:name="lt.kepo.airquality.ui.AirQualityActivity"
+                android:theme="@style/AirQualityActivityTheme"/>
 
         <activity android:name="lt.kepo.stations.ui.StationsActivity"/>
 

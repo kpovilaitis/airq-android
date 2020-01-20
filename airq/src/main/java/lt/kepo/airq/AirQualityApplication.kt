@@ -18,7 +18,8 @@ class AirQualityApplication : Application() {
                 listOf(
                     coreModule,
                     airQualityModule,
-                    stationsModule
+                    stationsModule,
+                    appModule
                 )
             )
         }

@@ -5,38 +5,58 @@ import lt.kepo.core.model.AirQuality
 import lt.kepo.airquality.repository.AirQualityRepository
 import lt.kepo.airquality.repository.AirQualityRepositoryImpl
 import lt.kepo.airquality.domain.UpdateAirQualitiesUseCase
+import lt.kepo.airquality.ui.AirQualityActivity
+import lt.kepo.airquality.ui.airqualities.AirQualitiesFragment
 import lt.kepo.airquality.ui.airqualities.AirQualitiesViewModel
+import lt.kepo.airquality.ui.airquality.AirQualityFragment
 import lt.kepo.airquality.ui.airquality.AirQualityViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val airQualityModule : Module = module {
 
-    factory<AirQualityRepository> { AirQualityRepositoryImpl(
+    scope(named<AirQualityActivity>()) {
+
+        scoped { LocationServices.getFusedLocationProviderClient(androidContext()) }
+
+        factory { UpdateAirQualitiesUseCase(airQualityRepository = get()) }
+
+        factory<AirQualityRepository> { AirQualityRepositoryImpl(
             airQualityDao = get(),
-            httpClient = get()
-        )
+            httpClient = get())
+        }
     }
 
-    single { LocationServices.getFusedLocationProviderClient(androidContext()) }
+    scope(named<AirQualitiesFragment>()) {
+        scoped {
+            val activityScope = getKoin().getOrCreateScope(
+                named<AirQualityActivity>().toString(),
+                named<AirQualityActivity>()
+            )
 
-    factory { UpdateAirQualitiesUseCase(airQualityRepository = get()) }
+            val vm = AirQualitiesViewModel(
+                application = androidApplication(),
+                airQualityRepository = activityScope.get(),
+                locationClient = activityScope.get(),
+                updateAirQualitiesUseCase = activityScope.get()
+            )
 
-    viewModel { AirQualitiesViewModel(
-        application = androidApplication(),
-        airQualityRepository = get(),
-        locationClient = get(),
-        updateAirQualitiesUseCase = get())
+            activityScope.close()
+            vm
+        }
     }
 
-    viewModel { (airQuality: AirQuality) -> AirQualityViewModel(
-        initAirQuality = airQuality,
-        application = androidApplication(),
-        airQualityRepository = get(),
-        locationClient = get(),
-        updateAirQualitiesUseCase = get())
+    scope(named<AirQualityFragment>()) {
+        scoped { (airQuality: AirQuality) -> AirQualityViewModel(
+            initAirQuality = airQuality,
+            application = androidApplication(),
+            airQualityRepository = get(),
+            locationClient = get(),
+            updateAirQualitiesUseCase = get())
+        }
     }
 }

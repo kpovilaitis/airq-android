@@ -1,6 +1,5 @@
 package lt.kepo.airquality.ui.airqualities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +11,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import lt.kepo.airquality.R
 import lt.kepo.airquality.ui.airquality.AirQualityFragment
+import lt.kepo.airquality.ui.AirQualitiesNavigator
+import lt.kepo.airquality.ui.AirQualityActivity
 import lt.kepo.core.ui.commitWithAnimations
 import lt.kepo.core.ui.getListDivider
 import lt.kepo.core.ui.showError
+import org.koin.android.ext.android.inject
+import org.koin.androidx.scope.currentScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class AirQualitiesFragment : Fragment() {
-    private val viewModel: AirQualitiesViewModel by viewModel()
+    private val navigator: AirQualitiesNavigator by inject()
+    private val viewModel: AirQualitiesViewModel by currentScope.viewModel(this)
 
     private lateinit var adapter: AirQualitiesAdapter
 
@@ -35,10 +40,10 @@ class AirQualitiesFragment : Fragment() {
 //        openFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
 //        closeFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
 
-        fab.setOnClickListener {
-            startActivity(Intent(requireContext(), StationsActivity::class.java))
+        fab.setOnClickListener { navigator.startStationsActivity(requireActivity()) }
 //            animateFAB()
-        }
+//        startActivity(Intent(requireContext(), StationsActivity::class.java))
+
 //        fab1.setOnClickListener {
 //            startActivityForResult(Intent(requireContext(), StationsActivity::class.java), STATIONS_ACTIVITY_REQUEST_CODE)
 //            animateFAB()
@@ -52,10 +57,7 @@ class AirQualitiesFragment : Fragment() {
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
         swipeToRefreshLayout.setOnRefreshListener { viewModel.updateCachedAirQualities(true) }
 
-        adapter = AirQualitiesAdapter(
-            emptyList(),
-            listClickListener
-        )
+        adapter = AirQualitiesAdapter(emptyList(), listClickListener)
         airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         airQualitiesRecyclerView.addItemDecoration(getListDivider(requireContext(), R.drawable.divider_air_qualities))
         airQualitiesRecyclerView.adapter = adapter

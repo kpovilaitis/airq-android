@@ -1,4 +1,4 @@
-package lt.kepo.airq
+package lt.kepo.airquality.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -8,12 +8,12 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import lt.kepo.airq.R
+import lt.kepo.airquality.R
 import lt.kepo.airquality.ui.airqualities.AirQualitiesFragment
 import lt.kepo.core.ui.commitWithAnimations
 
 
-class MainActivity : AppCompatActivity() {
+class AirQualityActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,7 +29,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.commitWithAnimations { replace(R.id.main_content, AirQualitiesFragment()) }
-
-        window.setBackgroundDrawableResource(R.drawable.background_window_inverted)
     }
 }

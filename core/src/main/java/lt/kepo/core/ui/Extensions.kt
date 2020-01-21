@@ -66,8 +66,8 @@ inline fun FragmentManager.commitWithAnimations(
     }
 }
 
-fun Fragment.showError(errorMessage: String, container: View) {
-    val snack = Snackbar.make(container, errorMessage, Snackbar.LENGTH_LONG)
+fun View.showError(errorMessage: String) {
+    val snack = Snackbar.make(this, errorMessage, Snackbar.LENGTH_LONG)
     val tv = snack.view.findViewById(R.id.snackbar_text) as TextView
 
     tv.setTextColor(resources.getColor(R.color.colorAccentTint, null))

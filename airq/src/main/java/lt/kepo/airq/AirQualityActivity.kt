@@ -30,7 +30,9 @@ class AirQualityActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 104)
         }
 
-        navigator.startAirQualityFragment(this)
+        if (savedInstanceState == null) {
+            navigator.startAirQualityFragment(this)
+        }
 
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.background_window_inverted))
     }

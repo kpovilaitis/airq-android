@@ -1,5 +1,8 @@
 <resources>
 
+    <string name="dialog_title_location_name">Location name</string>
+    <string name="close">Close</string>
+
     <string name="label_time_recorded">Recorded at</string>
     <string name="label_ozone">Ozone</string>
     <string name="label_pm_25">Particulate matter 2.5</string>

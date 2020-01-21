@@ -5,11 +5,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_stations.*
 import android.view.MenuItem
+import android.view.View
+import android.widget.RelativeLayout
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import lt.kepo.core.model.Station
 import lt.kepo.core.ui.getListDivider
+import lt.kepo.core.ui.showError
 import lt.kepo.stations.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,6 +30,11 @@ class StationsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        findViewById<RelativeLayout>(R.id.main_content).systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+
         stationsAdapter = StationsAdapter(emptyList()) { viewModel.addStationAirQuality(it) }
 
         stationsRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -36,6 +44,7 @@ class StationsActivity : AppCompatActivity() {
             toolbar.isSelected = stationsRecyclerView.canScrollVertically(-1)
         }
 
+        viewModel.errorMessage.observe(this, errorObserver)
         viewModel.isLoading.observe(this, progressObserver)
         viewModel.stations.observe(this, stationsObserver)
 
@@ -68,6 +77,8 @@ class StationsActivity : AppCompatActivity() {
     }
 
     private val progressObserver = Observer<Boolean> { isLoading -> }
+
+    private val errorObserver = Observer<String> { it?.let { error -> main_content.showError(error) } }
 
     private val stationsObserver = Observer<MutableList<Station>> { list -> list?.let { stations ->
             if (stationsAdapter.stations.size - stations.size == 1) {

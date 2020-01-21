@@ -1,13 +1,16 @@
 package lt.kepo.airquality.ui.airquality
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.NonNull
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_air_quality.*
 import lt.kepo.airquality.R
 import lt.kepo.core.constants.AIR_QUALITY_HERE_STATION_ID
+import lt.kepo.core.model.AirQuality
 import lt.kepo.core.ui.setFullName
 import lt.kepo.core.ui.setPollution
 import lt.kepo.core.ui.showError
@@ -15,8 +18,9 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class AirQualityFragment : Fragment() {
-    private val viewModel: AirQualityViewModel by inject { parametersOf(arguments?.getParcelable(
-        lt.kepo.core.model.AirQuality::class.java.simpleName)) }
+    private val viewModel: AirQualityViewModel by inject {
+        parametersOf(arguments?.getParcelable(AirQuality::class.java.simpleName))
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
         = inflater.inflate(R.layout.fragment_air_quality, container, false)
@@ -36,9 +40,9 @@ class AirQualityFragment : Fragment() {
             insets
         }
 
-        btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
+        btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+        textCity.setOnClickListener { showLocationNameDialog() }
+        textCountry.setOnClickListener { showLocationNameDialog() }
 
         swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
@@ -58,7 +62,15 @@ class AirQualityFragment : Fragment() {
     private fun formatText(templateResId: Int, value: Any?) =
         resources.getString(templateResId, value?.toString() ?: "-")
 
-    private val airQualityObserver = Observer<lt.kepo.core.model.AirQuality> { it?.let { newAirQuality ->
+    private fun showLocationNameDialog() {
+        AlertDialog.Builder(requireActivity(), R.style.Dialog).apply {
+            setTitle(R.string.dialog_title_location_name)
+            setMessage(viewModel.airQuality.value?.city?.name)
+            setPositiveButton(R.string.close) { dialog, _ -> dialog.dismiss() }
+        }.show()
+    }
+
+    private val airQualityObserver = Observer<AirQuality> { it?.let { newAirQuality ->
             if (newAirQuality.stationId == AIR_QUALITY_HERE_STATION_ID) {
                 btnRemoveAirQuality.visibility = View.GONE
             } else {
@@ -80,7 +92,7 @@ class AirQualityFragment : Fragment() {
         }
     }
 
-    private val errorMessageObserver = Observer<String> { it?.let { errorMessage -> showError(errorMessage, container) } }
+    private val errorMessageObserver = Observer<String> { it?.let { errorMessage -> container.showError(errorMessage) } }
 
     private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

@@ -26,7 +26,8 @@
 
         </activity>
 
-        <activity android:name="lt.kepo.stations.ui.StationsActivity"/>
+        <activity android:name="lt.kepo.stations.ui.StationsActivity"
+                android:windowSoftInputMode="adjustResize"/>
 
     </application>
 

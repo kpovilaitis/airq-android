@@ -113,7 +113,7 @@ class AirQualitiesFragment : Fragment() {
         }
     }
 
-    private val errorMessageObserver = Observer<String> { it?.let { errorMessage -> showError(errorMessage, container) } }
+    private val errorMessageObserver = Observer<String> { it?.let { errorMessage -> container.showError(errorMessage) } }
 
     private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

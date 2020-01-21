@@ -29,7 +29,7 @@ class StationsAdapter(
         fun bind(item: Station, listener: (Station) -> Unit) = with(itemView) {
             textStationName.text = item.station.name
             textStationAirQuality.text = resources.getString(R.string.label_station_air_quality, item.airQualityIndex)
-            buttonAddStation.setOnClickListener { listener(item) }
+            setOnClickListener { listener(item) }
         }
     }
 }

@@ -5,11 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_item_station.view.*
+import lt.kepo.core.model.Station
 import lt.kepo.stations.R
 
 class StationsAdapter(
-    var stations: List<lt.kepo.core.model.Station>,
-    private val clickListener: (lt.kepo.core.model.Station, Int) -> Unit
+    var stations: List<Station>,
+    private val clickListener: (Station) -> Unit
 ) : RecyclerView.Adapter<StationsAdapter.ViewHolder>() {
     override fun getItemCount(): Int = stations.size
 
@@ -25,10 +26,10 @@ class StationsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(stations[position], clickListener)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(item: lt.kepo.core.model.Station, listener: (lt.kepo.core.model.Station, Int) -> Unit) = with(itemView) {
+        fun bind(item: Station, listener: (Station) -> Unit) = with(itemView) {
             textStationName.text = item.station.name
             textStationAirQuality.text = resources.getString(R.string.label_station_air_quality, item.airQualityIndex)
-            buttonAddStation.setOnClickListener { listener(item, layoutPosition) }
+            buttonAddStation.setOnClickListener { listener(item) }
         }
     }
 }

@@ -22,11 +22,7 @@
 
     <style name="AppTheme.Compat"/>
 
-    <style name="SplashActivityTheme" parent="AppTheme.Compat"/>
-
-    <style name="AirQualityActivityTheme" parent="AppTheme.Compat">
-        <item name="android:windowBackground">@drawable/background_window_inverted</item>
-    </style>
+    <style name="AirQualityActivityTheme" parent="AppTheme.Compat"/>
 
     <style name="SettingsActivityTheme" parent="AppTheme.Compat"/>
 

@@ -11,19 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import lt.kepo.airquality.R
 import lt.kepo.airquality.ui.airquality.AirQualityFragment
-import lt.kepo.airquality.ui.AirQualitiesNavigator
-import lt.kepo.airquality.ui.AirQualityActivity
+import lt.kepo.airquality.ui.AppNavigator
 import lt.kepo.core.ui.commitWithAnimations
 import lt.kepo.core.ui.getListDivider
 import lt.kepo.core.ui.showError
 import org.koin.android.ext.android.inject
-import org.koin.androidx.scope.currentScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.qualifier.named
 
 class AirQualitiesFragment : Fragment() {
-    private val navigator: AirQualitiesNavigator by inject()
-    private val viewModel: AirQualitiesViewModel by currentScope.viewModel(this)
+    private val navigator: AppNavigator by inject()
+    private val viewModel: AirQualitiesViewModel by viewModel()
 
     private lateinit var adapter: AirQualitiesAdapter
 

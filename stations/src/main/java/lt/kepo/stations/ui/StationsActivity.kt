@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import lt.kepo.core.model.Station
 import lt.kepo.core.ui.getListDivider
 import lt.kepo.stations.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,8 +27,7 @@ class StationsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        stationsAdapter =
-            StationsAdapter(emptyList(), listClickListener)
+        stationsAdapter = StationsAdapter(emptyList(), listClickListener)
 
         stationsRecyclerView.layoutManager = LinearLayoutManager(this)
         stationsRecyclerView.addItemDecoration(getListDivider(this, R.drawable.divider_stations))
@@ -54,11 +54,7 @@ class StationsActivity : AppCompatActivity() {
         }
     }
 
-    private val listClickListener: (lt.kepo.core.model.Station, Int) -> Unit = { station, position->
-        viewModel.addStationAirQuality(station)
-        viewModel.stations.value?.remove(station)
-        stationsAdapter.notifyItemRemoved(position)
-    }
+    private val listClickListener: (Station) -> Unit = { viewModel.addStationAirQuality(it) }
 
     private val queryTextListener = object: SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -75,7 +71,13 @@ class StationsActivity : AppCompatActivity() {
 
     private val progressObserver = Observer<Boolean> { isLoading -> }
 
-    private val stationsObserver = Observer<MutableList<lt.kepo.core.model.Station>> { it?.let { stations ->
+    private val stationsObserver = Observer<MutableList<Station>> { it?.let { stations ->
+            if (stationsAdapter.stations.size - stations.size == 1) {
+                //        viewModel.stations.value?.remove(station)
+                //        stationsAdapter.notifyItemRemoved(position)
+                //        stationsAdapter.notifyItemRangeRemoved(position, 1)
+            }
+
             stationsAdapter.stations = stations
             stationsAdapter.notifyDataSetChanged()
         }

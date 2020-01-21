@@ -37,6 +37,9 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
 
             stationsRepository.addAirQuality(station.id)
 
+            _stations.value?.remove(station)
+            _stations.value = _stations.value
+
             _isLoading.value = false
         }
     }

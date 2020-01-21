@@ -27,7 +27,7 @@ class StationsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        stationsAdapter = StationsAdapter(emptyList(), listClickListener)
+        stationsAdapter = StationsAdapter(emptyList()) { viewModel.addStationAirQuality(it) }
 
         stationsRecyclerView.layoutManager = LinearLayoutManager(this)
         stationsRecyclerView.addItemDecoration(getListDivider(this, R.drawable.divider_stations))
@@ -54,8 +54,6 @@ class StationsActivity : AppCompatActivity() {
         }
     }
 
-    private val listClickListener: (Station) -> Unit = { viewModel.addStationAirQuality(it) }
-
     private val queryTextListener = object: SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean = false
 
@@ -71,15 +69,21 @@ class StationsActivity : AppCompatActivity() {
 
     private val progressObserver = Observer<Boolean> { isLoading -> }
 
-    private val stationsObserver = Observer<MutableList<Station>> { it?.let { stations ->
+    private val stationsObserver = Observer<MutableList<Station>> { list -> list?.let { stations ->
             if (stationsAdapter.stations.size - stations.size == 1) {
-                //        viewModel.stations.value?.remove(station)
-                //        stationsAdapter.notifyItemRemoved(position)
-                //        stationsAdapter.notifyItemRangeRemoved(position, 1)
-            }
 
-            stationsAdapter.stations = stations
-            stationsAdapter.notifyDataSetChanged()
+                val position = stationsAdapter.stations.indexOf(
+                    (stationsAdapter.stations + stations)
+                        .distinct()
+                        .first()
+                )
+
+                stationsAdapter.stations = stations.toList()
+                stationsAdapter.notifyItemRangeRemoved(position, 1)
+            } else {
+                stationsAdapter.stations = stations.toList()
+                stationsAdapter.notifyDataSetChanged()
+            }
         }
     }
 }

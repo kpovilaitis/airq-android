@@ -73,13 +73,14 @@ class StationsActivity : AppCompatActivity() {
             if (stationsAdapter.stations.size - stations.size == 1) {
 
                 val position = stationsAdapter.stations.indexOf(
-                    (stationsAdapter.stations + stations)
-                        .distinct()
+                    (stationsAdapter.stations + stations).groupBy { it.id }
+                        .filter { it.value.size == 1 }
+                        .flatMap { it.value }
                         .first()
                 )
 
                 stationsAdapter.stations = stations.toList()
-                stationsAdapter.notifyItemRangeRemoved(position, 1)
+                stationsAdapter.notifyItemRemoved(position)
             } else {
                 stationsAdapter.stations = stations.toList()
                 stationsAdapter.notifyDataSetChanged()

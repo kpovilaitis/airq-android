@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -13,14 +12,14 @@
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textAppName"
+                style="@style/TextBody"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentTop="true"
                 android:background="@color/colorStatusBar"
                 android:gravity="center"
-                android:stateListAnimator="@animator/toolbar_animator"
                 android:text="@string/app_name"
-                android:textSize="@dimen/text_size_label" />
+                android:stateListAnimator="@animator/toolbar_animator" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeToRefreshLayout"
@@ -28,7 +27,6 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/textAppName"
                 android:background="@drawable/background_window">
-
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/airQualitiesRecyclerView"
@@ -45,12 +43,10 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            style="@style/FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/margin_fab"
-            android:src="@drawable/ic_search"
-            app:layout_anchorGravity="bottom|end" />
+            android:src="@drawable/ic_search" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

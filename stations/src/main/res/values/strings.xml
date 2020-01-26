@@ -6,4 +6,6 @@
 
     <string name="label_station_air_quality">Air quality index: %s</string>
 
+    <string name="label_no_results">No results</string>
+
 </resources>

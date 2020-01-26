@@ -23,13 +23,21 @@ class StationsAdapter(
                 )
     )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(stations[position], clickListener)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int)
+            = holder.bind(stations[position], clickListener)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: Station, listener: (Station) -> Unit) = with(itemView) {
+            itemView.progress_circular.alpha = 0.0f
             textStationName.text = item.station.name
             textStationAirQuality.text = resources.getString(R.string.label_station_air_quality, item.airQualityIndex)
-            setOnClickListener { listener(item) }
+            setOnClickListener {
+                itemView.progress_circular
+                    .animate()
+                    .alpha(1.0f)
+                    .duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+                listener(item)
+            }
         }
     }
 }

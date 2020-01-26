@@ -9,6 +9,7 @@ import lt.kepo.core.network.ApiErrorResponse
 import lt.kepo.core.network.ApiSuccessResponse
 import lt.kepo.core.model.AirQuality
 import lt.kepo.airquality.repository.AirQualityRepository
+import lt.kepo.airquality.ui.BaseAirQualityViewModel
 import lt.kepo.core.constants.AIR_QUALITY_HERE_STATION_ID
 
 class AirQualityViewModel(
@@ -17,7 +18,9 @@ class AirQualityViewModel(
     airQualityRepository: AirQualityRepository,
     locationClient: FusedLocationProviderClient,
     private val updateAirQualitiesUseCase: UpdateAirQualitiesUseCase
-) : lt.kepo.airquality.ui.BaseAirQualityViewModel(application, locationClient, airQualityRepository) {
+) : BaseAirQualityViewModel(application, locationClient, airQualityRepository) {
+    val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
     val airQuality: LiveData<AirQuality> = airQualityRepository.getCachedAirQuality(initAirQuality.stationId)
 
     fun removeAirQuality() {
@@ -27,21 +30,24 @@ class AirQualityViewModel(
     }
 
     fun updateCachedAirQuality(force: Boolean = false) {
-        if (airQuality.value?.stationId == AIR_QUALITY_HERE_STATION_ID)
-            updateCachedAirQualityHere(force, airQuality.value)
-        else {
-            viewModelScope.launch {
-                _isLoading.value = true
+        viewModelScope.launch {
+            _isLoading.value = true
 
+            if (airQuality.value?.stationId == AIR_QUALITY_HERE_STATION_ID)
+                updateCachedAirQualityHere(
+                    force = force,
+                    airQualityHere = airQuality.value
+                )
+            else {
                 airQuality.value?.let {
                     when (val result = updateAirQualitiesUseCase(force, listOf(it))) {
                         is ApiSuccessResponse -> _errorMessage.value = null
                         is ApiErrorResponse<*> -> _errorMessage.value = result.error
                     }
                 }
-
-                _isLoading.value = false
             }
+
+            _isLoading.value = false
         }
     }
 }

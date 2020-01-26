@@ -81,6 +81,14 @@ class StationsActivity : AppCompatActivity() {
     private val errorObserver = Observer<String> { it?.let { error -> main_content.showError(error) } }
 
     private val stationsObserver = Observer<MutableList<Station>> { list -> list?.let { stations ->
+            if (stations.isEmpty() && search.getText) {
+                empty_view.visibility = View.VISIBLE
+                stationsRecyclerView.visibility = View.GONE
+            } else {
+                empty_view.visibility = View.GONE
+                stationsRecyclerView.visibility = View.VISIBLE
+            }
+
             if (stationsAdapter.stations.size - stations.size == 1) {
 
                 val position = stationsAdapter.stations.indexOf(

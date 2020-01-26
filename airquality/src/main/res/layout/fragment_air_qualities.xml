@@ -12,7 +12,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textAppName"
-                style="@style/TextBody"
+                style="@style/TextBodyBold"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentTop="true"
@@ -47,6 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:src="@drawable/ic_search" />
+            android:src="@drawable/ic_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

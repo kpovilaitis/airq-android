@@ -28,13 +28,8 @@ abstract class BaseAirQualityViewModel(
     val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    val _isLoading = MutableLiveData<Boolean>(false)
-    val isLoading: LiveData<Boolean> get() = _isLoading
-
     fun updateCachedAirQualityHere(force: Boolean, airQualityHere: AirQuality?) {
         if (force || airQualityHere == null || airQualityHere.shouldUpdate()) {
-            _isLoading.value = true
-
             if (isLocationEnabled(getApplication())) {
                 fusedLocationClient.locationAvailability.addOnSuccessListener { locationAvailability ->
                     if (locationAvailability.isLocationAvailable) {
@@ -56,8 +51,6 @@ abstract class BaseAirQualityViewModel(
             is ApiSuccessResponse -> _errorMessage.value = null
             is ApiErrorResponse<*> -> _errorMessage.value = result.error
         }
-
-        _isLoading.value = false
     }
 
     private fun isLocationEnabled(context: Context): Boolean {

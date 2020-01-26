@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import lt.kepo.airquality.R
 import lt.kepo.airquality.ui.airquality.AirQualityFragment
 import lt.kepo.airquality.ui.AppNavigator
+import lt.kepo.core.model.AirQuality
 import lt.kepo.core.ui.commitWithAnimations
 import lt.kepo.core.ui.getListDivider
 import lt.kepo.core.ui.showError
@@ -93,11 +94,11 @@ class AirQualitiesFragment : Fragment() {
         viewModel.updateCachedAirQualities()
     }
 
-    private val listClickListener: (lt.kepo.core.model.AirQuality) -> Unit = { airQuality ->
+    private val listClickListener: (AirQuality) -> Unit = { airQuality ->
         val nextFragment = AirQualityFragment()
         val bundle = Bundle()
 
-        bundle.putParcelable(lt.kepo.core.model.AirQuality::class.java.simpleName, airQuality)
+        bundle.putParcelable(AirQuality::class.java.simpleName, airQuality)
 
         nextFragment.arguments = bundle
 
@@ -107,7 +108,7 @@ class AirQualitiesFragment : Fragment() {
         }
     }
 
-    private val airQualitiesObserver = Observer<List<lt.kepo.core.model.AirQuality>> { it?.let { airQualities ->
+    private val airQualitiesObserver = Observer<List<AirQuality>> { it?.let { airQualities ->
             adapter.airQualities = airQualities
             adapter.notifyDataSetChanged()
         }

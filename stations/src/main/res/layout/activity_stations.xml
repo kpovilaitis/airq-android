@@ -16,7 +16,29 @@
                 android:paddingTop="@dimen/padding_toolbar_overflow"
                 android:clipToPadding="false"
                 android:paddingBottom="@dimen/padding_nav_bar"
-                android:layout_below="@id/toolbar"/>
+                android:layout_below="@id/toolbar"
+                android:visibility="gone"/>
+
+        <LinearLayout
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="124dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="148dp"
+                    android:layout_height="148dp"
+                    android:src="@drawable/ic_downasaur"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextTitleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_no_results" />
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

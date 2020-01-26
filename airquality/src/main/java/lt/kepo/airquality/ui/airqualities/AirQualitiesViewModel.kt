@@ -5,15 +5,22 @@ import androidx.lifecycle.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 import lt.kepo.airquality.domain.UpdateAirQualitiesUseCase
+import lt.kepo.airquality.repository.AirQualityRepository
+import lt.kepo.airquality.ui.BaseAirQualityViewModel
 import lt.kepo.core.constants.AIR_QUALITY_HERE_STATION_ID
+import lt.kepo.core.model.AirQuality
+import lt.kepo.core.network.ApiErrorResponse
+import lt.kepo.core.network.ApiSuccessResponse
 
 class AirQualitiesViewModel(
     application: Application,
-    airQualityRepository: lt.kepo.airquality.repository.AirQualityRepository,
+    airQualityRepository: AirQualityRepository,
     locationClient: FusedLocationProviderClient,
     private val updateAirQualitiesUseCase: UpdateAirQualitiesUseCase
-) : lt.kepo.airquality.ui.BaseAirQualityViewModel(application, locationClient, airQualityRepository) {
-    val airQualities: LiveData<List<lt.kepo.core.model.AirQuality>> = airQualityRepository.getCachedAirQualitiesLive()
+) : BaseAirQualityViewModel(application, locationClient, airQualityRepository) {
+    val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+    val airQualities: LiveData<List<AirQuality>> = airQualityRepository.getCachedAirQualitiesLive()
 
     fun updateCachedAirQualities(force: Boolean = false) {
         viewModelScope.launch {
@@ -30,16 +37,18 @@ class AirQualitiesViewModel(
                 airQualityHere = cachedQualities.singleOrNull { it.stationId == AIR_QUALITY_HERE_STATION_ID }
             )
 
-            cachedQualities
-                .filter { it.stationId != AIR_QUALITY_HERE_STATION_ID }
-                .let {
-                    when (val result = updateAirQualitiesUseCase(force, it)) {
-                        is lt.kepo.core.network.ApiSuccessResponse -> _errorMessage.value = null
-                        is lt.kepo.core.network.ApiErrorResponse<*> -> _errorMessage.value = result.error
+            if (cachedQualities.any()) {
+                cachedQualities
+                    .filter { it.stationId != AIR_QUALITY_HERE_STATION_ID }
+                    .let {
+                        when (val result = updateAirQualitiesUseCase(force, it)) {
+                            is ApiSuccessResponse -> _errorMessage.value = null
+                            is ApiErrorResponse<*> -> _errorMessage.value = result.error
+                        }
                     }
-                }
 
-            _isLoading.value = false
+                _isLoading.value = false
+            }
         }
     }
 }

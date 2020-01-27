@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import lt.kepo.core.model.Station
@@ -81,19 +82,9 @@ class StationsActivity : AppCompatActivity() {
     private val errorObserver = Observer<String> { it?.let { error -> container.showError(error) } }
 
     private val stationsObserver = Observer<MutableList<Station>> { list -> list?.let { stations ->
-            if (stations.isEmpty() && search.query.isNotEmpty()) {
-                view_try_typing.visibility = View.GONE
-                view_no_result.visibility = View.VISIBLE
-                stationsRecyclerView.visibility = View.GONE
-            } else if (stations.isEmpty() && search.query.isEmpty()){
-                view_try_typing.visibility = View.VISIBLE
-                view_no_result.visibility = View.GONE
-                stationsRecyclerView.visibility = View.GONE
-            } else {
-                view_try_typing.visibility = View.GONE
-                view_no_result.visibility = View.GONE
-                stationsRecyclerView.visibility = View.VISIBLE
-            }
+            view_try_typing.isVisible = stations.isEmpty() && search.query.isEmpty()
+            view_no_result.isVisible = stations.isEmpty() && search.query.isNotEmpty()
+            stationsRecyclerView.isVisible = stations.isNotEmpty()
 
             if (stationsAdapter.stations.size - stations.size == 1) {
 

@@ -56,6 +56,7 @@ class StationsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
+                search.clearFocus()
                 setResult(Activity.RESULT_OK)
                 finish()
                 true

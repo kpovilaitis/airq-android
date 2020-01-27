@@ -41,6 +41,4 @@ data class AirQuality (
     @Expose(deserialize = false, serialize = false)
     @ColumnInfo(name = "updated_at")
     val updatedAt: Date?
-) : Parcelable {
-    fun shouldUpdate() = updatedAt?.before(Date(Date().time - 1000 * 60 * 10)) == true
-}
+) : Parcelable

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_stations.*
 import android.view.MenuItem
 import android.view.View
-import android.widget.RelativeLayout
 import androidx.appcompat.widget.SearchView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
@@ -82,11 +81,17 @@ class StationsActivity : AppCompatActivity() {
     private val errorObserver = Observer<String> { it?.let { error -> container.showError(error) } }
 
     private val stationsObserver = Observer<MutableList<Station>> { list -> list?.let { stations ->
-            if (stations.isEmpty() && search.getText) {
-                empty_view.visibility = View.VISIBLE
+            if (stations.isEmpty() && search.query.isNotEmpty()) {
+                view_try_typing.visibility = View.GONE
+                view_no_result.visibility = View.VISIBLE
+                stationsRecyclerView.visibility = View.GONE
+            } else if (stations.isEmpty() && search.query.isEmpty()){
+                view_try_typing.visibility = View.VISIBLE
+                view_no_result.visibility = View.GONE
                 stationsRecyclerView.visibility = View.GONE
             } else {
-                empty_view.visibility = View.GONE
+                view_try_typing.visibility = View.GONE
+                view_no_result.visibility = View.GONE
                 stationsRecyclerView.visibility = View.VISIBLE
             }
 

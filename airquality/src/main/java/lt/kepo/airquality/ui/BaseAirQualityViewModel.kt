@@ -15,6 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
+import lt.kepo.airquality.domain.shouldUpdate
 import lt.kepo.core.network.ApiErrorResponse
 import lt.kepo.core.network.ApiSuccessResponse
 import lt.kepo.core.model.AirQuality

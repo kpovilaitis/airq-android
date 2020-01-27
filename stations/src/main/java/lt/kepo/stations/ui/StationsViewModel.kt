@@ -19,9 +19,6 @@ class StationsViewModel(private val stationsRepository: StationsRepository) : Vi
     private var getStationsJob: Job? = null
 
     fun getRemoteStations(query: String) {
-        //cancel ongoing autocomplete, to prevent overlapping responses
-        getStationsJob?.cancel()
-
         getStationsJob = viewModelScope.launch {
             _isLoading.value = true
 

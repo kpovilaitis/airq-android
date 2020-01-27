@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.SearchView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import lt.kepo.core.model.Station
@@ -30,7 +31,7 @@ class StationsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        findViewById<RelativeLayout>(R.id.main_content).systemUiVisibility =
+        findViewById<CoordinatorLayout>(R.id.container).systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
             View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -78,7 +79,7 @@ class StationsActivity : AppCompatActivity() {
 
     private val progressObserver = Observer<Boolean> { isLoading -> }
 
-    private val errorObserver = Observer<String> { it?.let { error -> main_content.showError(error) } }
+    private val errorObserver = Observer<String> { it?.let { error -> container.showError(error) } }
 
     private val stationsObserver = Observer<MutableList<Station>> { list -> list?.let { stations ->
             if (stations.isEmpty() && search.getText) {

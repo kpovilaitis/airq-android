@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/main_content"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/background_window">
+
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/margin_nav_bar"
-            android:background="@drawable/background_window"
-            android:fitsSystemWindows="true">
+            android:layout_marginBottom="@dimen/margin_nav_bar">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/stationsRecyclerView"
@@ -66,3 +70,5 @@
         </androidx.appcompat.widget.Toolbar>
 
     </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

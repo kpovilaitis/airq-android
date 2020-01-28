@@ -46,9 +46,9 @@ class AirQualitiesViewModel(
                             is ApiErrorResponse<*> -> _errorMessage.value = result.error
                         }
                     }
-
-                _isLoading.value = false
             }
+
+            _isLoading.value = false
         }
     }
 }

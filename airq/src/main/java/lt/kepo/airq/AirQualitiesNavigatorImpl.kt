@@ -17,6 +17,9 @@ class AirQualitiesNavigatorImpl : AppNavigator {
     }
 
     override fun startStationsActivity(activity: Activity) {
-        activity.startActivity(Intent(activity, StationsActivity::class.java))
+        activity.apply {
+            startActivity(Intent(activity, StationsActivity::class.java))
+            overridePendingTransition(R.anim.window_enter, R.anim.window_exit)
+        }
     }
 }

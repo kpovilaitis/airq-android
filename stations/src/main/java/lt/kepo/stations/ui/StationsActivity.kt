@@ -33,8 +33,8 @@ class StationsActivity : AppCompatActivity() {
 
         findViewById<CoordinatorLayout>(R.id.container).systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 
         stationsAdapter = StationsAdapter(emptyList()) { viewModel.addStationAirQuality(it) }
 
@@ -59,13 +59,14 @@ class StationsActivity : AppCompatActivity() {
                 search.clearFocus()
                 setResult(Activity.RESULT_OK)
                 finish()
+                overridePendingTransition(R.anim.window_pop_enter, R.anim.window_pop_exit)
                 true
             }
             else -> false
         }
     }
 
-    private val queryTextListener = object: SearchView.OnQueryTextListener {
+    private val queryTextListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean = false
 
         override fun onQueryTextChange(newText: String): Boolean {
@@ -82,26 +83,25 @@ class StationsActivity : AppCompatActivity() {
 
     private val errorObserver = Observer<String> { it?.let { error -> container.showError(error) } }
 
-    private val stationsObserver = Observer<MutableList<Station>> { list -> list?.let { stations ->
-            view_try_typing.isVisible = stations.isEmpty() && search.query.isEmpty()
-            view_no_result.isVisible = stations.isEmpty() && search.query.isNotEmpty()
-            stationsRecyclerView.isVisible = stations.isNotEmpty()
+    private val stationsObserver = Observer<MutableList<Station>> { stations ->
+        view_try_typing.isVisible = stations.isEmpty() && search.query.isEmpty()
+        view_no_result.isVisible = stations.isEmpty() && search.query.isNotEmpty()
+        stationsRecyclerView.isVisible = stations.isNotEmpty()
 
-            if (stationsAdapter.stations.size - stations.size == 1) {
+        if (stationsAdapter.stations.size - stations.size == 1) {
 
-                val position = stationsAdapter.stations.indexOf(
-                    (stationsAdapter.stations + stations).groupBy { it.id }
-                        .filter { it.value.size == 1 }
-                        .flatMap { it.value }
-                        .first()
-                )
+            val position = stationsAdapter.stations.indexOf(
+                (stationsAdapter.stations + stations).groupBy { it.id }
+                    .filter { it.value.size == 1 }
+                    .flatMap { it.value }
+                    .first()
+            )
 
-                stationsAdapter.stations = stations.toList()
-                stationsAdapter.notifyItemRemoved(position)
-            } else {
-                stationsAdapter.stations = stations.toList()
-                stationsAdapter.notifyDataSetChanged()
-            }
+            stationsAdapter.stations = stations.toList()
+            stationsAdapter.notifyItemRemoved(position)
+        } else {
+            stationsAdapter.stations = stations.toList()
+            stationsAdapter.notifyDataSetChanged()
         }
     }
 }

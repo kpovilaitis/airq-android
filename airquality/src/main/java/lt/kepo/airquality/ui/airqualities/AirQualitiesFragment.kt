@@ -108,10 +108,9 @@ class AirQualitiesFragment : Fragment() {
         }
     }
 
-    private val airQualitiesObserver = Observer<List<AirQuality>> { it?.let { airQualities ->
-            adapter.airQualities = airQualities
-            adapter.notifyDataSetChanged()
-        }
+    private val airQualitiesObserver = Observer<List<AirQuality>> { airQualities ->
+        adapter.airQualities = airQualities
+        adapter.notifyDataSetChanged()
     }
 
     private val errorMessageObserver = Observer<String> { it?.let { errorMessage -> container.showError(errorMessage) } }

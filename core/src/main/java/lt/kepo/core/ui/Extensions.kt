@@ -7,7 +7,6 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.view.View
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.snackbar.Snackbar
@@ -52,10 +51,10 @@ inline fun FragmentManager.commitWithAnimations(
     val transaction = beginTransaction()
 
     transaction.setCustomAnimations(
-        R.anim.fragment_enter,
-        R.anim.fragment_exit,
-        R.anim.fragment_pop_enter,
-        R.anim.fragment_pop_exit
+        R.anim.window_enter,
+        R.anim.window_exit,
+        R.anim.window_pop_enter,
+        R.anim.window_pop_exit
     )
     transaction.body()
 

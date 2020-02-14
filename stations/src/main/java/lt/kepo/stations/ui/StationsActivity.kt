@@ -15,15 +15,23 @@ import lt.kepo.core.model.Station
 import lt.kepo.core.ui.getListDivider
 import lt.kepo.core.ui.showError
 import lt.kepo.stations.R
+import org.koin.android.ext.android.getKoin
+import org.koin.androidx.scope.bindScope
+import org.koin.androidx.scope.currentScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class StationsActivity : AppCompatActivity() {
-    private val viewModel: StationsViewModel by viewModel()
+    private val viewModel: StationsViewModel by currentScope.viewModel(this)
 
     private lateinit var stationsAdapter: StationsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        getKoin()
+            .createScope(SCOPE_ID, named<StationsActivity>())
+            .apply { bindScope(this) }
 
         setContentView(R.layout.activity_stations)
         setSupportActionBar(toolbar)
@@ -103,5 +111,9 @@ class StationsActivity : AppCompatActivity() {
             stationsAdapter.stations = stations.toList()
             stationsAdapter.notifyDataSetChanged()
         }
+    }
+
+    companion object {
+        const val SCOPE_ID = "STATIONS_ACTIVITY_SCOPE_ID"
     }
 }

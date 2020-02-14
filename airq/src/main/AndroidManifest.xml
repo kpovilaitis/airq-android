@@ -15,7 +15,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.Compat">
 
-        <activity android:name=".AirQualityActivity"
+        <activity android:name="lt.kepo.airquality.ui.AirQualityActivity"
                 android:theme="@style/AirQualityActivityTheme">
 
             <intent-filter>

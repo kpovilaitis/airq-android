@@ -1,6 +1,5 @@
 package lt.kepo.airquality.ui.airquality
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.NonNull

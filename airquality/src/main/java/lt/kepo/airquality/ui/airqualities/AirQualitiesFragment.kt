@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import lt.kepo.airquality.R
 import lt.kepo.airquality.ui.airquality.AirQualityFragment
-import lt.kepo.airquality.ui.AppNavigator
+import lt.kepo.core.ui.AppNavigator
 import lt.kepo.core.model.AirQuality
 import lt.kepo.core.ui.commitWithAnimations
 import lt.kepo.core.ui.getListDivider

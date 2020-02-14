@@ -1,6 +1,6 @@
 package lt.kepo.airq
 
-import lt.kepo.airquality.ui.AppNavigator
+import lt.kepo.core.ui.AppNavigator
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

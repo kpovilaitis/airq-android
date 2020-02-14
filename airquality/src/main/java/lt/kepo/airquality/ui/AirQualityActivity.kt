@@ -1,4 +1,4 @@
-package lt.kepo.airq
+package lt.kepo.airquality.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -9,15 +9,20 @@ import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import lt.kepo.airquality.R
-import lt.kepo.airquality.ui.AppNavigator
-import org.koin.android.ext.android.inject
-
+import lt.kepo.airquality.ui.airqualities.AirQualitiesFragment
+import lt.kepo.core.ui.commitWithAnimations
+import org.koin.android.ext.android.getKoin
+import org.koin.androidx.scope.bindScope
+import org.koin.core.qualifier.named
 
 class AirQualityActivity : AppCompatActivity() {
-    private val navigator: AppNavigator by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        getKoin()
+            .createScope(SCOPE_ID, named<AirQualityActivity>())
+            .apply { bindScope(this) }
 
         setContentView(R.layout.activity_main)
 
@@ -31,9 +36,15 @@ class AirQualityActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            navigator.startAirQualityFragment(this)
+            supportFragmentManager.commitWithAnimations {
+                replace(R.id.main_content, AirQualitiesFragment())
+            }
         }
 
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.background_window_inverted))
+    }
+
+    companion object {
+        const val SCOPE_ID = "AIR_QUALITY_ACTIVITY_SCOPE_ID"
     }
 }

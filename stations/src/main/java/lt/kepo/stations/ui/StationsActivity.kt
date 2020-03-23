@@ -82,7 +82,7 @@ class StationsActivity : AppCompatActivity() {
 
     private val progressObserver = Observer<Boolean> { isLoading -> }
 
-    private val errorObserver = Observer<String> { it?.run { container.showError(this) } }
+    private val errorObserver = Observer<String> { container.showError(it) }
 
     private val stationsObserver = Observer<MutableList<Station>> { stations ->
         view_try_typing.isVisible = stations.isEmpty() && search.query.isEmpty()

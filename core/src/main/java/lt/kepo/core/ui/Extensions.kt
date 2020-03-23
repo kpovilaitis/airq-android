@@ -12,8 +12,8 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.snackbar.Snackbar
 import lt.kepo.core.R
 
-fun View.setPollution(airQualityIndex: String?) {
-    if (airQualityIndex != null && airQualityIndex != "-") {
+fun View.setPollution(airQualityIndex: String) {
+    if (airQualityIndex != "-") {
         val paintDrawable = PaintDrawable()
 
         paintDrawable.shape = RectShape()

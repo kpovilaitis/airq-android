@@ -26,7 +26,7 @@ class AppNavigatorImpl(
 
     override fun finishActivity(resultCode: Int?)  =
         activity.run {
-            resultCode?.run { setResult(this) }
+            resultCode?.let { setResult(it) }
             finish()
             overridePendingTransition(R.anim.window_pop_enter, lt.kepo.stations.R.anim.window_pop_exit)
         }

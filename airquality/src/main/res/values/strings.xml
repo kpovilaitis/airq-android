@@ -1,6 +1,11 @@
 <resources>
 
     <string name="dialog_title_location_name">Location name</string>
+    <string name="dialog_title_pm25">Particulate Matter 2.5 (PM2.5)</string>
+    <string name="dialog_message_pm25">Particulate matter 2.5 refers to tiny particles or droplets in the air that are two and one half microns or less in width. Particles in the PM2.5 size range are able to travel deeply into the respiratory tract, reaching the lungs.
+        \n\nExposure to fine particles can cause short-term health effects such as eye, nose, throat and lung irritation, coughing, sneezing, runny nose and shortness of breath. It also affect lung function and worsen medical conditions such as asthma and heart disease.
+        \n\nThere are outdoor and indoor sources of fine particles. Outside, fine particles primarily come from vehicle exhausts, other operations that involve the burning of fossil fuels and natural sources such as forest and grass fires. Fine particles also form from the reaction of gases or droplets in the atmosphere from sources such as power plants. These chemical reactions can occur miles from the original source of the emissions because fine particles can be carried long distances from their source.</string>
+
     <string name="close">Close</string>
 
     <string name="label_time_recorded">Recorded at</string>

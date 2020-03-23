@@ -3,8 +3,6 @@
 
     <style name="TextBody" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/text_size_label</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="TextBodyBold" parent="@style/TextBody">
@@ -13,8 +11,6 @@
 
     <style name="TextTitle" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/text_size_title</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="TextTitleBold" parent="@style/TextTitle">

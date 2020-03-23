@@ -42,7 +42,6 @@ class AirQualitiesViewModel(
                     .filter { it.stationId != AIR_QUALITY_HERE_STATION_ID }
                     .let {
                         when (val result = updateAirQualitiesUseCase(force, it)) {
-                            is ApiSuccessResponse -> _errorMessage.value = null
                             is ApiErrorResponse<*> -> _errorMessage.value = result.error
                         }
                     }

@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
+import kotlinx.android.synthetic.main.fragment_air_qualities.container
+import kotlinx.android.synthetic.main.fragment_air_qualities.swipeToRefreshLayout
 import lt.kepo.airquality.AirQualityNavigator
 import lt.kepo.airquality.R
 import lt.kepo.core.ui.AppNavigator
@@ -108,7 +110,7 @@ class AirQualitiesFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    private val errorMessageObserver = Observer<String> { it?.run { container.showError(this) } }
+    private val errorMessageObserver = Observer<String> { container.showError(it) }
 
     private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

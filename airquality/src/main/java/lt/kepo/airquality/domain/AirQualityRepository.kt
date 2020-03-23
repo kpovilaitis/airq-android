@@ -6,17 +6,17 @@ import lt.kepo.core.network.ApiResponse
 import lt.kepo.core.model.AirQuality
 
 interface AirQualityRepository {
-    suspend fun updateAirQualityHere(location: Location?): lt.kepo.core.network.ApiResponse<lt.kepo.core.model.AirQuality>
+    suspend fun updateAirQualityHere(location: Location?): ApiResponse<AirQuality>
 
-    suspend fun updateAirQuality(stationId: Int): lt.kepo.core.network.ApiResponse<lt.kepo.core.model.AirQuality>
+    suspend fun updateAirQuality(stationId: Int): ApiResponse<AirQuality>
 
-    fun getCachedAirQualitiesLive(): LiveData<List<lt.kepo.core.model.AirQuality>>
+    fun getCachedAirQualitiesLive(): LiveData<List<AirQuality>>
 
-    suspend fun getCachedAirQualities(): List<lt.kepo.core.model.AirQuality>
+    suspend fun getCachedAirQualities(): List<AirQuality>
 
 
 
-    fun getCachedAirQuality(stationId: Int): LiveData<lt.kepo.core.model.AirQuality>
+    fun getCachedAirQuality(stationId: Int): LiveData<AirQuality>
 
     suspend fun deleteCachedAirQuality(stationId: Int)
 }

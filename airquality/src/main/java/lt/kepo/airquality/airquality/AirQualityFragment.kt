@@ -1,10 +1,13 @@
 package lt.kepo.airquality.airquality
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.NonNull
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_air_quality.*
@@ -41,8 +44,12 @@ class AirQualityFragment : Fragment() {
             swipeToRefreshLayout.setProgressViewOffset(true, statusBarHeight, statusBarHeight * 2)
 
             container.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, 0)
-            textTimeRecordedLabel.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
-            textTimeRecordedValue.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
+            textTimeRecordedLabel.setPadding(textTimeRecordedLabel.paddingLeft, textTimeRecordedLabel.paddingTop, textTimeRecordedLabel.paddingRight, insets.systemWindowInsetBottom)
+            textTimeRecordedValue.setPadding(textTimeRecordedLabel.paddingLeft, textTimeRecordedLabel.paddingTop, textTimeRecordedLabel.paddingRight, insets.systemWindowInsetBottom)
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                textOzoneLabel.setPadding(textTimeRecordedLabel.paddingLeft, textTimeRecordedLabel.paddingTop, textTimeRecordedLabel.paddingRight, insets.systemWindowInsetBottom)
+                textOzoneValue.setPadding(textTimeRecordedLabel.paddingLeft, textTimeRecordedLabel.paddingTop, textTimeRecordedLabel.paddingRight, insets.systemWindowInsetBottom)
+            }
             v.setPadding(0, statusBarHeight, 0 , 0)
             insets
         }
@@ -50,6 +57,8 @@ class AirQualityFragment : Fragment() {
         btnBack.setOnClickListener { innerNavigator.goBack() }
         textCity.setOnClickListener { showLocationNameDialog() }
         textCountry.setOnClickListener { showLocationNameDialog() }
+
+        textPM25Label.setOnClickListener { showExplanationDialog(R.string.dialog_title_pm25, R.string.dialog_message_pm25) }
 
         swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
@@ -70,17 +79,27 @@ class AirQualityFragment : Fragment() {
         resources.getString(templateResId, value?.toString() ?: "-")
 
     private fun showLocationNameDialog() {
-        viewModel.airQuality.value?.city?.name?.run {
+        viewModel.airQuality.value?.city?.name?.let {
             AlertDialog.Builder(requireActivity(), R.style.Dialog).apply {
                 setTitle(R.string.dialog_title_location_name)
-                setMessage(this@run)
+                setMessage(it)
                 setPositiveButton(R.string.close) { dialog, _ -> dialog.dismiss() }
             }.show()
         }
     }
 
-    private val airQualityObserver = Observer<AirQuality> { it?.run {
-            if (stationId == AIR_QUALITY_HERE_STATION_ID) {
+    private fun showExplanationDialog(@StringRes titleResId: Int, @StringRes messageResId: Int) {
+        AlertDialog.Builder(requireActivity(), R.style.Dialog).apply {
+            setTitle(R.string.dialog_title_pm25)
+            setMessage(messageResId)
+            setPositiveButton(R.string.close) { dialog, _ -> dialog.dismiss() }
+        }.show()
+    }
+
+
+
+    private val airQualityObserver = Observer<AirQuality> {
+            if (it.stationId == AIR_QUALITY_HERE_STATION_ID) {
                 btnRemoveAirQuality.visibility = View.GONE
             } else {
                 btnRemoveAirQuality.setOnClickListener {
@@ -89,19 +108,18 @@ class AirQualityFragment : Fragment() {
                 }
             }
 
-            setFullName(city.name, textCity, textCountry)
-            textIndex.text = airQualityIndex
+            setFullName(it.city.name, textCity, textCountry)
+            textIndex.text = it.airQualityIndex
 
-            textSulfurDioxideValue.text = formatText(R.string.template_ppb, individualIndices.sulfurOxide?.value)
-            textPM25Value.text = formatText(R.string.template_μgm, individualIndices.particle25?.value)
-            textPM10Value.text = formatText(R.string.template_μgm, individualIndices.particle10?.value)
-            textOzoneValue.text = formatText(R.string.template_ppb, individualIndices.ozone?.value)
-            textTimeRecordedValue.text = time.toString()
-            pollutionView.setPollution(airQualityIndex)
-        }
+            textSulfurDioxideValue.text = formatText(R.string.template_ppb, it.individualIndices.sulfurOxide?.value)
+            textPM25Value.text = formatText(R.string.template_μgm, it.individualIndices.particle25?.value)
+            textPM10Value.text = formatText(R.string.template_μgm, it.individualIndices.particle10?.value)
+            textOzoneValue.text = formatText(R.string.template_ppb, it.individualIndices.ozone?.value)
+            textTimeRecordedValue.text = it.time.toString()
+            pollutionView.setPollution(it.airQualityIndex)
     }
 
-    private val errorMessageObserver = Observer<String> { it?.run { container.showError(this) } }
+    private val errorMessageObserver = Observer<String> { container.showError(it) }
 
     private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

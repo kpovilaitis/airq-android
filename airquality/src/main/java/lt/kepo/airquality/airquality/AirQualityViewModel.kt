@@ -41,7 +41,6 @@ class AirQualityViewModel(
             else {
                 airQuality.value?.let {
                     when (val result = updateAirQualitiesUseCase(force, listOf(it))) {
-                        is ApiSuccessResponse -> _errorMessage.value = null
                         is ApiErrorResponse<*> -> _errorMessage.value = result.error
                     }
                 }

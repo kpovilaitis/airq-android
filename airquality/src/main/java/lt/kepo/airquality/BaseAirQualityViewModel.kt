@@ -49,7 +49,6 @@ abstract class BaseAirQualityViewModel(
 
     private suspend fun updateAirQualityHere(location: Location?) {
         when (val result = airQualityRepository.updateAirQualityHere(location)) {
-            is ApiSuccessResponse -> _errorMessage.value = null
             is ApiErrorResponse<*> -> _errorMessage.value = result.error
         }
     }

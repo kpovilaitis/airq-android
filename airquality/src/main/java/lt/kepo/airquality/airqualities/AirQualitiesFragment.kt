@@ -1,5 +1,6 @@
-package lt.kepo.airquality.ui.airqualities
+package lt.kepo.airquality.airqualities
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,19 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
+import lt.kepo.airquality.AirQualityNavigator
 import lt.kepo.airquality.R
-import lt.kepo.airquality.ui.airquality.AirQualityFragment
 import lt.kepo.core.ui.AppNavigator
 import lt.kepo.core.model.AirQuality
-import lt.kepo.core.ui.commitWithAnimations
 import lt.kepo.core.ui.getListDivider
 import lt.kepo.core.ui.showError
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.scope.lifecycleScope
+import org.koin.androidx.viewmodel.scope.viewModel
 
 class AirQualitiesFragment : Fragment() {
-    private val navigator: AppNavigator by inject()
-    private val viewModel: AirQualitiesViewModel by viewModel()
+    private val navigator: AppNavigator by lifecycleScope.inject()
+    private val innerNavigator: AirQualityNavigator by lifecycleScope.inject()
+    private val viewModel: AirQualitiesViewModel by lifecycleScope.viewModel(this)
 
     private lateinit var adapter: AirQualitiesAdapter
 
@@ -32,13 +33,19 @@ class AirQualitiesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
         = inflater.inflate(R.layout.fragment_air_qualities, container, false)
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        lifecycleScope.linkTo(requireActivity().lifecycleScope)
+    }
+
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 //        openFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
 //        closeFabAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
 
-        fab.setOnClickListener { navigator.startStationsActivity(requireActivity()) }
+        fab.setOnClickListener { navigator.startStations() }
 //            animateFAB()
 //        startActivity(Intent(requireContext(), StationsActivity::class.java))
 
@@ -94,26 +101,14 @@ class AirQualitiesFragment : Fragment() {
         viewModel.updateCachedAirQualities()
     }
 
-    private val listClickListener: (AirQuality) -> Unit = { airQuality ->
-        val nextFragment = AirQualityFragment()
-        val bundle = Bundle()
-
-        bundle.putParcelable(AirQuality::class.java.simpleName, airQuality)
-
-        nextFragment.arguments = bundle
-
-        parentFragmentManager.commitWithAnimations{
-            replace(R.id.main_content, nextFragment)
-            addToBackStack(null)
-        }
-    }
+    private val listClickListener: (AirQuality) -> Unit = { innerNavigator.showAirQuality(it) }
 
     private val airQualitiesObserver = Observer<List<AirQuality>> { airQualities ->
         adapter.airQualities = airQualities
         adapter.notifyDataSetChanged()
     }
 
-    private val errorMessageObserver = Observer<String> { it?.let { errorMessage -> container.showError(errorMessage) } }
+    private val errorMessageObserver = Observer<String> { it?.run { container.showError(this) } }
 
     private val progressObserver = Observer<Boolean> { swipeToRefreshLayout.isRefreshing = it }
 }

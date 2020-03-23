@@ -1,4 +1,4 @@
-package lt.kepo.airquality.repository
+package lt.kepo.airquality.domain
 
 import android.location.Location
 import androidx.lifecycle.LiveData

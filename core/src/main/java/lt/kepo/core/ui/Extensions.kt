@@ -44,27 +44,6 @@ fun View.setPollution(airQualityIndex: String?) {
     }
 }
 
-inline fun FragmentManager.commitWithAnimations(
-    allowStateLoss: Boolean = false,
-    body: FragmentTransaction.() -> Unit
-) {
-    val transaction = beginTransaction()
-
-    transaction.setCustomAnimations(
-        R.anim.window_enter,
-        R.anim.window_exit,
-        R.anim.window_pop_enter,
-        R.anim.window_pop_exit
-    )
-    transaction.body()
-
-    if (allowStateLoss) {
-        transaction.commitAllowingStateLoss()
-    } else {
-        transaction.commit()
-    }
-}
-
 fun View.showError(errorMessage: String) {
     val snack = Snackbar.make(this, errorMessage, Snackbar.LENGTH_LONG)
     val tv = snack.view.findViewById(R.id.snackbar_text) as TextView

@@ -1,6 +1,7 @@
-package lt.kepo.airquality.repository
+package lt.kepo.airquality.domain
 
 import android.location.Location
+import lt.kepo.airquality.domain.AirQualityRepository
 import lt.kepo.core.network.ApiResponse
 import lt.kepo.core.network.HttpClient
 import lt.kepo.core.database.dao.AirQualityDao

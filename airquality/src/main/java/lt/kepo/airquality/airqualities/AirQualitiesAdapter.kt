@@ -1,4 +1,4 @@
-package lt.kepo.airquality.ui.airqualities
+package lt.kepo.airquality.airqualities
 
 import android.view.LayoutInflater
 import android.view.View

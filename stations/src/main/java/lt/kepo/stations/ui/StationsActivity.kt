@@ -12,26 +12,21 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import lt.kepo.core.model.Station
+import lt.kepo.core.ui.AppNavigator
 import lt.kepo.core.ui.getListDivider
 import lt.kepo.core.ui.showError
 import lt.kepo.stations.R
-import org.koin.android.ext.android.getKoin
-import org.koin.androidx.scope.bindScope
-import org.koin.androidx.scope.currentScope
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.qualifier.named
+import org.koin.androidx.scope.lifecycleScope
+import org.koin.androidx.viewmodel.scope.viewModel
 
 class StationsActivity : AppCompatActivity() {
-    private val viewModel: StationsViewModel by currentScope.viewModel(this)
+    private val navigator: AppNavigator by lifecycleScope.inject()
+    private val viewModel: StationsViewModel by lifecycleScope.viewModel(this)
 
     private lateinit var stationsAdapter: StationsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        getKoin()
-            .createScope(SCOPE_ID, named<StationsActivity>())
-            .apply { bindScope(this) }
 
         setContentView(R.layout.activity_stations)
         setSupportActionBar(toolbar)
@@ -65,9 +60,7 @@ class StationsActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 search.clearFocus()
-                setResult(Activity.RESULT_OK)
-                finish()
-                overridePendingTransition(R.anim.window_pop_enter, R.anim.window_pop_exit)
+                navigator.finishActivity(Activity.RESULT_OK)
                 true
             }
             else -> false
@@ -89,7 +82,7 @@ class StationsActivity : AppCompatActivity() {
 
     private val progressObserver = Observer<Boolean> { isLoading -> }
 
-    private val errorObserver = Observer<String> { it?.let { error -> container.showError(error) } }
+    private val errorObserver = Observer<String> { it?.run { container.showError(this) } }
 
     private val stationsObserver = Observer<MutableList<Station>> { stations ->
         view_try_typing.isVisible = stations.isEmpty() && search.query.isEmpty()
@@ -111,9 +104,5 @@ class StationsActivity : AppCompatActivity() {
             stationsAdapter.stations = stations.toList()
             stationsAdapter.notifyDataSetChanged()
         }
-    }
-
-    companion object {
-        const val SCOPE_ID = "STATIONS_ACTIVITY_SCOPE_ID"
     }
 }

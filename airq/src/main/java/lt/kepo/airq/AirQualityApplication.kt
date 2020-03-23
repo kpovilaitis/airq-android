@@ -1,7 +1,7 @@
 package lt.kepo.airq
 
 import android.app.Application
-import lt.kepo.airquality.di.airQualityModule
+import lt.kepo.airquality.airQualityModule
 import lt.kepo.core.di.coreModule
 import lt.kepo.stations.di.stationsModule
 import org.koin.android.ext.koin.androidContext
@@ -15,12 +15,10 @@ class AirQualityApplication : Application() {
         startKoin {
             androidContext(this@AirQualityApplication)
             modules(
-                listOf(
-                    coreModule,
-                    airQualityModule,
-                    stationsModule,
-                    appModule
-                )
+                coreModule +
+                 airQualityModule +
+                 stationsModule +
+                 appModule
             )
         }
     }

@@ -1,4 +1,4 @@
-package lt.kepo.airquality.ui.airquality
+package lt.kepo.airquality.airquality
 
 import android.app.Application
 import androidx.lifecycle.*
@@ -8,8 +8,8 @@ import lt.kepo.airquality.domain.UpdateAirQualitiesUseCase
 import lt.kepo.core.network.ApiErrorResponse
 import lt.kepo.core.network.ApiSuccessResponse
 import lt.kepo.core.model.AirQuality
-import lt.kepo.airquality.repository.AirQualityRepository
-import lt.kepo.airquality.ui.BaseAirQualityViewModel
+import lt.kepo.airquality.domain.AirQualityRepository
+import lt.kepo.airquality.BaseAirQualityViewModel
 import lt.kepo.core.constants.AIR_QUALITY_HERE_STATION_ID
 
 class AirQualityViewModel(

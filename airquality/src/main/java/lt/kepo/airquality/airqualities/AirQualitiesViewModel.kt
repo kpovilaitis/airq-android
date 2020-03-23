@@ -1,12 +1,12 @@
-package lt.kepo.airquality.ui.airqualities
+package lt.kepo.airquality.airqualities
 
 import android.app.Application
 import androidx.lifecycle.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 import lt.kepo.airquality.domain.UpdateAirQualitiesUseCase
-import lt.kepo.airquality.repository.AirQualityRepository
-import lt.kepo.airquality.ui.BaseAirQualityViewModel
+import lt.kepo.airquality.domain.AirQualityRepository
+import lt.kepo.airquality.BaseAirQualityViewModel
 import lt.kepo.core.constants.AIR_QUALITY_HERE_STATION_ID
 import lt.kepo.core.model.AirQuality
 import lt.kepo.core.network.ApiErrorResponse

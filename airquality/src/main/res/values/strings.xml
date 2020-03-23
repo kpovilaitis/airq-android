@@ -2,9 +2,67 @@
 
     <string name="dialog_title_location_name">Location name</string>
     <string name="dialog_title_pm25">Particulate Matter 2.5 (PM2.5)</string>
-    <string name="dialog_message_pm25">Particulate matter 2.5 refers to tiny particles or droplets in the air that are two and one half microns or less in width. Particles in the PM2.5 size range are able to travel deeply into the respiratory tract, reaching the lungs.
-        \n\nExposure to fine particles can cause short-term health effects such as eye, nose, throat and lung irritation, coughing, sneezing, runny nose and shortness of breath. It also affect lung function and worsen medical conditions such as asthma and heart disease.
-        \n\nThere are outdoor and indoor sources of fine particles. Outside, fine particles primarily come from vehicle exhausts, other operations that involve the burning of fossil fuels and natural sources such as forest and grass fires. Fine particles also form from the reaction of gases or droplets in the atmosphere from sources such as power plants. These chemical reactions can occur miles from the original source of the emissions because fine particles can be carried long distances from their source.</string>
+    <string name="dialog_message_pm25">Particulate matter 2.5 refers to tiny particles or droplets in the air that are 2.5 micrometers or less in diameter.
+        \n\nThere are outdoor and indoor sources of fine particles. Outside, fine particles primarily come from vehicle exhausts, other operations that involve the burning of fossil fuels and natural sources such as forest and grass fires. Fine particles also form from the reaction of gases or droplets in the atmosphere from sources such as power plants. These chemical reactions can occur miles from the original source of the emissions because fine particles can be carried long distances from their source.
+        \n\nExposure to fine particles can cause short-term health effects such as eye, nose, throat and lung irritation, coughing, sneezing, runny nose and shortness of breath. It also affect lung function and worsen medical conditions such as asthma and heart disease. Particles in the PM2.5 size range are able to travel deeply into the respiratory tract, reaching the lungs and even getting into your bloodstream.
+    </string>
+    <string name="dialog_title_pm25_levels">PM2.5 toxicity levels</string>
+    <string name="dialog_message_pm25_levels">Particulate matter 2.5 toxicity levels are measured in μg/m\u00B3 (micrograms in cubic meter).
+        \n\n\Amount \t Level \t\t\t\t\t\t\t Index
+        \n0 \t - 10 \t\t Good \t\t\t\t\t\t\t 0 \t\t - 50
+        \n10\t - 20 \t\t Fair \t\t\t\t\t\t\t\t 50\t - 100
+        \n20\t - 25 \t\t Moderate \t\t 100 - 150
+        \n25\t - 50 \t\t Poor \t\t\t\t\t\t\t 150 - 200
+        \n50\t - 75 \t\t Unhealthy \t 250 - 300
+        \n75\t - 999 \tHazardous \t300 - 500
+    </string>
+    <string name="dialog_title_pm10">Particulate Matter 10 (PM10)</string>
+    <string name="dialog_message_pm10">Particulate matter 10 is particulate matter 10 micrometers or less in diameter.
+        \n\nThere are outdoor and indoor sources of fine particles. Outside, fine particles primarily come from vehicle exhausts, other operations that involve the burning of fossil fuels and natural sources such as forest and grass fires. Fine particles also form from the reaction of gases or droplets in the atmosphere from sources such as power plants. These chemical reactions can occur miles from the original source of the emissions because fine particles can be carried long distances from their source.
+        \n\nExposure to fine particles can cause short-term health effects such as eye, nose, throat and lung irritation, coughing, sneezing, runny nose and shortness of breath. It also affect lung function and worsen medical conditions such as asthma and heart disease. Particles in the PM10 size range are able to travel deeply into the respiratory tract, reaching the lungs. Generally they are bigger than the PM2.5 and also bigger than the blood cells, therefore they are less intrusive, than their smaller counterpart PM2.5.
+    </string>
+    <string name="dialog_title_pm10_levels">PM10 toxicity levels</string>
+    <string name="dialog_message_pm10_levels">Particulate matter 10 toxicity levels are measured in μg/m\u00B3 (micrograms in cubic meter).
+        \n\n\Amount \t Level \t\t\t\t\t\t\t Index
+        \n0 \t - 20 \t\t Good \t\t\t\t\t\t\t 0 \t\t - 50
+        \n20\t - 40 \t\t Fair \t\t\t\t\t\t\t\t 50\t - 100
+        \n40\t - 50 \t\t Moderate \t\t 100 - 150
+        \n50\t - 100 \t Poor \t\t\t\t\t\t\t 150 - 200
+        \n100 - 150 Unhealthy \t 250 - 300
+        \n150 - 999 Hazardous \t300 - 500
+    </string>
+    <string name="dialog_title_sulfur_dioxide">Sulfur Dioxide (SO₂)</string>
+    <string name="dialog_message_sulfur_dioxide">Sulfur dioxide, or SO₂ is a colorless gas with a strong odor, similar to a just-struck match.
+        \n\nSulfur dioxide is a common air pollutant found in most of the country, especially in summer smog. It is formed when fuel containing sulfur, such as coal and oil, is burned, creating air pollution. Most sulfur dioxide air pollution comes from the burning of coal and oil in power plants. It is also emitted by trains, large ships, and some diesel equipment that burns high sulfur fuel, and by volcanic eruptions. It affects the environment when reacts with substances in the atmosphere to form acid rain.
+        \n\nShort term health effects can be: burning of the nose, throat, and lungs, difficulty breathing. Long term health effects can be: changes in lung function, loss of smell, headache and dizziness, nausea and vomiting, shortness of breath.
+    </string>
+    <string name="dialog_title_sulfur_dioxide_levels">SO₂ toxicity levels</string>
+    <string name="dialog_message_sulfur_dioxide_levels">Sulfur Dioxide toxicity levels are measured in μg/m\u00B3 (micrograms in cubic meter).
+        \n\n\Amount \t\t Level \t\t\t\t\t\t\t Index
+        \n0 \t\t - 100 \t Good \t\t\t\t\t\t\t 0 \t\t - 50
+        \n100 - 200 \tFair \t\t\t\t\t\t\t\t 50\t - 100
+        \n200 - 350 \tModerate \t\t 100 - 150
+        \n350 - 500 \tPoor \t\t\t\t\t\t\t 150 - 200
+        \n500 - 750 \tUnhealthy \t 250 - 300
+        \n750 - 999 \tHazardous \t300 - 500
+    </string>
+    <string name="dialog_title_ozone">Ozone (O₃)</string>
+    <string name="dialog_message_ozone">Ozone is a molecule of three oxygen atoms bound together (O₃). It has a very sharp smell that is often described as similar to that of chlorine. It is unstable and highly reactive, it reacts chemically in the presence of sunlight and forms ozone smog.
+        \n\nOzone, besides the \'good ozone\' in the stratosphere, can also be found in the troposphere, the lowest layer of the atmosphere, where it is known as the \'bad ozone\'. Tropospheric ozone is man-made, a result of air pollution from internal combustion engines and power plants. Automobile exhaust and industrial emissions release a family of nitrogen oxide gases and volatile organic compounds, by-products of burning gasoline and coal. Nitrogen oxide gases and volatile organic compounds combine chemically with oxygen to form ozone during sunny, high-temperature conditions of late spring, summer and early fall.
+        \n\nOzone can cause the muscles in the airways to constrict, trapping air in the alveoli. This leads to wheezing, shortness of breath, asthma attacks, increased risk of respiratory infections.
+    </string>
+    <string name="dialog_title_ozone_levels">O₃ toxicity levels</string>
+    <string name="dialog_message_ozone_levels">Ozone toxicity levels are measured in μg/m\u00B3 (micrograms in cubic meter).
+        \n\n\Amount \t\t Level \t\t\t\t\t\t\t Index
+        \n0 \t - 50 \t\t\t Good \t\t\t\t\t\t\t 0 \t\t - 50
+        \n50 \t- 100 \t\tFair \t\t\t\t\t\t\t\t 50\t - 100
+        \n100 - 130 \t\tModerate \t\t 100 - 150
+        \n130 - 240 \tPoor \t\t\t\t\t\t\t 150 - 200
+        \n240 - 380 \tUnhealthy \t 250 - 300
+        \n380 - 999 \tHazardous \t300 - 500
+    </string>
+    <string name="dialog_title_recorded_at">Time recorded at</string>
+    <string name="dialog_message_recorded_at">Local time, when the given data was recorded.</string>
 
     <string name="close">Close</string>
 

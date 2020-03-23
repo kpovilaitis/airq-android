@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="menu_search">Paieška</string>
+
+    <string name="hint_search">@string/menu_search</string>
+
+    <string name="label_station_air_quality">Oro kokybės indeksas: %s</string>
+    <string name="label_no_results">Nėra rezultatų</string>
+    <string name="label_try_amsterdam">Pabandykite “Amsterdam”</string>
+
+</resources>

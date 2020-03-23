@@ -1,2 +1,2 @@
-# AirQ Kotlin
+# AirQ Android
 

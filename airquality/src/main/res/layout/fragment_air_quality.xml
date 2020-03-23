@@ -11,6 +11,28 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_window">
 
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnRemoveAirQuality"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_delete" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back" />
+
         <View
             android:id="@+id/pollutionView"
             android:layout_width="match_parent"
@@ -67,39 +89,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textCountry" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textTimeRecordedLabel"
-            style="@style/TextBodyBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="4dp"
-            android:text="@string/label_time_recorded"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textTimeRecordedValue"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textTimeRecordedValue"
-            style="@style/TextBodyBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toEndOf="@+id/textTimeRecordedLabel" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textOzoneLabel"
+            android:id="@+id/textPM25Label"
             style="@style/TextBodyBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -110,14 +100,14 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="4dp"
-            android:text="@string/label_ozone"
-            app:layout_constraintBottom_toTopOf="@+id/textTimeRecordedLabel"
-            app:layout_constraintEnd_toStartOf="@+id/textOzoneValue"
+            android:text="@string/label_pm_25"
+            app:layout_constraintBottom_toTopOf="@+id/textPM10Label"
+            app:layout_constraintEnd_toStartOf="@+id/textPM25Value"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textOzoneValue"
+            android:id="@+id/textPM25Value"
             style="@style/TextBodyBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -127,9 +117,9 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="4dp"
-            app:layout_constraintBottom_toTopOf="@+id/textTimeRecordedLabel"
+            app:layout_constraintBottom_toTopOf="@+id/textPM10Label"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toEndOf="@+id/textOzoneLabel"
+            app:layout_constraintStart_toEndOf="@id/textPM25Label"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -164,40 +154,6 @@
             app:layout_constraintBottom_toTopOf="@+id/textSulfurDioxideLabel"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@+id/textPM10Label"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textPM25Label"
-            style="@style/TextBodyBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="4dp"
-            android:text="@string/label_pm_25"
-            app:layout_constraintBottom_toTopOf="@+id/textPM10Label"
-            app:layout_constraintEnd_toStartOf="@+id/textPM25Value"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textPM25Value"
-            style="@style/TextBodyBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="4dp"
-            app:layout_constraintBottom_toTopOf="@+id/textPM10Label"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toEndOf="@id/textPM25Label"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -236,27 +192,68 @@
             app:layout_constraintStart_toEndOf="@+id/textSulfurDioxideLabel"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btnRemoveAirQuality"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textTimeRecordedLabel"
+            style="@style/TextBodyBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:layout_marginEnd="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_delete" />
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            android:text="@string/label_time_recorded"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textTimeRecordedValue"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_back" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textOzoneLabel"
+            style="@style/TextBodyBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            android:text="@string/label_ozone"
+            app:layout_constraintBottom_toTopOf="@+id/textTimeRecordedLabel"
+            app:layout_constraintEnd_toStartOf="@+id/textOzoneValue"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textOzoneValue"
+            style="@style/TextBodyBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            app:layout_constraintBottom_toTopOf="@+id/textTimeRecordedLabel"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@+id/textOzoneLabel"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textTimeRecordedValue"
+            style="@style/TextBodyBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@+id/textTimeRecordedLabel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

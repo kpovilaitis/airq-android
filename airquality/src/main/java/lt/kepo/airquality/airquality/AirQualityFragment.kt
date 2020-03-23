@@ -59,6 +59,14 @@ class AirQualityFragment : Fragment() {
         textCountry.setOnClickListener { showLocationNameDialog() }
 
         textPM25Label.setOnClickListener { showExplanationDialog(R.string.dialog_title_pm25, R.string.dialog_message_pm25) }
+        textPM25Value.setOnClickListener { showExplanationDialog(R.string.dialog_title_pm25_levels, R.string.dialog_message_pm25_levels) }
+        textPM10Label.setOnClickListener { showExplanationDialog(R.string.dialog_title_pm10, R.string.dialog_message_pm10) }
+        textPM10Value.setOnClickListener { showExplanationDialog(R.string.dialog_title_pm10_levels, R.string.dialog_message_pm10_levels) }
+        textSulfurDioxideLabel.setOnClickListener { showExplanationDialog(R.string.dialog_title_sulfur_dioxide, R.string.dialog_message_sulfur_dioxide) }
+        textSulfurDioxideValue.setOnClickListener { showExplanationDialog(R.string.dialog_title_sulfur_dioxide_levels, R.string.dialog_message_sulfur_dioxide_levels) }
+        textOzoneLabel.setOnClickListener { showExplanationDialog(R.string.dialog_title_ozone, R.string.dialog_message_ozone) }
+        textOzoneValue.setOnClickListener { showExplanationDialog(R.string.dialog_title_ozone_levels, R.string.dialog_message_ozone_levels) }
+        textTimeRecordedLabel.setOnClickListener { showExplanationDialog(R.string.dialog_title_recorded_at, R.string.dialog_message_recorded_at) }
 
         swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
@@ -90,7 +98,7 @@ class AirQualityFragment : Fragment() {
 
     private fun showExplanationDialog(@StringRes titleResId: Int, @StringRes messageResId: Int) {
         AlertDialog.Builder(requireActivity(), R.style.Dialog).apply {
-            setTitle(R.string.dialog_title_pm25)
+            setTitle(titleResId)
             setMessage(messageResId)
             setPositiveButton(R.string.close) { dialog, _ -> dialog.dismiss() }
         }.show()
@@ -111,10 +119,10 @@ class AirQualityFragment : Fragment() {
             setFullName(it.city.name, textCity, textCountry)
             textIndex.text = it.airQualityIndex
 
-            textSulfurDioxideValue.text = formatText(R.string.template_ppb, it.individualIndices.sulfurOxide?.value)
+            textSulfurDioxideValue.text = formatText(R.string.template_μgm, it.individualIndices.sulfurOxide?.value)
             textPM25Value.text = formatText(R.string.template_μgm, it.individualIndices.particle25?.value)
             textPM10Value.text = formatText(R.string.template_μgm, it.individualIndices.particle10?.value)
-            textOzoneValue.text = formatText(R.string.template_ppb, it.individualIndices.ozone?.value)
+            textOzoneValue.text = formatText(R.string.template_μgm, it.individualIndices.ozone?.value)
             textTimeRecordedValue.text = it.time.toString()
             pollutionView.setPollution(it.airQualityIndex)
     }

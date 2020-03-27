@@ -15,8 +15,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.Compat">
 
-        <activity android:name="lt.kepo.airquality.AirQualityActivity"
-                android:theme="@style/AirQualityActivityTheme">
+        <activity android:name="lt.kepo.airq.MainActivity"
+                android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,9 +25,6 @@
             </intent-filter>
 
         </activity>
-
-        <activity android:name="lt.kepo.stations.ui.StationsActivity"
-                android:windowSoftInputMode="adjustResize"/>
 
     </application>
 

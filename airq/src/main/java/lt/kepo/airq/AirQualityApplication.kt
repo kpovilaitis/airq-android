@@ -1,25 +1,7 @@
 package lt.kepo.airq
 
 import android.app.Application
-import lt.kepo.airquality.airQualityModule
-import lt.kepo.core.di.coreModule
-import lt.kepo.stations.di.stationsModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import dagger.hilt.android.HiltAndroidApp
 
-class AirQualityApplication : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-
-        startKoin {
-            androidContext(this@AirQualityApplication)
-            modules(
-                coreModule +
-                 airQualityModule +
-                 stationsModule +
-                 appModule
-            )
-        }
-    }
-}
+@HiltAndroidApp
+class AirQualityApplication : Application()

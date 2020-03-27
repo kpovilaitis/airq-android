@@ -3,11 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
-    signingConfigs {
-
-    }
+//    signingConfigs {
+//
+//    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -22,27 +23,38 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
     }
     androidExtensions {
         experimental = true
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8
     }
     compileOptions {
-        targetCompatibility = "8"
-        sourceCompatibility = "8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
+    implementation project(':air-quality-api')
+    implementation project(':air-quality')
+    implementation project(':air-quality-database')
     implementation project(':core')
+    implementation project(':database')
+    implementation project(':location')
+    implementation project(':network')
     implementation project(':stations')
-    implementation project(':airquality')
 
-    implementation "org.koin:koin-android:2.1.4"
+    implementation "com.google.dagger:hilt-android:${versions.hilt}"
+    kapt "com.google.dagger:hilt-android-compiler:${versions.hilt}"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:${versions.hilt_lifecycle_viewmodel}"
+    kapt "androidx.hilt:hilt-compiler:${versions.hilt_compiler}"
+
+    implementation "androidx.appcompat:appcompat:${versions.appCompat}"
+
+    implementation "com.google.android.material:material:${versions.material}"
 }

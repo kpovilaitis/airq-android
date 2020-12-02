@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import lt.kepo.airquality.AirQuality
 import lt.kepo.airquality.airqualities.AirQualitiesRepository
+import lt.kepo.airquality.airqualities.AirQualitiesViewModel
 
 class AirQualityDetailsViewModel @ViewModelInject constructor(
     private val airQualityRepository: AirQualityRepository,
@@ -13,7 +14,7 @@ class AirQualityDetailsViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     private val _isProgressVisible = MutableLiveData(false)
-    private val _error = MutableLiveData<Error>()
+    private val _error = MutableLiveData<Error>(null)
     private val airQualityStationId: Int = requireNotNull(savedStateHandle.get("station_id"))
 
     val isProgressVisible: LiveData<Boolean> = _isProgressVisible
@@ -21,6 +22,7 @@ class AirQualityDetailsViewModel @ViewModelInject constructor(
     val airQuality: LiveData<AirQuality> = airQualityRepository
         .getAirQuality(airQualityStationId)
         .asLiveData(viewModelScope.coroutineContext)
+    val isRemoveAirQualityVisible: LiveData<Boolean> = airQuality.map { it.isCurrentLocationQuality.not() }
 
     init {
         viewModelScope.launch {
@@ -34,15 +36,9 @@ class AirQualityDetailsViewModel @ViewModelInject constructor(
         }
     }
 
-    fun refreshAirQuality(
-        force: Boolean = false
-    ) {
+    fun refreshAirQuality() {
         viewModelScope.launch {
-            _isProgressVisible.value = true
-
-
-
-            _isProgressVisible.value = false
+            refreshRepositoryAirQualities()
         }
     }
 
@@ -54,11 +50,7 @@ class AirQualityDetailsViewModel @ViewModelInject constructor(
             .refresh(airQualityStationId)
             .let { refreshResult ->
                 when (refreshResult) {
-                    is AirQualityRepository.RefreshResult.Error -> {
-                        _error.value = Error.RefreshAirQuality(
-                            message = "error"
-                        )
-                    }
+                    is AirQualityRepository.RefreshResult.Error -> _error.value = Error.RefreshAirQuality
                 }
             }
 
@@ -67,8 +59,6 @@ class AirQualityDetailsViewModel @ViewModelInject constructor(
 
     sealed class Error {
 
-        data class RefreshAirQuality(
-            val message: String
-        ) : Error()
+        object RefreshAirQuality : Error()
     }
 }

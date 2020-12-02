@@ -10,7 +10,7 @@ class AirQualitiesViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     private val _isProgressVisible = MutableLiveData(false)
-    private val _error = MutableLiveData<Error>()
+    private val _error = MutableLiveData<Error>(null)
 
     val isProgressVisible: LiveData<Boolean> = _isProgressVisible
     val errorMessage: LiveData<Error> = _error
@@ -24,9 +24,7 @@ class AirQualitiesViewModel @ViewModelInject constructor(
         }
     }
 
-    fun refreshAirQualities(
-        force: Boolean = false
-    ) {
+    fun refreshAirQualities() {
         viewModelScope.launch {
             refreshRepositoryAirQualities()
         }
@@ -39,12 +37,8 @@ class AirQualitiesViewModel @ViewModelInject constructor(
         airQualitiesRepository
             .refresh()
             .let { refreshResult ->
-                when(refreshResult) {
-                    is AirQualitiesRepository.RefreshResult.Error -> {
-                        _error.value = Error.RefreshAirQualities(
-                            message = "error"
-                        )
-                    }
+                 when (refreshResult) {
+                    is AirQualitiesRepository.RefreshResult.Error -> _error.value = Error.RefreshAirQualities
                 }
             }
 
@@ -53,9 +47,7 @@ class AirQualitiesViewModel @ViewModelInject constructor(
 
     sealed class Error {
 
-        data class RefreshAirQualities(
-            val message: String
-        ) : Error()
+        object RefreshAirQualities : Error()
     }
 }
 

@@ -26,8 +26,6 @@ class StationsFragment : Fragment(R.layout.fragment_stations) {
     @Inject lateinit var navigator: AppNavigator
     private val viewModel: StationsViewModel by viewModels()
 
-    private lateinit var stationsAdapter: StationsAdapter
-
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //
@@ -48,11 +46,8 @@ class StationsFragment : Fragment(R.layout.fragment_stations) {
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setHasOptionsMenu(true)
+        val stationsAdapter = StationsAdapter { viewModel.addStation(it) }
 
-        stationsAdapter = StationsAdapter(emptyList()) { viewModel.addStation(it) }
-
-        stationsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         stationsRecyclerView.addItemDecoration(
             DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
                 .apply {
@@ -69,24 +64,44 @@ class StationsFragment : Fragment(R.layout.fragment_stations) {
             toolbar.isSelected = stationsRecyclerView.canScrollVertically(-1)
         }
 
-        viewModel.errorMessage.observe(viewLifecycleOwner, errorObserver)
-        viewModel.isLoading.observe(viewLifecycleOwner, progressObserver)
-        viewModel.stations.observe(viewLifecycleOwner, stationsObserver)
-
         search.setOnQueryTextListener(queryTextListener)
         search.requestFocus()
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                search.clearFocus()
-                navigator.goBack()
-                true
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            if (error != null) {
+                stations_container.showError(
+                    when (error) {
+                        is StationsViewModel.Error.GetStations -> getString(R.string.error_get_stations)
+                        is StationsViewModel.Error.AddStation -> getString(R.string.error_add_station)
+                    }
+                )
             }
-            else -> false
+        }
+        viewModel.isProgressVisible.observe(viewLifecycleOwner) { isProgressVisible ->
+
+        }
+        viewModel.isTypingHintVisible.observe(viewLifecycleOwner) { isTypingHintVisible ->
+            view_try_typing.isVisible = isTypingHintVisible
+        }
+        viewModel.isNoResultVisible.observe(viewLifecycleOwner) { isNoResultVisible ->
+            view_no_result.isVisible = isNoResultVisible
+        }
+        viewModel.stations.observe(viewLifecycleOwner) { stations ->
+            stationsAdapter.stations = stations
+            stationsAdapter.notifyDataSetChanged()
         }
     }
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            android.R.id.home -> {
+//                search.clearFocus()
+//                navigator.goBack()
+//                true
+//            }
+//            else -> false
+//        }
+//    }
 
     private val queryTextListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -98,32 +113,6 @@ class StationsFragment : Fragment(R.layout.fragment_stations) {
                 viewModel.getStations(newText)
 
             return true
-        }
-    }
-
-    private val progressObserver = Observer<Boolean> { isLoading -> }
-
-    private val errorObserver = Observer<String> { container.showError(it) }
-
-    private val stationsObserver = Observer<List<Station>> { stations ->
-        view_try_typing.isVisible = stations.isEmpty() && search.query.isEmpty()
-        view_no_result.isVisible = stations.isEmpty() && search.query.isNotEmpty()
-        stationsRecyclerView.isVisible = stations.isNotEmpty()
-
-        if (stationsAdapter.stations.size - stations.size == 1) {
-
-            val position = stationsAdapter.stations.indexOf(
-                (stationsAdapter.stations + stations).groupBy { it.id }
-                    .filter { it.value.size == 1 }
-                    .flatMap { it.value }
-                    .first()
-            )
-
-            stationsAdapter.stations = stations.toList()
-            stationsAdapter.notifyItemRemoved(position)
-        } else {
-            stationsAdapter.stations = stations.toList()
-            stationsAdapter.notifyDataSetChanged()
         }
     }
 }

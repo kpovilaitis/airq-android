@@ -8,4 +8,7 @@
     <string name="label_no_results">Nėra rezultatų</string>
     <string name="label_try_amsterdam">Pabandykite “Amsterdam”</string>
 
+    <string name="error_get_stations">Nepavyko rasti stočių</string>
+    <string name="error_add_station">Nepavyko pridėti stoties</string>
+
 </resources>

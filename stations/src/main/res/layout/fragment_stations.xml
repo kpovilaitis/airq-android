@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
+    android:id="@+id/stations_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -21,7 +21,7 @@
                 android:clipToPadding="false"
                 android:paddingBottom="@dimen/padding_nav_bar"
                 android:layout_below="@id/toolbar"
-                android:visibility="gone"/>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         <LinearLayout
                 android:id="@+id/view_no_result"
@@ -29,8 +29,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:layout_marginTop="124dp"
-                android:visibility="gone">
+                android:layout_marginTop="124dp">
 
             <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="148dp"
@@ -51,8 +50,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:layout_marginTop="272dp"
-                android:visibility="gone">
+                android:layout_marginTop="272dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextTitleBold"

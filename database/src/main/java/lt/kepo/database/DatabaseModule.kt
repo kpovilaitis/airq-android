@@ -26,6 +26,7 @@ class DatabaseModule {
         ).build()
 
     @Provides
+    @Singleton
     fun provideAirQualityDao(
         appDatabase: AppDatabase
     ): AirQualityDao =

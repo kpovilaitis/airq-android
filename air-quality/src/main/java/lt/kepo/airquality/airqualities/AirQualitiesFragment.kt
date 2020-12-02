@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import kotlinx.android.synthetic.main.fragment_air_qualities.swipeToRefreshLayout
+import kotlinx.android.synthetic.main.fragment_air_quality.*
 import lt.kepo.airquality.R
+import lt.kepo.airquality.airqualitydetails.AirQualityDetailsViewModel
 import lt.kepo.core.navigation.AppNavigator
 import lt.kepo.core.ui.showError
 import javax.inject.Inject
@@ -23,8 +25,6 @@ class AirQualitiesFragment : Fragment(R.layout.fragment_air_qualities) {
 
     @Inject lateinit var navigator: AppNavigator
     private val viewModel: AirQualitiesViewModel by viewModels()
-
-    private lateinit var adapter: AirQualitiesAdapter
 
 //    private var isFabOpen = false
 //    private lateinit var openFabAnimation: Animation
@@ -58,10 +58,10 @@ class AirQualitiesFragment : Fragment(R.layout.fragment_air_qualities) {
 
         swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
-        swipeToRefreshLayout.setOnRefreshListener { viewModel.refreshAirQualities(true) }
+        swipeToRefreshLayout.setOnRefreshListener { viewModel.refreshAirQualities() }
 
-        adapter = AirQualitiesAdapter { navigator.showAirQualityDetails(it) }
-        airQualitiesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val adapter = AirQualitiesAdapter { navigator.showAirQualityDetails(it) }
+        airQualitiesRecyclerView.adapter = adapter
         airQualitiesRecyclerView.addItemDecoration(
             DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
                 .apply {
@@ -73,7 +73,6 @@ class AirQualitiesFragment : Fragment(R.layout.fragment_air_qualities) {
                     }
                 }
         )
-        airQualitiesRecyclerView.adapter = adapter
 
         airQualitiesRecyclerView.setOnScrollChangeListener { _, _, _, _, _ ->
             textAppName.isSelected = airQualitiesRecyclerView.canScrollVertically(-1)
@@ -84,14 +83,16 @@ class AirQualitiesFragment : Fragment(R.layout.fragment_air_qualities) {
             adapter.notifyDataSetChanged()
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-            when (error) {
-                is AirQualitiesViewModel.Error.RefreshAirQualities -> {
-                    air_qualities_container.showError(error.message)
-                }
+            if (error != null) {
+                air_qualities_container.showError(
+                    when (error) {
+                        is AirQualitiesViewModel.Error.RefreshAirQualities -> getString(R.string.error_occurred)
+                    }
+                )
             }
         }
         viewModel.isProgressVisible.observe(viewLifecycleOwner) { isProgressVisible ->
-            swipeToRefreshLayout.isRefreshing = isProgressVisible == true
+            swipeToRefreshLayout.isRefreshing = isProgressVisible
         }
     }
 

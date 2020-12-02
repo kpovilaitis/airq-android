@@ -10,12 +10,10 @@ class LocalDateTimeAdapter {
     private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     @ToJson
-    fun toJson(value: Date): String {
-        return formatter.format(value)
-    }
+    fun toJson(value: Date?): String =
+        value?.let { formatter.format(it) } ?: ""
 
     @FromJson
-    fun fromJson(value: String): Date {
-        return formatter.parse(value) ?: error("")
-    }
+    fun fromJson(value: String): Date? =
+        formatter.parse(value)
 }

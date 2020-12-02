@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_item_station.view.*
 
 class StationsAdapter(
-    var stations: List<Station>,
+    var stations: List<Station> = emptyList(),
     private val clickListener: (Int) -> Unit
 ) : RecyclerView.Adapter<StationsAdapter.ViewHolder>() {
     override fun getItemCount(): Int = stations.size

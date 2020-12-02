@@ -74,4 +74,6 @@
 
     <string name="template_μgm">%s μg/m\u00B3</string>
 
+    <string name="error_occurred">Nutiko klaida</string>
+
 </resources>

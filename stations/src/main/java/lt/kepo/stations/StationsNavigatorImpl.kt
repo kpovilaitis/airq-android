@@ -15,6 +15,7 @@ class StationsNavigatorImpl @Inject constructor(
     override fun showStations() {
         fragmentManager.commit {
             replace(container.id, StationsFragment())
+            addToBackStack(null)
         }
     }
 }

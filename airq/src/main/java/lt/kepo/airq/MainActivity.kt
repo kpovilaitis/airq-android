@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
-import lt.kepo.airquality.R
 import lt.kepo.core.navigation.AppNavigator
 import lt.kepo.core.navigation.NavigationContainer
 import javax.inject.Inject
@@ -29,8 +28,6 @@ class MainActivity : AppCompatActivity(), NavigationContainer {
         if (savedInstanceState == null) {
             navigator.showAirQualities()
         }
-
-        window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.background_window_inverted))
     }
 
     override val id: Int = R.id.main_content

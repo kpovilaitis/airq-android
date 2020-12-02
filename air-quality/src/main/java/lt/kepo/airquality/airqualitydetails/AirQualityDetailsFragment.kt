@@ -6,6 +6,7 @@ import android.view.*
 import androidx.annotation.NonNull
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,9 +14,9 @@ import kotlinx.android.synthetic.main.fragment_air_quality.*
 import kotlinx.android.synthetic.main.fragment_air_quality.swipeToRefreshLayout
 import kotlinx.android.synthetic.main.fragment_air_quality.textCity
 import kotlinx.android.synthetic.main.fragment_air_quality.textCountry
-import kotlinx.android.synthetic.main.list_item_air_quality.view.*
 import lt.kepo.airquality.R
 import lt.kepo.airquality.setPollution
+import lt.kepo.airquality.airqualitydetails.AirQualityDetailsViewModel.Error
 import lt.kepo.core.navigation.AppNavigator
 import lt.kepo.core.ui.showError
 import javax.inject.Inject
@@ -46,6 +47,10 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
         }
 
         btnBack.setOnClickListener { navigator.goBack() }
+        btnRemoveAirQuality.setOnClickListener {
+            viewModel.removeAirQuality()
+            parentFragmentManager.popBackStack()
+        }
         textCity.setOnClickListener { showLocationNameDialog() }
         textCountry.setOnClickListener { showLocationNameDialog() }
 
@@ -61,18 +66,12 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
 
         swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
-        swipeToRefreshLayout.setOnRefreshListener { viewModel.refreshAirQuality(true) }
+        swipeToRefreshLayout.setOnRefreshListener { viewModel.refreshAirQuality() }
 
+        viewModel.isRemoveAirQualityVisible.observe(viewLifecycleOwner) { isRemoveAirQualityVisible ->
+            btnRemoveAirQuality.isVisible = isRemoveAirQualityVisible
+        }
         viewModel.airQuality.observe(viewLifecycleOwner) { airQuality ->
-            if (airQuality.isCurrentLocationQuality) {
-                btnRemoveAirQuality.visibility = View.GONE
-            } else {
-                btnRemoveAirQuality.setOnClickListener {
-                    viewModel.removeAirQuality()
-                    parentFragmentManager.popBackStack()
-                }
-            }
-
             textCity.text = airQuality.primaryAddress
             textCountry.text = airQuality.secondaryAddress
             textIndex.text = airQuality.airQualityIndex
@@ -85,10 +84,12 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
             pollutionView.setPollution(airQuality.airQualityIndex)
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-            when (error) {
-                is AirQualityDetailsViewModel.Error.RefreshAirQuality -> {
-                    air_quality_container.showError(error.message)
-                }
+            if (error != null) {
+                air_quality_container.showError(
+                    when (error) {
+                        is Error.RefreshAirQuality -> getString(R.string.error_occurred)
+                    }
+                )
             }
         }
         viewModel.isProgressVisible.observe(viewLifecycleOwner) { isProgressVisible ->
@@ -97,7 +98,7 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
     }
 
     private fun formatText(templateResId: Int, value: Any?) =
-        resources.getString(templateResId, value?.toString() ?: "-")
+        getString(templateResId, value?.toString() ?: "-")
 
     private fun showLocationNameDialog() {
 //        viewModel.airQuality.value?.city?.name?.let {

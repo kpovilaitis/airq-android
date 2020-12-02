@@ -21,9 +21,7 @@ class AirQualityRepositoryImpl @Inject constructor(
     ): Flow<AirQuality> =
         airQualityDao
             .get(stationId)
-            .map { airQuality ->
-                airQuality.toDomainModel()
-            }
+            .map { it.toDomainModel() }
 
     override suspend fun remove(stationId: Int) {
         airQualityDao.delete(stationId)
@@ -48,6 +46,4 @@ class AirQualityRepositoryImpl @Inject constructor(
                     else -> AirQualityRepository.RefreshResult.Error
                 }
             }
-
-
 }

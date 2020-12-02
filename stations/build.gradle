@@ -32,6 +32,7 @@ dependencies {
     implementation project (":air-quality-api")
     implementation project (":air-quality-database")
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinx_coroutines_core}"
 
     implementation "com.google.dagger:hilt-android:${versions.hilt}"
     kapt "com.google.dagger:hilt-android-compiler:${versions.hilt}"
@@ -41,6 +42,8 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:${versions.appCompat}"
     implementation "androidx.fragment:fragment-ktx:${versions.fragmentKtx}"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle_livedata_ktx}"
 
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'

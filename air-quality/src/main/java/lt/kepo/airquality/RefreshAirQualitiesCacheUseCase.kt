@@ -1,8 +1,8 @@
 package lt.kepo.airquality
 
-interface RefreshAirQualityUseCase {
+interface RefreshAirQualitiesCacheUseCase {
 
-    suspend operator fun invoke(stationId: Int): Result
+    suspend operator fun invoke(): Result
 
     sealed class Result {
 

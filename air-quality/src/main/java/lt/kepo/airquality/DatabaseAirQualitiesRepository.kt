@@ -1,27 +1,21 @@
-package lt.kepo.airquality.airqualities
+package lt.kepo.airquality
 
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
-import lt.kepo.airquality.AirQuality
-import lt.kepo.airquality.RefreshAirQualityHereUseCase
-import lt.kepo.airquality.RefreshAirQualityUseCase
-import lt.kepo.airquality.airqualitydetails.AirQualityRepository
-import lt.kepo.airquality.toDomainModel
 import lt.kepo.airqualitydatabase.AirQualityDao
 import javax.inject.Inject
 
-class AirQualitiesRepositoryImpl @Inject constructor(
+class DatabaseAirQualitiesRepository @Inject constructor(
     private val airQualityDao: AirQualityDao,
     private val refreshAirQuality: RefreshAirQualityUseCase,
     private val refreshAirQualityHere: RefreshAirQualityHereUseCase
 ) : AirQualitiesRepository {
 
-    override fun getAirQualities(): Flow<List<AirQuality>> =
+    override fun getAll(): Flow<List<AirQuality>> =
         airQualityDao
             .getAll()
             .map { airQualityEntities ->
@@ -30,22 +24,28 @@ class AirQualitiesRepositoryImpl @Inject constructor(
                 }
             }
 
-    override suspend fun refresh(): AirQualitiesRepository.RefreshResult = withContext(IO) {
+    override fun getAirQuality(stationId: Int): Flow<AirQuality> =
+        airQualityDao
+            .get(stationId)
+            .map { it.toDomainModel() }
+
+    override suspend fun remove(stationId: Int) {
+        airQualityDao.delete(stationId)
+    }
+
+    override suspend fun refresh(): AirQualitiesRepository.RefreshResult = coroutineScope {
         airQualityDao
             .getAll()
             .first()
-            .filterNot { it.isCurrentLocationQuality }
             .map { entity ->
                 async {
-                    refreshAirQuality(entity.stationId)
+                    if (entity.isCurrentLocationQuality) {
+                        refreshAirQualityHere()
+                    } else {
+                        refreshAirQuality(entity.stationId)
+                    }
                 }
-            }
-            .plus(
-                async {
-                    refreshAirQualityHere()
-                }
-            )
-            .awaitAll()
+            }.awaitAll()
             .let { refreshResults ->
                 when {
                     refreshResults.any { it is RefreshAirQualityUseCase.Result.Error } ->

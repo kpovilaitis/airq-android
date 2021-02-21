@@ -1,11 +1,15 @@
-package lt.kepo.airquality.airqualities
+package lt.kepo.airquality
 
 import kotlinx.coroutines.flow.Flow
 import lt.kepo.airquality.AirQuality
 
 interface AirQualitiesRepository {
 
-    fun getAirQualities(): Flow<List<AirQuality>>
+    fun getAll(): Flow<List<AirQuality>>
+
+    fun getAirQuality(stationId: Int): Flow<AirQuality>
+
+    suspend fun remove(stationId: Int)
 
     suspend fun refresh(): RefreshResult
 

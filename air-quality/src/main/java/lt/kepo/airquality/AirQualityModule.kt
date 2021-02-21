@@ -2,37 +2,59 @@ package lt.kepo.airquality
 
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.components.FragmentComponent
-import lt.kepo.airquality.airqualities.AirQualitiesRepository
-import lt.kepo.airquality.airqualities.AirQualitiesRepositoryImpl
-import lt.kepo.airquality.airqualitydetails.AirQualityRepository
-import lt.kepo.airquality.airqualitydetails.AirQualityRepositoryImpl
-import lt.kepo.core.navigation.AirQualityNavigator
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ActivityScoped
+import lt.kepo.airqualitydatabase.AirQualityDao
+import javax.inject.Singleton
 
-@Module
+@Module(
+    includes = [
+        AirQualityModule.Binder::class
+    ]
+)
 @InstallIn(ActivityRetainedComponent::class)
-abstract class AirQualityModule {
+class AirQualityModule {
 
-    @Binds
-    abstract fun bindRefreshAirQualityUseCase(
-        refresh: RemoteRefreshAirQualityUseCase
-    ): RefreshAirQualityUseCase
+    @Provides
+    @ActivityRetainedScoped
+    internal fun provideCachedAirQualitiesRepository(
+        airQualityDao: AirQualityDao,
+        refreshAirQuality: RefreshAirQualityUseCase,
+        refreshAirQualityHere: RefreshAirQualityHereUseCase
+    ): CachedAirQualitiesRepository = DatabaseAirQualitiesRepository(
+        airQualityDao = airQualityDao,
+        refreshAirQuality = refreshAirQuality,
+        refreshAirQualityHere = refreshAirQualityHere
+    ).withCache(
+        cacheExpiresAfterMillis = 30 * 60 * 1000,
+        getCurrentTimeMillis = { System.currentTimeMillis() }
+    )
 
-    @Binds
-    abstract fun bindRefreshAirQualityHereUseCase(
-        refresh: RemoteRefreshAirQualityHereUseCase
-    ): RefreshAirQualityHereUseCase
+    @Module
+    @InstallIn(ActivityRetainedComponent::class)
+    internal interface Binder {
 
-    @Binds
-    abstract fun bindAirQualitiesRepository(
-        repository: AirQualitiesRepositoryImpl
-    ): AirQualitiesRepository
+        @Binds
+        fun bindRefreshAirQualityUseCase(
+            refresh: RemoteRefreshAirQualityUseCase
+        ): RefreshAirQualityUseCase
 
-    @Binds
-    abstract fun bindAirQualityRepository(
-        repository: AirQualityRepositoryImpl
-    ): AirQualityRepository
+        @Binds
+        fun bindRefreshAirQualityHereUseCase(
+            refresh: RemoteRefreshAirQualityHereUseCase
+        ): RefreshAirQualityHereUseCase
+
+        @Binds
+        fun bindRefreshAirQualitiesCacheUseCase(
+            repository: CachedAirQualitiesRepository
+        ): RefreshAirQualitiesCacheUseCase
+
+        @Binds
+        fun bindAirQualitiesRepository(
+            repository: CachedAirQualitiesRepository
+        ): AirQualitiesRepository
+    }
 }

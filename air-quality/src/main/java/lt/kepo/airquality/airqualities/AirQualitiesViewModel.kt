@@ -3,10 +3,13 @@ package lt.kepo.airquality.airqualities
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import lt.kepo.airquality.AirQualitiesRepository
 import lt.kepo.airquality.AirQuality
+import lt.kepo.airquality.RefreshAirQualitiesCacheUseCase
 
 class AirQualitiesViewModel @ViewModelInject constructor(
-    private val airQualitiesRepository: AirQualitiesRepository
+    private val airQualitiesRepository: AirQualitiesRepository,
+    private val refreshCacheUseCase: RefreshAirQualitiesCacheUseCase
 ) : ViewModel() {
 
     private val _isProgressVisible = MutableLiveData(false)
@@ -15,34 +18,40 @@ class AirQualitiesViewModel @ViewModelInject constructor(
     val isProgressVisible: LiveData<Boolean> = _isProgressVisible
     val errorMessage: LiveData<Error> = _error
     val airQualities: LiveData<List<AirQuality>> = airQualitiesRepository
-        .getAirQualities()
+        .getAll()
         .asLiveData(viewModelScope.coroutineContext)
 
     init {
         viewModelScope.launch {
-            refreshRepositoryAirQualities()
+            _isProgressVisible.value = true
+            _error.value = null
+
+            airQualitiesRepository
+                .refresh()
+                .let { refreshResult ->
+                    when (refreshResult) {
+                        is AirQualitiesRepository.RefreshResult.Error -> _error.value = Error.RefreshAirQualities
+                    }
+                }
+
+            _isProgressVisible.value = false
         }
     }
 
     fun refreshAirQualities() {
         viewModelScope.launch {
-            refreshRepositoryAirQualities()
-        }
-    }
+            _isProgressVisible.value = true
+            _error.value = null
 
-    private suspend fun refreshRepositoryAirQualities() {
-        _isProgressVisible.value = true
-        _error.value = null
-
-        airQualitiesRepository
-            .refresh()
-            .let { refreshResult ->
-                 when (refreshResult) {
-                    is AirQualitiesRepository.RefreshResult.Error -> _error.value = Error.RefreshAirQualities
+            refreshCacheUseCase()
+                .let { refreshResult ->
+                    when (refreshResult) {
+                        is RefreshAirQualitiesCacheUseCase.Result.Error -> _error.value = Error.RefreshAirQualities
+                    }
                 }
-            }
 
-        _isProgressVisible.value = false
+            _isProgressVisible.value = false
+        }
     }
 
     sealed class Error {
@@ -50,5 +59,3 @@ class AirQualitiesViewModel @ViewModelInject constructor(
         object RefreshAirQualities : Error()
     }
 }
-
-//fun lt.kepo.airqualityapi.response.AirQuality.shouldUpdate() = updatedAt?.before(Date(Date().time - 1000 * 60 * 10)) == true

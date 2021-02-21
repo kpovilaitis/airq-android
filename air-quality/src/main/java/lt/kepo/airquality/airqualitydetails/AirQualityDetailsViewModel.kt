@@ -4,12 +4,13 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import lt.kepo.airquality.AirQualitiesRepository
 import lt.kepo.airquality.AirQuality
-import lt.kepo.airquality.airqualities.AirQualitiesRepository
-import lt.kepo.airquality.airqualities.AirQualitiesViewModel
+import lt.kepo.airquality.RefreshAirQualitiesCacheUseCase
 
 class AirQualityDetailsViewModel @ViewModelInject constructor(
-    private val airQualityRepository: AirQualityRepository,
+    private val airQualitiesRepository: AirQualitiesRepository,
+    private val refreshCacheUseCase: RefreshAirQualitiesCacheUseCase,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -19,42 +20,48 @@ class AirQualityDetailsViewModel @ViewModelInject constructor(
 
     val isProgressVisible: LiveData<Boolean> = _isProgressVisible
     val errorMessage: LiveData<Error> = _error
-    val airQuality: LiveData<AirQuality> = airQualityRepository
+    val airQuality: LiveData<AirQuality> = airQualitiesRepository
         .getAirQuality(airQualityStationId)
         .asLiveData(viewModelScope.coroutineContext)
     val isRemoveAirQualityVisible: LiveData<Boolean> = airQuality.map { it.isCurrentLocationQuality.not() }
 
     init {
         viewModelScope.launch {
-            refreshRepositoryAirQualities()
+            _isProgressVisible.value = true
+            _error.value = null
+
+            airQualitiesRepository
+                .refresh()
+                .let { refreshResult ->
+                    when (refreshResult) {
+                        is AirQualitiesRepository.RefreshResult.Error -> _error.value = Error.RefreshAirQuality
+                    }
+                }
+
+            _isProgressVisible.value = false
         }
     }
 
     fun removeAirQuality() {
         viewModelScope.launch {
-            airQualityRepository.remove(airQualityStationId)
+            airQualitiesRepository.remove(airQualityStationId)
         }
     }
 
     fun refreshAirQuality() {
         viewModelScope.launch {
-            refreshRepositoryAirQualities()
-        }
-    }
+            _isProgressVisible.value = true
+            _error.value = null
 
-    private suspend fun refreshRepositoryAirQualities() {
-        _isProgressVisible.value = true
-        _error.value = null
-
-        airQualityRepository
-            .refresh(airQualityStationId)
-            .let { refreshResult ->
-                when (refreshResult) {
-                    is AirQualityRepository.RefreshResult.Error -> _error.value = Error.RefreshAirQuality
+            refreshCacheUseCase()
+                .let { refreshResult ->
+                    when (refreshResult) {
+                        is RefreshAirQualitiesCacheUseCase.Result.Error -> _error.value = Error.RefreshAirQuality
+                    }
                 }
-            }
 
-        _isProgressVisible.value = false
+            _isProgressVisible.value = false
+        }
     }
 
     sealed class Error {

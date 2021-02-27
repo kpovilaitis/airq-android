@@ -5,13 +5,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lt.kepo.airquality.AirQualitiesRepository
 import lt.kepo.airquality.AirQuality
-import lt.kepo.airquality.RefreshAirQualitiesCacheUseCase
+import lt.kepo.airquality.IsAirQualitiesExpired
 import javax.inject.Inject
 
 @HiltViewModel
 class AirQualitiesViewModel @Inject constructor(
     private val airQualitiesRepository: AirQualitiesRepository,
-    private val refreshCacheUseCase: RefreshAirQualitiesCacheUseCase
+    private val isAirQualitiesExpired: IsAirQualitiesExpired
 ) : ViewModel() {
 
     private val _isProgressVisible = MutableLiveData(false)
@@ -28,16 +28,7 @@ class AirQualitiesViewModel @Inject constructor(
             _isProgressVisible.value = true
             _error.value = null
 
-            if (isForced) {
-                refreshCacheUseCase()
-                    .let { refreshResult ->
-                        when (refreshResult) {
-                            is RefreshAirQualitiesCacheUseCase.Result.Error -> {
-                                _error.value = Error.RefreshAirQualities
-                            }
-                        }
-                    }
-            } else {
+            if (isForced || isAirQualitiesExpired()) {
                 airQualitiesRepository
                     .refresh()
                     .let { refreshResult ->

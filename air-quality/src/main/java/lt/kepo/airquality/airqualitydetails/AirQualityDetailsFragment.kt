@@ -51,8 +51,6 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
             viewModel.removeAirQuality()
             parentFragmentManager.popBackStack()
         }
-        textCity.setOnClickListener { showLocationNameDialog() }
-        textCountry.setOnClickListener { showLocationNameDialog() }
 
         textPM25Label.setOnClickListener { showExplanationDialog(R.string.dialog_title_pm25, R.string.dialog_message_pm25) }
         textPM25Value.setOnClickListener { showExplanationDialog(R.string.dialog_title_pm25_levels, R.string.dialog_message_pm25_levels) }
@@ -66,14 +64,28 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
 
         swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
-        swipeToRefreshLayout.setOnRefreshListener { viewModel.refreshAirQuality() }
+        swipeToRefreshLayout.setOnRefreshListener {
+            viewModel.refreshAirQuality(
+                isForced = true
+            )
+        }
 
         viewModel.isRemoveAirQualityVisible.observe(viewLifecycleOwner) { isRemoveAirQualityVisible ->
             btnRemoveAirQuality.isVisible = isRemoveAirQualityVisible
         }
         viewModel.airQuality.observe(viewLifecycleOwner) { airQuality ->
-            textCity.text = airQuality.primaryAddress
-            textCountry.text = airQuality.secondaryAddress
+            textCity.apply {
+                setOnClickListener {
+                    showLocationNameDialog(airQuality.primaryAddress)
+                }
+                text = airQuality.primaryAddress
+            }
+            textCountry.apply {
+                setOnClickListener {
+                    showLocationNameDialog(airQuality.primaryAddress)
+                }
+                text = airQuality.secondaryAddress
+            }
             textIndex.text = airQuality.airQualityIndex
 
             textSulfurDioxideValue.text = formatText(R.string.template_μgm, airQuality.sulfurOxide)
@@ -95,19 +107,20 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
         viewModel.isProgressVisible.observe(viewLifecycleOwner) { isProgressVisible ->
             swipeToRefreshLayout.isRefreshing = isProgressVisible == true
         }
+        viewModel.refreshAirQuality(
+            isForced = false
+        )
     }
 
     private fun formatText(templateResId: Int, value: Any?) =
         getString(templateResId, value?.toString() ?: "-")
 
-    private fun showLocationNameDialog() {
-//        viewModel.airQuality.value?.city?.name?.let {
-//            AlertDialog.Builder(requireActivity(), R.style.Dialog).apply {
-//                setTitle(R.string.dialog_title_location_name)
-//                setMessage(it)
-//                setPositiveButton(R.string.close) { dialog, _ -> dialog.dismiss() }
-//            }.show()
-//        }
+    private fun showLocationNameDialog(locationName: String) {
+        AlertDialog.Builder(requireActivity(), R.style.Dialog).apply {
+            setTitle(R.string.dialog_title_location_name)
+            setMessage(locationName)
+            setPositiveButton(R.string.close) { dialog, _ -> dialog.dismiss() }
+        }.show()
     }
 
     private fun showExplanationDialog(@StringRes titleResId: Int, @StringRes messageResId: Int) {

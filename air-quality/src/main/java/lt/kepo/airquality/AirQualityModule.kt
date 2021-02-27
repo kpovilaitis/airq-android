@@ -5,10 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ActivityRetainedScoped
-import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
 import lt.kepo.airqualitydatabase.AirQualityDao
 import lt.kepo.core.navigation.AirQualityNavigator
@@ -25,16 +22,16 @@ class AirQualityModule {
 
     @Provides
     @Singleton
-    internal fun provideCachedAirQualitiesRepository(
+    internal fun provideExpiringAirQualitiesRepository(
         airQualityDao: AirQualityDao,
         refreshAirQuality: RefreshAirQualityUseCase,
         refreshAirQualityHere: RefreshAirQualityHereUseCase
-    ): CachedAirQualitiesRepository = DatabaseAirQualitiesRepository(
+    ): ExpiringAirQualitiesRepository = DatabaseAirQualitiesRepository(
         airQualityDao = airQualityDao,
         refreshAirQuality = refreshAirQuality,
         refreshAirQualityHere = refreshAirQualityHere
-    ).withCache(
-        cacheExpiresAfterMillis = 30 * 60 * 1000,
+    ).withExpiration(
+        expiresAfterMillis = 30 * 60 * 1000,
         getCurrentTimeMillis = { System.currentTimeMillis() }
     )
 
@@ -53,13 +50,13 @@ class AirQualityModule {
         ): RefreshAirQualityHereUseCase
 
         @Binds
-        fun bindRefreshAirQualitiesCacheUseCase(
-            repository: CachedAirQualitiesRepository
-        ): RefreshAirQualitiesCacheUseCase
+        fun bindIsAirQualitiesExpired(
+            repository: ExpiringAirQualitiesRepository
+        ): IsAirQualitiesExpired
 
         @Binds
         fun bindAirQualitiesRepository(
-            repository: CachedAirQualitiesRepository
+            repository: ExpiringAirQualitiesRepository
         ): AirQualitiesRepository
     }
 

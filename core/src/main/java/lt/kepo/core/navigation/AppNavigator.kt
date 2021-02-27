@@ -4,7 +4,6 @@ import androidx.fragment.app.FragmentActivity
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
-@ActivityScoped
 class AppNavigator @Inject constructor(
     private val activity: FragmentActivity,
     airQualityNavigator: AirQualityNavigator,

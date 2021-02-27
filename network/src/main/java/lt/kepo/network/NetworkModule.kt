@@ -1,12 +1,11 @@
 package lt.kepo.network
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import lt.kepo.airqualityapi.AIR_QUALITY_API_URL
 import lt.kepo.airqualityapi.AirQualityApi
 import lt.kepo.airqualityapi.ApiTokenInterceptor
@@ -14,11 +13,10 @@ import lt.kepo.airqualityapi.LocalDateTimeAdapter
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.*
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 class NetworkModule {
 
     @Provides
@@ -29,8 +27,7 @@ class NetworkModule {
         Retrofit.Builder()
             .baseUrl(
                 AIR_QUALITY_API_URL
-            )
-            .addConverterFactory(
+            ).addConverterFactory(
                 MoshiConverterFactory.create(
                     Moshi.Builder()
                         .add(
@@ -41,15 +38,13 @@ class NetworkModule {
                         )
                         .build()
                 )
-            )
-            .client(
+            ).client(
                 OkHttpClient.Builder()
                     .addInterceptor(
                         interceptor
                     )
                     .build()
-            )
-            .build()
+            ).build()
             .create(
                 AirQualityApi::class.java
             )

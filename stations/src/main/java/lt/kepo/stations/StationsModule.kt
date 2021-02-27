@@ -3,24 +3,46 @@ package lt.kepo.stations
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ViewModelComponent
+import lt.kepo.core.navigation.StationsNavigator
 
-@Module
-@InstallIn(ActivityRetainedComponent::class)
-abstract class StationsModule {
+@Module(
+    includes = [
+        StationsModule.ViewModelBinder::class,
+        StationsModule.ActivityBinder::class
+    ]
+)
+@InstallIn(ViewModelComponent::class)
+class StationsModule {
 
-    @Binds
-    abstract fun bindAddStationUseCase(
-        addStationUseCase: RemoteAddStationUseCase
-    ): AddStationUseCase
+    @Module
+    @InstallIn(ViewModelComponent::class)
+    interface ViewModelBinder {
 
-    @Binds
-    abstract fun bindGetStationsUseCase(
-        getStations: RemoteGetStationsUseCase
-    ): GetStationsUseCase
+        @Binds
+        fun bindAddStationUseCase(
+            addStationUseCase: RemoteAddStationUseCase
+        ): AddStationUseCase
 
-    @Binds
-    abstract fun bindStationsRepository(
-        repository: StationsRepositoryImpl
-    ): StationsRepository
+        @Binds
+        fun bindGetStationsUseCase(
+            getStations: RemoteGetStationsUseCase
+        ): GetStationsUseCase
+
+        @Binds
+        fun bindStationsRepository(
+            repository: RemoteStationsRepository
+        ): StationsRepository
+    }
+
+    @Module
+    @InstallIn(ActivityComponent::class)
+    interface ActivityBinder {
+
+        @Binds
+        fun bindStationsNavigator(
+            navigatorImpl: StationsNavigatorImpl
+        ): StationsNavigator
+    }
 }

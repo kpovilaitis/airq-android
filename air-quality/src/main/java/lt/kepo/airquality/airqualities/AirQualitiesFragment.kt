@@ -1,9 +1,7 @@
 package lt.kepo.airquality.airqualities
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -13,9 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_air_qualities.*
 import kotlinx.android.synthetic.main.fragment_air_qualities.swipeToRefreshLayout
-import kotlinx.android.synthetic.main.fragment_air_quality.*
 import lt.kepo.airquality.R
-import lt.kepo.airquality.airqualitydetails.AirQualityDetailsViewModel
 import lt.kepo.core.navigation.AppNavigator
 import lt.kepo.core.ui.showError
 import javax.inject.Inject
@@ -58,7 +54,11 @@ class AirQualitiesFragment : Fragment(R.layout.fragment_air_qualities) {
 
         swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
         swipeToRefreshLayout.setColorSchemeResources(R.color.colorAccentTint)
-        swipeToRefreshLayout.setOnRefreshListener { viewModel.refreshAirQualities() }
+        swipeToRefreshLayout.setOnRefreshListener {
+            viewModel.refreshAirQualities(
+                isForced = true
+            )
+        }
 
         val adapter = AirQualitiesAdapter { navigator.showAirQualityDetails(it) }
         airQualitiesRecyclerView.adapter = adapter
@@ -94,6 +94,10 @@ class AirQualitiesFragment : Fragment(R.layout.fragment_air_qualities) {
         viewModel.isProgressVisible.observe(viewLifecycleOwner) { isProgressVisible ->
             swipeToRefreshLayout.isRefreshing = isProgressVisible
         }
+
+        viewModel.refreshAirQualities(
+            isForced = false
+        )
     }
 
 //    private fun animateFAB() {

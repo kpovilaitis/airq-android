@@ -17,8 +17,10 @@ class AirQualitiesAdapter(
 
     override fun getItemCount(): Int = airQualities.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-            = ViewHolder(
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.list_item_air_quality, parent, false)
     )
 

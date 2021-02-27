@@ -1,17 +1,18 @@
 package lt.kepo.airquality.airqualitydetails
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lt.kepo.airquality.AirQualitiesRepository
 import lt.kepo.airquality.AirQuality
 import lt.kepo.airquality.RefreshAirQualitiesCacheUseCase
+import javax.inject.Inject
 
-class AirQualityDetailsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AirQualityDetailsViewModel @Inject constructor(
     private val airQualitiesRepository: AirQualitiesRepository,
     private val refreshCacheUseCase: RefreshAirQualitiesCacheUseCase,
-    @Assisted private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _isProgressVisible = MutableLiveData(false)

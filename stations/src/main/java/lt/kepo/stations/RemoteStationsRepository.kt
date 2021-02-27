@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
-class StationsRepositoryImpl @Inject constructor(
+class RemoteStationsRepository @Inject constructor(
     private val getStationsUseCase: GetStationsUseCase,
     private val addStationUseCase: AddStationUseCase
 ) : StationsRepository {

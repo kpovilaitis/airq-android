@@ -16,7 +16,9 @@ class RemoteGetStationsUseCase @Inject constructor(
         }.let { apiResult ->
             when (apiResult) {
                 is ApiResult.Success -> GetStationsUseCase.Result.Success(
-                    apiResult.data.map { it.toDomainModel() }
+                    stations = apiResult.data.map {
+                        it.toDomainModel()
+                    }
                 )
                 is ApiResult.Error -> GetStationsUseCase.Result.Error
             }

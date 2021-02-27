@@ -1,11 +1,12 @@
 package lt.kepo.stations
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import kotlinx.android.synthetic.main.fragment_stations.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class StationsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class StationsViewModel @Inject constructor(
     private val stationsRepository: StationsRepository
 ) : ViewModel() {
 

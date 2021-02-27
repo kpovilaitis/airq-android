@@ -1,13 +1,15 @@
 package lt.kepo.airquality.airqualities
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lt.kepo.airquality.AirQualitiesRepository
 import lt.kepo.airquality.AirQuality
 import lt.kepo.airquality.RefreshAirQualitiesCacheUseCase
+import javax.inject.Inject
 
-class AirQualitiesViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AirQualitiesViewModel @Inject constructor(
     private val airQualitiesRepository: AirQualitiesRepository,
     private val refreshCacheUseCase: RefreshAirQualitiesCacheUseCase
 ) : ViewModel() {
@@ -21,34 +23,31 @@ class AirQualitiesViewModel @ViewModelInject constructor(
         .getAll()
         .asLiveData(viewModelScope.coroutineContext)
 
-    init {
+    fun refreshAirQualities(isForced: Boolean) {
         viewModelScope.launch {
             _isProgressVisible.value = true
             _error.value = null
 
-            airQualitiesRepository
-                .refresh()
-                .let { refreshResult ->
-                    when (refreshResult) {
-                        is AirQualitiesRepository.RefreshResult.Error -> _error.value = Error.RefreshAirQualities
+            if (isForced) {
+                refreshCacheUseCase()
+                    .let { refreshResult ->
+                        when (refreshResult) {
+                            is RefreshAirQualitiesCacheUseCase.Result.Error -> {
+                                _error.value = Error.RefreshAirQualities
+                            }
+                        }
                     }
-                }
-
-            _isProgressVisible.value = false
-        }
-    }
-
-    fun refreshAirQualities() {
-        viewModelScope.launch {
-            _isProgressVisible.value = true
-            _error.value = null
-
-            refreshCacheUseCase()
-                .let { refreshResult ->
-                    when (refreshResult) {
-                        is RefreshAirQualitiesCacheUseCase.Result.Error -> _error.value = Error.RefreshAirQualities
+            } else {
+                airQualitiesRepository
+                    .refresh()
+                    .let { refreshResult ->
+                        when (refreshResult) {
+                            is AirQualitiesRepository.RefreshResult.Error -> {
+                                _error.value = Error.RefreshAirQualities
+                            }
+                        }
                     }
-                }
+            }
 
             _isProgressVisible.value = false
         }

@@ -37,8 +37,8 @@ class RemoteAddStationUseCase @Inject constructor(
     ): AirQualityEntity =
         AirQualityEntity(
             stationId = if (isCurrentLocationQuality) Int.MIN_VALUE else stationId,
-            primaryAddress = city.name.split(", ").last(),
-            secondaryAddress = city.name.split(", ").dropLast(1).joinToString(", "),
+            primaryAddress = city.name.split(", ").dropLast(1).joinToString(", "),
+            secondaryAddress = city.name.split(", ").last(),
             airQualityIndex = airQualityIndex,
             sulfurOxide = individualIndices.sulfurOxide?.value,
             ozone = individualIndices.ozone?.value,

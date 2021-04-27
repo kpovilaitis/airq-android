@@ -9,16 +9,19 @@ android {
 //    signingConfigs {
 //
 //    }
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion versions.compileSdk
+
     defaultConfig {
         applicationId "lt.kepo.airq"
-        minSdkVersion 24
-        targetSdkVersion 29
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+
         versionCode 2
         versionName "1.1.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,12 +29,15 @@ android {
 //            signingConfig signingConfigs.release
         }
     }
+
     androidExtensions {
         experimental = true
     }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

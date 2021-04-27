@@ -5,22 +5,19 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion versions.compileSdk
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 29
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles 'consumer-rules.pro'
     }
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -47,8 +44,8 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle_livedata_ktx}"
 
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation "androidx.recyclerview:recyclerview:${versions.recyclerview}"
+    implementation "androidx.constraintlayout:constraintlayout:${versions.constraint_layout}"
 
     implementation "com.google.android.material:material:${versions.material}"
 }

@@ -3,9 +3,7 @@ package lt.kepo.airquality
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import lt.kepo.airqualitydatabase.AirQualityDao
 import javax.inject.Inject
 
@@ -24,10 +22,10 @@ class DatabaseAirQualitiesRepository @Inject constructor(
                 }
             }
 
-    override fun getAirQuality(stationId: Int): Flow<AirQuality> =
+    override fun getAirQuality(stationId: Int): Flow<AirQuality?> =
         airQualityDao
             .get(stationId)
-            .map { it.toDomainModel() }
+            .map { it?.toDomainModel() }
 
     override suspend fun remove(stationId: Int) {
         airQualityDao.delete(stationId)
@@ -37,15 +35,16 @@ class DatabaseAirQualitiesRepository @Inject constructor(
         airQualityDao
             .getAll()
             .first()
+            .filterNot { entity -> entity.isCurrentLocationQuality }
             .map { entity ->
                 async {
-                    if (entity.isCurrentLocationQuality) {
-                        refreshAirQualityHere()
-                    } else {
-                        refreshAirQuality(entity.stationId)
-                    }
+                    refreshAirQuality(entity.stationId)
                 }
-            }.awaitAll()
+            }.plus(
+                async {
+                    refreshAirQualityHere()
+                }
+            ).awaitAll()
             .let { refreshResults ->
                 when {
                     refreshResults.any { it is RefreshAirQualityUseCase.Result.Error } ->

@@ -4,17 +4,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import lt.kepo.airqualitydatabase.AirQualityDao
-import lt.kepo.core.navigation.AirQualityNavigator
 import javax.inject.Singleton
 
 @Module(
     includes = [
         AirQualityModule.ViewModelBinder::class,
-        AirQualityModule.ActivityBinder::class
     ]
 )
 @InstallIn(SingletonComponent::class)
@@ -58,15 +55,5 @@ class AirQualityModule {
         fun bindAirQualitiesRepository(
             repository: ExpiringAirQualitiesRepository
         ): AirQualitiesRepository
-    }
-
-    @Module
-    @InstallIn(ActivityComponent::class)
-    abstract class ActivityBinder {
-
-        @Binds
-        abstract fun bindAirQualityNavigator(
-            navigatorImpl: AirQualityNavigatorImpl
-        ): AirQualityNavigator
     }
 }

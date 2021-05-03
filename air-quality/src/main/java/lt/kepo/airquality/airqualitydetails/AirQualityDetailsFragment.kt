@@ -9,22 +9,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_air_quality.*
 import kotlinx.android.synthetic.main.fragment_air_quality.swipeToRefreshLayout
 import kotlinx.android.synthetic.main.fragment_air_quality.textCity
 import kotlinx.android.synthetic.main.fragment_air_quality.textCountry
 import lt.kepo.airquality.R
-import lt.kepo.airquality.setPollution
 import lt.kepo.airquality.airqualitydetails.AirQualityDetailsViewModel.Error
-import lt.kepo.core.navigation.AppNavigator
 import lt.kepo.core.ui.showError
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
 
-    @Inject lateinit var navigator: AppNavigator
     private val viewModel: AirQualityDetailsViewModel by viewModels()
 
     override fun onViewCreated(@NonNull view : View, savedInstanceState: Bundle?) {
@@ -46,10 +43,12 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
             insets
         }
 
-        btnBack.setOnClickListener { navigator.goBack() }
+        btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
         btnRemoveAirQuality.setOnClickListener {
             viewModel.removeAirQuality()
-            parentFragmentManager.popBackStack()
+            findNavController().popBackStack()
         }
 
         textPM25Label.setOnClickListener { showExplanationDialog(R.string.dialog_title_pm25, R.string.dialog_message_pm25) }
@@ -93,7 +92,6 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
             textPM10Value.text = formatText(R.string.template_μgm, airQuality.particle10)
             textOzoneValue.text = formatText(R.string.template_μgm, airQuality.ozone)
             textTimeRecordedValue.text = airQuality.localTimeRecorded.toString()
-            pollutionView.setPollution(airQuality.airQualityIndex)
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
             if (error != null) {
@@ -107,6 +105,11 @@ class AirQualityDetailsFragment : Fragment(R.layout.fragment_air_quality) {
         viewModel.isProgressVisible.observe(viewLifecycleOwner) { isProgressVisible ->
             swipeToRefreshLayout.isRefreshing = isProgressVisible == true
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
         viewModel.refreshAirQuality(
             isForced = false
         )

@@ -2,6 +2,7 @@ package lt.kepo.airquality.airqualitydetails
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import lt.kepo.airquality.AirQualitiesRepository
 import lt.kepo.airquality.AirQuality
@@ -23,6 +24,7 @@ class AirQualityDetailsViewModel @Inject constructor(
     val errorMessage: LiveData<Error> = _error
     val airQuality: LiveData<AirQuality> = airQualitiesRepository
         .getAirQuality(airQualityStationId)
+        .mapNotNull { it }
         .asLiveData(viewModelScope.coroutineContext)
     val isRemoveAirQualityVisible: LiveData<Boolean> = airQuality.map { airQuality ->
         airQuality.isCurrentLocationQuality.not()

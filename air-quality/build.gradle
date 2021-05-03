@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion versions.compileSdk
@@ -29,6 +30,7 @@ dependencies {
     implementation project(':air-quality-api')
     implementation project(':air-quality-database')
     implementation project(':location')
+    implementation project(':stations')
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${versions.swipeRefreshLayout}"
 
@@ -37,6 +39,10 @@ dependencies {
 
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:${versions.hilt_lifecycle_viewmodel}"
     kapt "androidx.hilt:hilt-compiler:${versions.hilt_compiler}"
+
+    implementation "androidx.navigation:navigation-fragment-ktx:${versions.navigation}"
+    implementation "androidx.navigation:navigation-ui-ktx:${versions.navigation}"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:${versions.navigation}"
 
     implementation "androidx.appcompat:appcompat:${versions.appCompat}"
     implementation "androidx.core:core-ktx:${versions.coreKtx}"

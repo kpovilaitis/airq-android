@@ -20,6 +20,8 @@ interface StationsRepository {
 
         object Success : SearchResult()
 
+        object NothingFound : SearchResult()
+
         object Error : SearchResult()
     }
 

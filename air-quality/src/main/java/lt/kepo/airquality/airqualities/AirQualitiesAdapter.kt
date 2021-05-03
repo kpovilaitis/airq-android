@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_item_air_quality.view.*
 import lt.kepo.airquality.AirQuality
 import lt.kepo.airquality.R
-import lt.kepo.airquality.setPollution
 
 class AirQualitiesAdapter(
     var airQualities: List<AirQuality> = emptyList(),
@@ -35,7 +34,6 @@ class AirQualitiesAdapter(
             textCountry.text = item.secondaryAddress
             textIndex.text = item.airQualityIndex
 
-            itemView.pollutionView.setPollution(item.airQualityIndex)
             itemView.setOnClickListener {
                 listener(item.stationId)
             }

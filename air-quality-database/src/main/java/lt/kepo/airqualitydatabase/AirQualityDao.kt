@@ -19,7 +19,7 @@ interface AirQualityDao {
     )
     fun get(
         stationId: Int
-    ): Flow<AirQualityEntity>
+    ): Flow<AirQualityEntity?>
 
     @Query(
         """

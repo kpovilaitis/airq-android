@@ -11,42 +11,41 @@ class StationsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isProgressVisible = MutableLiveData(false)
-    private val _query = MutableLiveData("")
+    private val _isNothingFoundVisible = MutableLiveData(false)
     private val _error = MutableLiveData<Error>(null)
 
-    val stations: LiveData<List<Station>> = stationsRepository.stations.asLiveData(viewModelScope.coroutineContext)
+    val stations: LiveData<List<Station>> = stationsRepository.stations
+        .asLiveData(viewModelScope.coroutineContext)
+        .map { it.take(7) }
     val isProgressVisible: LiveData<Boolean> = _isProgressVisible
     val error: LiveData<Error> = _error
-    val isTypingHintVisible: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        value = true
-        addSource(stations) { value = it.isEmpty() && _query.value?.isEmpty() == true }
-        addSource(_query) { value = it.isEmpty() && stations.value?.isEmpty() == true }
-    }
-    val isNoResultVisible: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        value = false
-        addSource(stations) { value = it.isEmpty() && _query.value?.isNotEmpty() == true }
-        addSource(_query) { value = it.isNotEmpty() && stations.value?.isEmpty() == true }
-    }
-
-    private var getStationsJob: Job? = null
+    val isNothingFoundVisible: LiveData<Boolean> = _isNothingFoundVisible
 
     fun getStations(query: String) {
-        getStationsJob = viewModelScope.launch {
-            _query.value = query
-            _isProgressVisible.value = true
-            _error.value = null
-
+        if (query.isBlank() || query.length < 2) {
+            return
+        }
+        viewModelScope.launch {
             when (stationsRepository.search(query)) {
-                is StationsRepository.SearchResult.Error -> _error.value = Error.GetStations
+                is StationsRepository.SearchResult.Success -> {
+                    _isNothingFoundVisible.value = false
+                    _error.value = null
+                }
+                is StationsRepository.SearchResult.NothingFound -> {
+                    _isNothingFoundVisible.value = true
+                    _error.value = null
+                }
+                is StationsRepository.SearchResult.Error -> {
+                    _isNothingFoundVisible.value = false
+                    _error.value = Error.GetStations
+                }
             }
-
-            _isProgressVisible.value = false
         }
     }
 
-    fun clearStations() {
-        getStationsJob?.cancel()
-        _isProgressVisible.value = false
+    fun clearSearch() {
+        _error.value = null
+        _isNothingFoundVisible.value = false
         viewModelScope.launch {
             stationsRepository.clear()
         }

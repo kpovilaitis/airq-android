@@ -1,42 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:maxHeight="72dp"
-        android:minHeight="72dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/background_item"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textIndex"
+            style="@style/TextBodyBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_index"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textStationName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="123"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textStationName"
             style="@style/TextBodyBold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="100dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="32dp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/textStationAirQuality"
             app:layout_constraintEnd_toStartOf="@+id/progress_circular"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Honduras"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textStationAirQuality"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintEnd_toStartOf="@+id/progress_circular"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textStationName" />
+            app:layout_constraintEnd_toStartOf="@id/progress_circular"
+            app:layout_constraintStart_toStartOf="@id/textStationName"
+            app:layout_constraintTop_toBottomOf="@id/textStationName"
+            tools:text="123"/>
 
     <ProgressBar
             android:id="@+id/progress_circular"

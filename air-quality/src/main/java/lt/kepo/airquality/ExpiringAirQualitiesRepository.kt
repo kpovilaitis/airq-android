@@ -15,7 +15,7 @@ internal class ExpiringAirQualitiesRepository @Inject constructor(
     override fun getAll(): Flow<List<AirQuality>> =
         originalRepository.getAll()
 
-    override fun getAirQuality(stationId: Int): Flow<AirQuality> =
+    override fun getAirQuality(stationId: Int): Flow<AirQuality?> =
         originalRepository.getAirQuality(stationId)
 
     override suspend fun remove(stationId: Int) {

@@ -6,7 +6,6 @@
 
     <string name="label_station_air_quality">Air quality index: %s</string>
     <string name="label_no_results">No results</string>
-    <string name="label_try_amsterdam">Try “Amsterdam”</string>
 
     <string name="error_get_stations">Could not search stations</string>
     <string name="error_add_station">Could not add station</string>

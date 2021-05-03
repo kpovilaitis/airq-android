@@ -7,7 +7,7 @@ interface AirQualitiesRepository {
 
     fun getAll(): Flow<List<AirQuality>>
 
-    fun getAirQuality(stationId: Int): Flow<AirQuality>
+    fun getAirQuality(stationId: Int): Flow<AirQuality?>
 
     suspend fun remove(stationId: Int)
 

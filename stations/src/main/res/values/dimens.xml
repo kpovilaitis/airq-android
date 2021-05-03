@@ -3,8 +3,8 @@
 
     <dimen name="divider_height">8dp</dimen>
 
-    <dimen name="padding_toolbar_overflow">24dp</dimen>
+    <dimen name="padding_toolbar_overflow">20dp</dimen>
 
-    <dimen name="margin_toolbar_overflow">-16dp</dimen>
+    <dimen name="margin_toolbar_overflow">-20dp</dimen>
 
 </resources>

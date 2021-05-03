@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/stations_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@drawable/background_window">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stations_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/background_window">
 
     <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/margin_nav_bar">
+            android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/stationsRecyclerView"
+                android:id="@+id/stations_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_toolbar_overflow"
@@ -44,46 +44,55 @@
 
         </LinearLayout>
 
-        <LinearLayout
-                android:id="@+id/view_try_typing"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="272dp">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextTitleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_try_amsterdam" />
-
-        </LinearLayout>
-
-        <androidx.appcompat.widget.Toolbar
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/toolbar"
-                style="@style/ToolBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
                 android:background="@drawable/background_toolbar"
-                android:contentInsetLeft="0dp"
-                android:contentInsetStart="0dp"
                 android:stateListAnimator="@animator/toolbar_animator"
                 android:layout_alignParentTop="true"
-                app:navigationIcon="@drawable/ic_back"
-                app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp">
+                android:layout_margin="8dp"
+                tools:layout_height="48dp"
+                >
 
-            <androidx.appcompat.widget.SearchView
-                    android:id="@+id/search"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    app:searchIcon="@null"
-                    app:iconifiedByDefault="false"
-                    app:queryHint="@string/hint_search"
-                    app:queryBackground="@android:color/transparent"
-                    app:searchHintIcon="@null"
-                    app:closeIcon="@drawable/ic_remove"/>
+            <Button
+                    android:id="@+id/button_back"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:icon="@drawable/ic_back"
+                    app:iconTint="@color/colorAccentTint"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
-        </androidx.appcompat.widget.Toolbar>
+            <EditText
+                    android:id="@+id/search_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:hint="@string/hint_search"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/button_back"
+                    app:layout_constraintEnd_toStartOf="@id/button_clear_search_input"/>
+
+            <Button
+                    android:id="@+id/button_clear_search_input"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:icon="@drawable/ic_remove"
+                    app:iconTint="@color/colorAccentTint"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RelativeLayout>
 

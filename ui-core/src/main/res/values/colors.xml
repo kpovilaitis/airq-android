@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#999999</color>
+    <color name="colorPrimaryDark">#2286c3</color>
+    <color name="colorAccent">#fff176</color>
+
+    <color name="colorAccentTint">#323232</color>
+    <color name="colorStatusBar">#EDEDED</color>
+    <color name="colorNavigationBar">#FFFFFF</color>
+
+    <color name="colorPollution">#999999</color>
+
+    <color name="colorPollutionUnknown">#00FFFFFF</color>
+    <color name="colorPollutionGood">#66b26f</color>
+    <color name="colorPollutionModerate">#f5c73d</color>
+    <color name="colorPollutionUnhealthyForSensitive">#ea862e</color>
+    <color name="colorPollutionUnhealthy">#d85241</color>
+    <color name="colorPollutionVeryUnhealthy">#9346ec</color>
+    <color name="colorPollutionHazardous">#cb1d1a</color>
+
+    <color name="colorTextPrimary">@color/colorAccentTint</color>
+
+</resources>

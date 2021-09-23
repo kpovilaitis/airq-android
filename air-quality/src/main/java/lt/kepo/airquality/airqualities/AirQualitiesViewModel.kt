@@ -2,6 +2,7 @@ package lt.kepo.airquality.airqualities
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import lt.kepo.airquality.AirQualitiesRepository
 import lt.kepo.airquality.AirQuality
@@ -14,14 +15,24 @@ class AirQualitiesViewModel @Inject constructor(
     private val isAirQualitiesExpired: IsAirQualitiesExpired
 ) : ViewModel() {
 
-    private val _isProgressVisible = MutableLiveData(false)
-    private val _error = MutableLiveData<Error>(null)
+    private val _isProgressVisible = MutableStateFlow(false)
+    private val _error = MutableStateFlow<Error?>(null)
 
-    val isProgressVisible: LiveData<Boolean> = _isProgressVisible
-    val errorMessage: LiveData<Error> = _error
-    val airQualities: LiveData<List<AirQuality>> = airQualitiesRepository
+    val isProgressVisible: StateFlow<Boolean> = _isProgressVisible
+    val error: StateFlow<Error?> = _error
+    val airQualities: StateFlow<List<AirQualitiesListItem>> = airQualitiesRepository
         .getAll()
-        .asLiveData(viewModelScope.coroutineContext)
+        .map { airQualities ->
+            airQualities.sortedByDescending { airQuality ->
+                airQuality.isCurrentLocationQuality
+            }.map { airQuality ->
+                airQuality.toListItem()
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = emptyList(),
+        )
 
     fun refreshAirQualities(isForced: Boolean) {
         viewModelScope.launch {
@@ -49,3 +60,11 @@ class AirQualitiesViewModel @Inject constructor(
         object RefreshAirQualities : Error()
     }
 }
+
+private fun AirQuality.toListItem(): AirQualitiesListItem =
+    AirQualitiesListItem(
+        stationId = stationId,
+        primaryAddress = primaryAddress,
+        secondaryAddress = secondaryAddress,
+        airQualityIndex = airQualityIndex,
+    )

@@ -15,7 +15,7 @@ interface AirQualityApi {
     ): Response<AirQualityApiResponse<AirQualityResponse>>
 
     @GET("/feed/geo:{latitude};{longitude}/")
-    suspend fun getAirQualityLocationHere(
+    suspend fun getAirQualityHere(
         @Path("latitude") latitude: String,
         @Path("longitude") longitude: String
     ): Response<AirQualityApiResponse<AirQualityResponse>>

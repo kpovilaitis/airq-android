@@ -30,12 +30,3 @@ internal class ExpiringAirQualitiesRepository @Inject constructor(
     override fun invoke(): Boolean =
         getCurrentTimeMillis() > refreshedAtMillis + expiresAfterMillis
 }
-
-internal fun AirQualitiesRepository.withExpiration(
-    expiresAfterMillis: Long,
-    getCurrentTimeMillis: () -> Long
-): ExpiringAirQualitiesRepository = ExpiringAirQualitiesRepository(
-    originalRepository = this,
-    expiresAfterMillis = expiresAfterMillis,
-    getCurrentTimeMillis = getCurrentTimeMillis
-)

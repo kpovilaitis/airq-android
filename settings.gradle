@@ -1,9 +1,9 @@
-include ':location'
 include ':airq',
         ':stations',
-        ':core',
+        ':ui-core',
         ':air-quality',
         ':air-quality-api',
         ':air-quality-database',
         ':database',
-        ':network'
+        ':network',
+        ':location'

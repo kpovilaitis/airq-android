@@ -19,17 +19,12 @@ class StationsModule {
 
         @Binds
         fun bindAddStationUseCase(
-            addStationUseCase: RemoteAddStationUseCase
-        ): AddStationUseCase
+            addStationUseCase: RemoteSaveStationUseCase
+        ): SaveStationUseCase
 
         @Binds
         fun bindGetStationsUseCase(
-            getStations: RemoteGetStationsUseCase
-        ): GetStationsUseCase
-
-        @Binds
-        fun bindStationsRepository(
-            repository: RemoteStationsRepository
-        ): StationsRepository
+            getStations: RemoteSearchStationsUseCase
+        ): SearchStationsUseCase
     }
 }

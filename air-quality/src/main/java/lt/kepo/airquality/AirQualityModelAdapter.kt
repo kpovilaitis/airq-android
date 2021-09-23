@@ -21,7 +21,7 @@ internal fun AirQualityResponse.toEntityModel(
     isCurrentLocationQuality: Boolean
 ): AirQualityEntity =
     AirQualityEntity(
-        stationId = if (isCurrentLocationQuality) Int.MIN_VALUE else stationId,
+        stationId = stationId,
         primaryAddress = city.name.split(", ").dropLast(1).joinToString(", "),
         secondaryAddress = city.name.split(", ").last(),
         airQualityIndex = airQualityIndex,

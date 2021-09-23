@@ -17,7 +17,7 @@ class RemoteRefreshAirQualityHereUseCase @Inject constructor(
         airQualityApi.call {
             when (val location = locationClient.getLastLocation()) {
                 null -> getAirQualityHere()
-                else -> getAirQualityLocationHere(
+                else -> getAirQualityHere(
                     latitude = location.latitude.toString(),
                     longitude = location.longitude.toString()
                 )

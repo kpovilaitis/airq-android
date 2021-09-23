@@ -3,51 +3,47 @@
 buildscript {
 
     ext.versions = [
-        'compileSdk': 30,
+        'compileSdk': 31,
         'minSdk': 24,
         'targetSdk': 30,
 
-        'kotlin' : '1.4.32',
-        'android_gradle_plugin' : '4.1.3',
-        'hilt' : '2.31-alpha',
+        'kotlin' : '1.5.21',
+        'hilt' : '2.37',
         'hilt_lifecycle_viewmodel' : '1.0.0-alpha03',
         'hilt_compiler' : '1.0.0-alpha03',
         'room' : '2.3.0',
         'play_services_location' : '18.0.0',
         'kotlinx_coroutines_core' : '1.4.2',
-        'lifecycle_livedata_ktx' : '2.3.1',
+        'lifecycle' : '2.3.1',
         'material' : '1.3.0',
         'swipeRefreshLayout' : '1.1.0',
-        'appCompat' : '1.2.0',
+        'appCompat' : '1.3.1',
         'coreKtx' : '1.3.2',
         'fragmentKtx' : '1.3.3',
         'moshi' : '1.11.0',
-        'navigation' : '2.3.5',
         'constraint_layout' : '2.0.4',
-        'lifecycle' : '2.3.0',
         'retrofit' : '2.9.0',
         'recyclerview' : '1.2.0',
+        'compose' : '1.0.2',
     ]
 
     repositories {
         google()
-        jcenter()
-
+        mavenCentral()
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:${versions.android_gradle_plugin}"
+        classpath 'com.android.tools.build:gradle:7.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "com.google.dagger:hilt-android-gradle-plugin:${versions.hilt}"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${versions.navigation}"
     }
-}
 
-allprojects {
-
-    repositories {
-        google()
-        jcenter()
+    subprojects {
+        repositories {
+            google()
+            mavenCentral()
+            jcenter()
+        }
     }
 }
 

@@ -1,9 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion versions.compileSdk
@@ -11,47 +9,45 @@ android {
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 1
-        versionName "1.0"
     }
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
+        useIR = true
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion versions.compose
+        kotlinCompilerVersion versions.kotlin
+    }
 }
 
 dependencies {
-    implementation project(':core')
+    implementation project(':ui-core')
     implementation project(':air-quality-api')
     implementation project(':air-quality-database')
     implementation project(':location')
-    implementation project(':stations')
-
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:${versions.swipeRefreshLayout}"
 
     implementation "com.google.dagger:hilt-android:${versions.hilt}"
     kapt "com.google.dagger:hilt-android-compiler:${versions.hilt}"
 
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:${versions.hilt_lifecycle_viewmodel}"
-    kapt "androidx.hilt:hilt-compiler:${versions.hilt_compiler}"
-
-    implementation "androidx.navigation:navigation-fragment-ktx:${versions.navigation}"
-    implementation "androidx.navigation:navigation-ui-ktx:${versions.navigation}"
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:${versions.navigation}"
-
-    implementation "androidx.appcompat:appcompat:${versions.appCompat}"
-    implementation "androidx.core:core-ktx:${versions.coreKtx}"
-    implementation "androidx.fragment:fragment-ktx:${versions.fragmentKtx}"
-
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle_livedata_ktx}"
-
-    implementation "androidx.recyclerview:recyclerview:${versions.recyclerview}"
-    implementation "androidx.constraintlayout:constraintlayout:${versions.constraint_layout}"
-
-    implementation "com.google.android.material:material:${versions.material}"
+    implementation "androidx.compose.ui:ui:${versions.compose}"
+    implementation "androidx.compose.material:material:${versions.compose}"
+    implementation "androidx.compose.ui:ui-tooling:${versions.compose}"
+    implementation "androidx.compose.runtime:runtime-livedata:${versions.compose}"
+    implementation "androidx.compose.compiler:compiler:${versions.compose}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-beta01"
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha09"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0-alpha03"
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.16.1"
 }

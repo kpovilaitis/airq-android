@@ -6,7 +6,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
-import lt.kepo.airqualitydatabase.AirQualityDao
 import javax.inject.Singleton
 
 @Module(
@@ -20,14 +19,9 @@ class AirQualityModule {
     @Provides
     @Singleton
     internal fun provideExpiringAirQualitiesRepository(
-        airQualityDao: AirQualityDao,
-        refreshAirQuality: RefreshAirQualityUseCase,
-        refreshAirQualityHere: RefreshAirQualityHereUseCase
-    ): ExpiringAirQualitiesRepository = DatabaseAirQualitiesRepository(
-        airQualityDao = airQualityDao,
-        refreshAirQuality = refreshAirQuality,
-        refreshAirQualityHere = refreshAirQualityHere
-    ).withExpiration(
+        repository: DatabaseAirQualitiesRepository
+    ): ExpiringAirQualitiesRepository = ExpiringAirQualitiesRepository(
+        originalRepository = repository,
         expiresAfterMillis = 30 * 60 * 1000,
         getCurrentTimeMillis = { System.currentTimeMillis() }
     )

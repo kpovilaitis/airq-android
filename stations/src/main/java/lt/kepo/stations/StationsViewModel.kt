@@ -3,52 +3,72 @@ package lt.kepo.stations
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class StationsViewModel @Inject constructor(
-    private val stationsRepository: StationsRepository
+    private val searchStationsUseCase: SearchStationsUseCase,
+    private val saveStationUseCase: SaveStationUseCase,
 ) : ViewModel() {
 
-    private val _isProgressVisible = MutableLiveData(false)
-    private val _isNothingFoundVisible = MutableLiveData(false)
-    private val _error = MutableLiveData<Error>(null)
-
-    val stations: LiveData<List<Station>> = stationsRepository.stations
-        .asLiveData(viewModelScope.coroutineContext)
-        .map { it.take(7) }
-    val isProgressVisible: LiveData<Boolean> = _isProgressVisible
-    val error: LiveData<Error> = _error
-    val isNothingFoundVisible: LiveData<Boolean> = _isNothingFoundVisible
-
-    fun getStations(query: String) {
-        if (query.isBlank() || query.length < 2) {
-            return
-        }
-        viewModelScope.launch {
-            when (stationsRepository.search(query)) {
-                is StationsRepository.SearchResult.Success -> {
-                    _isNothingFoundVisible.value = false
-                    _error.value = null
+    private val _query = MutableStateFlow("")
+    private val _isProgressVisible = MutableStateFlow(false)
+    private val _error = MutableStateFlow<Error?>(null)
+    private val searchResults = _query
+        .filterNot { query ->
+            query.isBlank() || query.length < 2
+        }.debounce(400L)
+        .mapLatest { query ->
+            searchStationsUseCase(query)
+        }.map { result ->
+            when (result) {
+                is SearchStationsUseCase.Result.Success -> {
+                    result.stations
                 }
-                is StationsRepository.SearchResult.NothingFound -> {
-                    _isNothingFoundVisible.value = true
-                    _error.value = null
-                }
-                is StationsRepository.SearchResult.Error -> {
-                    _isNothingFoundVisible.value = false
+                is SearchStationsUseCase.Result.Error -> {
                     _error.value = Error.GetStations
+                    emptyList()
                 }
             }
         }
+
+    val stations: StateFlow<List<StationsListItem>> = searchResults
+        .map { stations ->
+            stations.map { station ->
+                station.toListItem()
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = emptyList(),
+        )
+    val query: StateFlow<String> = _query
+    val isProgressVisible: StateFlow<Boolean> = _isProgressVisible
+    val error: StateFlow<Error?> = _error
+    val isNothingFoundVisible: StateFlow<Boolean> = _query
+        .combine(searchResults) { query, results ->
+            query.isNotEmpty() && results.isEmpty()
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = false,
+        )
+    val isClearActionVisible: StateFlow<Boolean> = _query
+        .map { text ->
+            text.isNotEmpty()
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = false,
+        )
+
+    fun onQueryEntered(query: String) {
+        _query.value = query
     }
 
     fun clearSearch() {
-        _error.value = null
-        _isNothingFoundVisible.value = false
-        viewModelScope.launch {
-            stationsRepository.clear()
-        }
+        _query.value = ""
     }
 
     fun addStation(stationId: Int) {
@@ -56,9 +76,12 @@ class StationsViewModel @Inject constructor(
             _isProgressVisible.value = true
             _error.value = null
 
-            when (stationsRepository.save(stationId)) {
-                is StationsRepository.SaveResult.Error -> _error.value = Error.AddStation
-            }
+            saveStationUseCase(stationId)
+                .let { result ->
+                    if (result is SaveStationUseCase.Result.Error) {
+                        _error.value = Error.AddStation
+                    }
+                }
 
             _isProgressVisible.value = false
         }
@@ -71,3 +94,10 @@ class StationsViewModel @Inject constructor(
         object AddStation : Error()
     }
 }
+
+private fun Station.toListItem(): StationsListItem =
+    StationsListItem(
+        id = id,
+        name = name,
+        airQualityIndex = airQualityIndex,
+    )

@@ -37,4 +37,12 @@ interface AirQualityDao {
     suspend fun delete(
         stationId: Int
     )
+
+    @Query(
+        """
+        DELETE FROM air_qualities 
+        WHERE is_current_location = 1
+        """
+    )
+    suspend fun deleteCurrentLocation()
 }

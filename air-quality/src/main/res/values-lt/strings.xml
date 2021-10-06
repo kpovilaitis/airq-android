@@ -76,4 +76,15 @@
 
     <string name="error_occurred">Nutiko klaida</string>
 
+
+    <string name="menu_search">Paieška</string>
+
+    <string name="hint_search">@string/menu_search</string>
+
+    <string name="label_station_air_quality">Oro kokybės indeksas: %s</string>
+    <string name="label_no_results">Nėra rezultatų</string>
+
+    <string name="error_get_stations">Nepavyko rasti stočių</string>
+    <string name="error_add_station">Nepavyko pridėti stoties</string>
+
 </resources>

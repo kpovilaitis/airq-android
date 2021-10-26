@@ -13,22 +13,22 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.launch
 import lt.kepo.airquality.R
+import lt.kepo.core.SimpleEvent
 
 @Composable
 fun AirQualitiesListScreen(
     navController: NavHostController,
     viewModel: AirQualitiesViewModel,
 ) {
-    val airQualities by viewModel.airQualities.collectAsState()
-    val isProgressVisible by viewModel.isProgressVisible.collectAsState()
-    val isErrorVisible by viewModel.isErrorVisible.collectAsState()
+    val airQualities by viewModel.airQualities.collectAsState(emptyList())
+    val isProgressVisible by viewModel.isProgressVisible.collectAsState(false)
+    val showError by viewModel.showError.collectAsState(null)
 
     AirQualitiesListScreen(
         airQualities = airQualities,
         isProgressVisible = isProgressVisible,
-        isErrorVisible = isErrorVisible,
+        showError = showError,
         onRefresh = {
             viewModel.refresh()
         },
@@ -49,12 +49,24 @@ fun AirQualitiesListScreen(
 private fun AirQualitiesListScreen(
     airQualities: List<AirQualitiesListItem>,
     isProgressVisible: Boolean,
-    isErrorVisible: Boolean,
+    showError: SimpleEvent?,
     onRefresh: () -> Unit,
     onAirQualityClick: (Int) -> Unit,
     onAddAirQualityClick: () -> Unit,
 ) {
+    val scaffoldState = rememberScaffoldState()
+
+    if (showError?.notHandledContent != null) {
+        val message = stringResource(R.string.error_occurred)
+        LaunchedEffect("snackbar") {
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = message,
+            )
+        }
+    }
+
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             Row(
                 modifier = Modifier
@@ -87,6 +99,7 @@ private fun AirQualitiesListScreen(
                     contentPadding = PaddingValues(
                         vertical = 8.dp
                     ),
+                    modifier = Modifier.fillMaxHeight()
                 ) {
                     items(airQualities) { airQualityListItem ->
                         AirQualitiesListItem(
@@ -112,16 +125,6 @@ private fun AirQualitiesListScreen(
                 }
             )
         },
-        snackbarHost = { snackBarState ->
-            if (isErrorVisible) {
-                val message = stringResource(R.string.error_occurred)
-                rememberCoroutineScope().launch {
-                    snackBarState.showSnackbar(
-                        message = message,
-                    )
-                }
-            }
-        },
     )
 }
 
@@ -132,13 +135,13 @@ fun PreviewAirQualitiesScreen() {
         airQualities = listOf(
             AirQualitiesListItem(
                 stationId = 1,
-                primaryAddress = "Kaunas",
-                secondaryAddress = "Lietuva",
-                airQualityIndex = "12",
+                address = "Kaunas, Lietuva",
+                index = "12",
+                isCurrentLocation = true
             )
         ),
         isProgressVisible = true,
-        isErrorVisible = false,
+        showError = null,
         onRefresh = { },
         onAirQualityClick = { },
         onAddAirQualityClick = { },

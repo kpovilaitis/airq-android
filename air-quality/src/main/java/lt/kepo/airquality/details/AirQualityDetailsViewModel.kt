@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import lt.kepo.airqualitydata.AirQualitiesRepository
 import lt.kepo.airqualitydata.AirQualityDetails
+import lt.kepo.core.SimpleEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,80 +19,36 @@ class AirQualityDetailsViewModel @Inject constructor(
     private val airQuality: Flow<AirQualityDetails?> = airQualitiesRepository
         .getAirQuality(airQualityStationId)
 
-    val isProgressVisible: StateFlow<Boolean> = airQualitiesRepository.loadState
-        .map { loadState ->
-            loadState is AirQualitiesRepository.LoadState.Loading
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = false,
-        )
-    val isErrorVisible: StateFlow<Boolean> = airQualitiesRepository.loadState
-        .map { loadState ->
-            loadState is AirQualitiesRepository.LoadState.Error
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = false,
-        )
-    val stationName: StateFlow<String> = airQuality
-        .map { it?.primaryAddress ?: "" }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = "",
-        )
-    val index: StateFlow<String> = airQuality
-        .map { it?.airQualityIndex ?: "" }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = "",
-        )
-    val sulfurOxide: StateFlow<Double> = airQuality
-        .map { it?.sulfurOxide ?: 0.0 }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = 0.0,
-        )
-    val ozone: StateFlow<Double> = airQuality
-        .map { it?.ozone ?: 0.0 }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = 0.0,
-        )
-    val particle10: StateFlow<Double> = airQuality
-        .map { it?.particle10 ?: 0.0 }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = 0.0,
-        )
-    val particle25: StateFlow<Double> = airQuality
-        .map { it?.particle25 ?: 0.0 }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = 0.0,
-        )
-    val isCurrentLocationLabelVisible: StateFlow<Boolean> = airQuality
-        .map { airQuality ->
-            airQuality?.isCurrentLocationQuality == true
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = false,
-        )
-    val isRemoveAirQualityVisible: StateFlow<Boolean> = airQuality
-        .map { airQuality ->
-            airQuality?.isCurrentLocationQuality?.not() == true
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = false,
-        )
+    val isProgressVisible: Flow<Boolean> = airQualitiesRepository.isLoading
+    val showError: Flow<SimpleEvent> = airQualitiesRepository.error.transform { error ->
+        if (error is AirQualitiesRepository.Error.Refresh) {
+            emit(SimpleEvent())
+        }
+    }
+    val stationName: Flow<String> = airQuality.map { airQuality ->
+        airQuality?.address ?: ""
+    }
+    val index: Flow<String> = airQuality.map { airQuality ->
+        airQuality?.airQualityIndex ?: ""
+    }
+    val sulfurOxide: Flow<Double?> = airQuality.map { airQuality ->
+        airQuality?.sulfurOxide
+    }
+    val ozone: Flow<Double?> = airQuality.map {  airQuality ->
+        airQuality?.ozone
+    }
+    val particle10: Flow<Double?> = airQuality.map { airQuality ->
+        airQuality?.particle10
+    }
+    val particle25: Flow<Double?> = airQuality.map { airQuality ->
+        airQuality?.particle25
+    }
+    val isCurrentLocationLabelVisible: Flow<Boolean> = airQuality.map { airQuality ->
+        airQuality?.isCurrentLocationQuality == true
+    }
+    val isRemoveAirQualityVisible: Flow<Boolean> = airQuality.map {  airQuality ->
+        airQuality?.isCurrentLocationQuality?.not() == true
+    }
 
     fun refresh() {
         viewModelScope.launch {

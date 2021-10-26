@@ -23,23 +23,22 @@ class RemoteRefreshAirQualityHereUseCase @Inject constructor(
                     longitude = location.longitude.toString()
                 )
             }
-        }.also { apiResult ->
-            when (apiResult) {
+        }.let { airQualityResponse ->
+            when (airQualityResponse) {
                 is ApiResult.Success -> {
                     airQualityDao.run {
                         deleteCurrentLocation()
                         insert(
-                            airQuality = apiResult.data.toEntityModel(
-                                isCurrentLocationQuality = true
+                            airQuality = airQualityResponse.data.toEntityModel(
+                                isCurrentLocationQuality = true,
                             )
                         )
                     }
+                    RefreshAirQualityHereUseCase.Result.Success
                 }
-            }
-        }.let { airQualityResponse ->
-            when (airQualityResponse) {
-                is ApiResult.Success -> RefreshAirQualityHereUseCase.Result.Success
-                is ApiResult.Error -> RefreshAirQualityHereUseCase.Result.Error
+                is ApiResult.Error -> {
+                    RefreshAirQualityHereUseCase.Result.Error
+                }
             }
         }
 }

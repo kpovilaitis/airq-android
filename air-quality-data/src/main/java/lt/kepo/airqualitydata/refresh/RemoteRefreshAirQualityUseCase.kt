@@ -19,18 +19,19 @@ class RemoteRefreshAirQualityUseCase @Inject constructor(
             getAirQuality(
                 stationId = stationId
             )
-        }.also { apiResult ->
-            when (apiResult) {
-                is ApiResult.Success -> airQualityDao.insert(
-                    airQuality = apiResult.data.toEntityModel(
-                        isCurrentLocationQuality = false
-                    )
-                )
-            }
         }.let { airQualityResponse ->
             when (airQualityResponse) {
-                is ApiResult.Success -> RefreshAirQualityUseCase.Result.Success
-                is ApiResult.Error -> RefreshAirQualityUseCase.Result.Error
+                is ApiResult.Success -> {
+                    airQualityDao.insert(
+                        airQuality = airQualityResponse.data.toEntityModel(
+                            isCurrentLocationQuality = false
+                        )
+                    )
+                    RefreshAirQualityUseCase.Result.Success
+                }
+                is ApiResult.Error -> {
+                    RefreshAirQualityUseCase.Result.Error
+                }
             }
         }
 }

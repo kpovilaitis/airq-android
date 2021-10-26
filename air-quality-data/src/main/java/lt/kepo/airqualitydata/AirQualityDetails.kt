@@ -4,8 +4,7 @@ import java.util.*
 
 data class AirQualityDetails(
     val stationId: Int,
-    val primaryAddress: String,
-    val secondaryAddress: String,
+    val address: String,
     val airQualityIndex: String,
     val sulfurOxide: Double?,
     val ozone: Double?,

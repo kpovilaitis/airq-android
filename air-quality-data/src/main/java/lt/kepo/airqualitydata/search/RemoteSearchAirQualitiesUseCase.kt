@@ -30,8 +30,8 @@ class RemoteSearchAirQualitiesUseCase @Inject constructor(
     private fun StationResponse.toDomainModel(): AirQualityListItem =
         AirQualityListItem(
             stationId = id,
-            airQualityIndex = airQualityIndex,
-            isCurrentLocationQuality = false,
+            index = airQualityIndex,
+            isCurrentLocation = false,
             address = station.name,
         )
 }

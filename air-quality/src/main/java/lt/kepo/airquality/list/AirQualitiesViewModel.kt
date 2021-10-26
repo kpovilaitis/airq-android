@@ -5,8 +5,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import lt.kepo.airqualitydata.AirQualitiesRepository
-import lt.kepo.airqualitydata.AirQualityDetails
 import lt.kepo.airqualitydata.AirQualityListItem
+import lt.kepo.core.SimpleEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,35 +14,21 @@ class AirQualitiesViewModel @Inject constructor(
     private val airQualitiesRepository: AirQualitiesRepository,
 ) : ViewModel() {
 
-    val isProgressVisible: StateFlow<Boolean> = airQualitiesRepository.loadState
-        .map { loadState ->
-            loadState is AirQualitiesRepository.LoadState.Loading
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = false,
-        )
-    val isErrorVisible: StateFlow<Boolean> = airQualitiesRepository.loadState
-        .map { loadState ->
-            loadState is AirQualitiesRepository.LoadState.Error
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = false,
-        )
-    val airQualities: StateFlow<List<AirQualitiesListItem>> = airQualitiesRepository
+    val isProgressVisible: Flow<Boolean> = airQualitiesRepository.isLoading
+    val showError: Flow<SimpleEvent> = airQualitiesRepository.error.transform { error ->
+        if (error is AirQualitiesRepository.Error.Refresh) {
+            emit(SimpleEvent())
+        }
+    }
+    val airQualities: Flow<List<AirQualitiesListItem>> = airQualitiesRepository
         .airQualities
         .map { airQualities ->
             airQualities.sortedByDescending { airQuality ->
-                airQuality.isCurrentLocationQuality
+                airQuality.isCurrentLocation
             }.map { airQuality ->
                 airQuality.toListItem()
             }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = emptyList(),
-        )
+        }
 
     fun refresh() {
         viewModelScope.launch {
@@ -54,7 +40,7 @@ class AirQualitiesViewModel @Inject constructor(
 private fun AirQualityListItem.toListItem(): AirQualitiesListItem =
     AirQualitiesListItem(
         stationId = stationId,
-        primaryAddress = address,
-        secondaryAddress = "",
-        airQualityIndex = airQualityIndex,
+        address = address,
+        index = index,
+        isCurrentLocation = isCurrentLocation,
     )

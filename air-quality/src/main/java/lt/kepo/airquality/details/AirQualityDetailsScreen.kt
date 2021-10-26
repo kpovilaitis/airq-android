@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.launch
 import lt.kepo.airquality.R
-import lt.kepo.uicore.getAirQualityIndexColor
+import lt.kepo.core.SimpleEvent
+import lt.kepo.core.getAirQualityIndexColor
 
 @Composable
 fun AirQualityDetailsScreen(
@@ -35,16 +35,16 @@ fun AirQualityDetailsScreen(
             .fillMaxWidth()
             .fillMaxHeight(),
     ) {
-        val stationName by viewModel.stationName.collectAsState()
-        val index by viewModel.index.collectAsState()
-        val sulfurOxide by viewModel.sulfurOxide.collectAsState()
-        val ozone by viewModel.ozone.collectAsState()
-        val particle10 by viewModel.particle10.collectAsState()
-        val particle25 by viewModel.particle25.collectAsState()
-        val isCurrentLocationLabelVisible by viewModel.isCurrentLocationLabelVisible.collectAsState()
-        val isRemoveAirQualityVisible by viewModel.isRemoveAirQualityVisible.collectAsState()
-        val isProgressVisible by viewModel.isProgressVisible.collectAsState()
-        val isErrorVisible by viewModel.isErrorVisible.collectAsState()
+        val stationName by viewModel.stationName.collectAsState("")
+        val index by viewModel.index.collectAsState("")
+        val sulfurOxide by viewModel.sulfurOxide.collectAsState(null)
+        val ozone by viewModel.ozone.collectAsState(null)
+        val particle10 by viewModel.particle10.collectAsState(null)
+        val particle25 by viewModel.particle25.collectAsState(null)
+        val isCurrentLocationLabelVisible by viewModel.isCurrentLocationLabelVisible.collectAsState(false)
+        val isRemoveAirQualityVisible by viewModel.isRemoveAirQualityVisible.collectAsState(false)
+        val isProgressVisible by viewModel.isProgressVisible.collectAsState(false)
+        val showError by viewModel.showError.collectAsState(null)
 
         AirQualityDetailsScreen(
             stationName = stationName,
@@ -56,7 +56,7 @@ fun AirQualityDetailsScreen(
             isCurrentLocationLabelVisible = isCurrentLocationLabelVisible,
             isRemoveVisible = isRemoveAirQualityVisible,
             isProgressVisible = isProgressVisible,
-            isErrorVisible = isErrorVisible,
+            showError = showError,
             onRefresh = {
                 viewModel.refresh()
             },
@@ -75,19 +75,31 @@ fun AirQualityDetailsScreen(
 private fun AirQualityDetailsScreen(
     stationName: String,
     airQualityIndex: String,
-    sulfurOxide: Double,
-    ozone: Double,
-    particle10: Double,
-    particle25: Double,
+    sulfurOxide: Double?,
+    ozone: Double?,
+    particle10: Double?,
+    particle25: Double?,
     isCurrentLocationLabelVisible: Boolean,
     isRemoveVisible: Boolean,
     isProgressVisible: Boolean,
-    isErrorVisible: Boolean,
+    showError: SimpleEvent?,
     onRefresh: () -> Unit,
     onBackClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
+    val scaffoldState = rememberScaffoldState()
+
+    if (showError?.notHandledContent != null) {
+        val message = stringResource(R.string.error_occurred)
+        LaunchedEffect("snackbar") {
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = message,
+            )
+        }
+    }
+
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             Row(
                 modifier = Modifier
@@ -180,36 +192,26 @@ private fun AirQualityDetailsScreen(
 
                     ParticleItem(
                         label = stringResource(R.string.label_pm_25),
-                        value = particle25.toString(),
+                        value = particle25?.toString(),
                         measurement = stringResource(R.string.template_ppb)
                     )
 
                     ParticleItem(
                         label = stringResource(R.string.label_pm_10),
-                        value = particle10.toString(),
+                        value = particle10?.toString(),
                         measurement = stringResource(R.string.template_ppb)
                     )
 
                     ParticleItem(
                         label = stringResource(R.string.label_ozone),
-                        value = ozone.toString(),
+                        value = ozone?.toString(),
                         measurement = stringResource(R.string.template_μgm)
                     )
 
                     ParticleItem(
                         label = stringResource(R.string.label_sulfur_dioxide),
-                        value = sulfurOxide.toString(),
+                        value = sulfurOxide?.toString(),
                         measurement = stringResource(R.string.template_μgm)
-                    )
-                }
-            }
-        },
-        snackbarHost = { snackBarState ->
-            if (isErrorVisible) {
-                val message = stringResource(R.string.error_occurred)
-                rememberCoroutineScope().launch {
-                    snackBarState.showSnackbar(
-                        message = message,
                     )
                 }
             }
@@ -220,7 +222,7 @@ private fun AirQualityDetailsScreen(
 @Composable
 private fun ParticleItem(
     label: String,
-    value: String,
+    value: String?,
     measurement: String,
 ) {
     Row(
@@ -241,7 +243,7 @@ private fun ParticleItem(
         )
 
         Text(
-            text = "$value $measurement",
+            text = "${value ?: "-"} $measurement",
             style = MaterialTheme.typography.h6,
         )
     }
@@ -261,7 +263,7 @@ fun PreviewAirQualityDetailsScreen() {
         isCurrentLocationLabelVisible = true,
         isRemoveVisible = false,
         isProgressVisible = false,
-        isErrorVisible = false,
+        showError = null,
         onRefresh = { },
         onBackClick = { },
         onDeleteClick = { },

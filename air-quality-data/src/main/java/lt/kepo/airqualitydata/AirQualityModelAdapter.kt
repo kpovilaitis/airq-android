@@ -6,16 +6,15 @@ import lt.kepo.airqualitydatabase.AirQualityEntity
 internal fun AirQualityEntity.toListItemModel(): AirQualityListItem =
     AirQualityListItem(
         stationId = stationId,
-        address = primaryAddress,
-        airQualityIndex = airQualityIndex,
-        isCurrentLocationQuality = isCurrentLocationQuality,
+        address = address,
+        index = airQualityIndex,
+        isCurrentLocation = isCurrentLocationQuality,
     )
 
 internal fun AirQualityEntity.toDetailsModel(): AirQualityDetails =
     AirQualityDetails(
         stationId = stationId,
-        primaryAddress = primaryAddress,
-        secondaryAddress = secondaryAddress,
+        address = address,
         airQualityIndex = airQualityIndex,
         sulfurOxide = sulfurOxide,
         ozone = ozone,
@@ -30,8 +29,7 @@ internal fun AirQualityResponse.toEntityModel(
 ): AirQualityEntity =
     AirQualityEntity(
         stationId = stationId,
-        primaryAddress = city.name.split(", ").dropLast(1).joinToString(", "),
-        secondaryAddress = city.name.split(", ").last(),
+        address = city.name,
         airQualityIndex = airQualityIndex,
         sulfurOxide = individualIndices.sulfurOxide?.value,
         ozone = individualIndices.ozone?.value,

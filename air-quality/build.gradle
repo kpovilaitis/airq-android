@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    implementation project(':ui-core')
+    implementation project(':core')
     implementation project(':air-quality-data')
 
     implementation "com.google.dagger:hilt-android:${versions.hilt}"

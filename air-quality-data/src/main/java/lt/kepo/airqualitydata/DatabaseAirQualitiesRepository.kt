@@ -3,7 +3,6 @@ package lt.kepo.airqualitydata
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import lt.kepo.airqualitydatabase.AirQualityDao
-import lt.kepo.airqualitydata.AirQualitiesRepository.LoadState
 import lt.kepo.airqualitydata.refresh.RefreshAirQualityHereUseCase
 import lt.kepo.airqualitydata.refresh.RefreshAirQualityUseCase
 import lt.kepo.airqualitynetwork.AirQualityApi
@@ -24,8 +23,11 @@ class DatabaseAirQualitiesRepository @Inject constructor(
         SupervisorJob() + Dispatchers.Default
     )
 
-    private val _loadState = MutableStateFlow<LoadState>(LoadState.NotLoading)
-    override val loadState: Flow<LoadState> = _loadState
+    private val _isLoading = MutableStateFlow(false)
+    override val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _error = MutableSharedFlow<AirQualitiesRepository.Error>()
+    override val error: Flow<AirQualitiesRepository.Error> = _error
 
     override val airQualities: Flow<List<AirQualityListItem>> =
         airQualityDao
@@ -46,16 +48,21 @@ class DatabaseAirQualitiesRepository @Inject constructor(
         airQualityDao
             .get(stationId)
             .onStart {
-
+                if (refreshedAtMillis < getCurrentTimeMillis() - EXPIRATION_DURATION) {
+                    coroutineScope.launch {
+                        refresh()
+                    }
+                }
             }.map { airQualityEntity ->
                 airQualityEntity?.toDetailsModel()
             }
 
     override suspend fun add(stationId: Int) {
-        _loadState.value = LoadState.Loading
+        _isLoading.value = true
         airQualityApi.call {
             getAirQuality(stationId)
         }.let { apiResult ->
+            _isLoading.value = false
             when (apiResult) {
                 is ApiResult.Success -> {
                     airQualityDao.insert(
@@ -63,10 +70,9 @@ class DatabaseAirQualitiesRepository @Inject constructor(
                             isCurrentLocationQuality = false,
                         ),
                     )
-                    _loadState.value = LoadState.NotLoading
                 }
                 is ApiResult.Error -> {
-                    _loadState.value = LoadState.Error.Add
+                    _error.emit(AirQualitiesRepository.Error.Add)
                 }
             }
         }
@@ -77,7 +83,7 @@ class DatabaseAirQualitiesRepository @Inject constructor(
     }
 
     override suspend fun refresh() = coroutineScope {
-        _loadState.value = LoadState.Loading
+        _isLoading.value = true
         airQualityDao
             .getAll()
             .first()
@@ -99,10 +105,9 @@ class DatabaseAirQualitiesRepository @Inject constructor(
                         result is RefreshAirQualityHereUseCase.Result.Error
                 }
 
-                _loadState.value = if (isRefreshError) {
-                    LoadState.Error.Refresh
-                } else {
-                    LoadState.NotLoading
+                _isLoading.value = false
+                if (isRefreshError) {
+                    _error.emit(AirQualitiesRepository.Error.Refresh)
                 }
             }
     }

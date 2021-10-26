@@ -4,7 +4,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface AirQualitiesRepository {
 
-    val loadState: Flow<LoadState>
+    val error: Flow<Error>
+
+    val isLoading: Flow<Boolean>
 
     val airQualities: Flow<List<AirQualityListItem>>
 
@@ -16,17 +18,10 @@ interface AirQualitiesRepository {
 
     suspend fun refresh()
 
-    sealed class LoadState {
+    sealed class Error  {
 
-        object NotLoading: LoadState()
+        object Add: Error()
 
-        object Loading: LoadState()
-
-        sealed class Error: LoadState() {
-
-            object Add: LoadState()
-
-            object Refresh: LoadState()
-        }
+        object Refresh: Error()
     }
 }

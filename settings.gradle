@@ -1,5 +1,5 @@
 include ':airq',
-        ':ui-core',
+        ':core',
         ':air-quality',
         ':air-quality-data',
         ':air-quality-network',

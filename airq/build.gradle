@@ -53,7 +53,7 @@ dependencies {
     implementation project(':air-quality-data')
     implementation project(':air-quality-database')
     implementation project(':air-quality-network')
-    implementation project(':ui-core')
+    implementation project(':core')
     implementation project(':database')
     implementation project(':location')
     implementation project(':network')

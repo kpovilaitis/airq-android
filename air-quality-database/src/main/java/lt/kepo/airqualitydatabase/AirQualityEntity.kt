@@ -12,11 +12,8 @@ data class AirQualityEntity (
     @ColumnInfo(name = "station_id")
     val stationId: Int,
 
-    @ColumnInfo(name = "primary_address")
-    val primaryAddress: String,
-
-    @ColumnInfo(name = "secondary_address")
-    val secondaryAddress: String,
+    @ColumnInfo(name = "address")
+    val address: String,
 
     @ColumnInfo(name = "air_quality_index")
     val airQualityIndex: String,

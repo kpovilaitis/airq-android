@@ -22,9 +22,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import lt.kepo.airquality.airqualities.AirQualitiesListScreen
-import lt.kepo.airquality.airqualitydetails.AirQualityDetailsScreen
-import lt.kepo.stations.StationsScreen
+import lt.kepo.airquality.list.AirQualitiesListScreen
+import lt.kepo.airquality.details.AirQualityDetailsScreen
+import lt.kepo.airquality.list.search.AirQualitySearchScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -68,10 +68,10 @@ fun MainScreen() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = "airQualitiesList",
+                startDestination = "list",
             ) {
                 composable(
-                    route = "airQualitiesList",
+                    route = "list",
                 ) {
                     AirQualitiesListScreen(
                         navController = navController,
@@ -79,7 +79,7 @@ fun MainScreen() {
                     )
                 }
                 composable(
-                    route = "airQualityDetails/{stationId}",
+                    route = "details/{stationId}",
                     arguments = listOf(
                         navArgument("stationId") {
                             type = NavType.IntType
@@ -92,9 +92,9 @@ fun MainScreen() {
                     )
                 }
                 composable(
-                    route = "stations",
+                    route = "search",
                 ) {
-                    StationsScreen(
+                    AirQualitySearchScreen(
                         navController = navController,
                         viewModel = hiltViewModel(),
                     )

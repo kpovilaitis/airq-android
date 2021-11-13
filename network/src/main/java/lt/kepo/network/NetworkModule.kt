@@ -6,10 +6,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import lt.kepo.airqualityapi.AIR_QUALITY_API_URL
-import lt.kepo.airqualityapi.AirQualityApi
-import lt.kepo.airqualityapi.ApiTokenInterceptor
-import lt.kepo.airqualityapi.LocalDateTimeAdapter
+import lt.kepo.airqualitynetwork.AIR_QUALITY_API_URL
+import lt.kepo.airqualitynetwork.AirQualityApi
+import lt.kepo.airqualitynetwork.ApiTokenInterceptor
+import lt.kepo.airqualitynetwork.LocalDateTimeAdapter
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory

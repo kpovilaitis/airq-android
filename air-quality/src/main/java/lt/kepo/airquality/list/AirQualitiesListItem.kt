@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import lt.kepo.airquality.R
-import lt.kepo.core.getAirQualityIndexColor
+import lt.kepo.airquality.getAirQualityIndexColor
 
 data class AirQualitiesListItem(
     val stationId: Int,
@@ -65,6 +65,7 @@ fun AirQualitiesListItem(
         Text(
             text = listItem.address,
             maxLines = 1,
+            color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.h6,
         )
 

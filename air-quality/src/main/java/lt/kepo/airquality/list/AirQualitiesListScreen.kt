@@ -76,15 +76,16 @@ private fun AirQualitiesListScreen(
                     Text(
                         text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .padding(
                                 horizontal = 20.dp,
-                                vertical = 11.dp,
+                                vertical = 12.dp,
                             ),
                     )
 
                     Divider(
-                        color = MaterialTheme.colors.onBackground,
+                        color = MaterialTheme.colors.primary,
                         thickness = 2.dp,
                     )
                 }
@@ -120,7 +121,6 @@ private fun AirQualitiesListScreen(
                     Icon(
                         painter = painterResource(R.drawable.ic_add),
                         contentDescription = null,
-                        tint = MaterialTheme.colors.onSecondary,
                     )
                 }
             )

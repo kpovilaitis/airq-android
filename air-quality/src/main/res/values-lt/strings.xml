@@ -68,11 +68,11 @@
 
     <string name="label_time_recorded">Fiksavimo laikas</string>
     <string name="label_ozone">Ozonas</string>
-    <string name="label_pm_25">Kietosios dalelės 2.5</string>
-    <string name="label_pm_10">Kietosios dalelės 10</string>
+    <string name="label_pm_25">PM 2.5</string>
+    <string name="label_pm_10">PM 10</string>
     <string name="label_sulfur_dioxide">Sieros dioksidas</string>
 
-    <string name="template_μgm">%s μg/m\u00B3</string>
+    <string name="template_μgm">μg/m\u00B3</string>
 
     <string name="error_occurred">Nutiko klaida</string>
 

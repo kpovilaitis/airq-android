@@ -21,8 +21,8 @@ import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import lt.kepo.airquality.R
+import lt.kepo.airquality.getAirQualityIndexColor
 import lt.kepo.core.SimpleEvent
-import lt.kepo.core.getAirQualityIndexColor
 
 @Composable
 fun AirQualityDetailsScreen(
@@ -141,7 +141,7 @@ private fun AirQualityDetailsScreen(
                         Icon(
                             painter = painterResource(R.drawable.ic_delete),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.primary
+                            tint = MaterialTheme.colors.primary,
                         )
                     }
                 }
@@ -172,7 +172,7 @@ private fun AirQualityDetailsScreen(
                             .wrapContentSize(Alignment.Center)
                     ) {
                         Text(
-                            text = AnnotatedString(airQualityIndex),
+                            text = airQualityIndex,
                             style = MaterialTheme.typography.h2,
                         )
                     }
@@ -181,6 +181,7 @@ private fun AirQualityDetailsScreen(
                         text = stationName,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .padding(20.dp)
                     )
@@ -234,6 +235,7 @@ private fun ParticleItem(
     ) {
         Text(
             text = label,
+            color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.h6,
         )
 
@@ -244,6 +246,7 @@ private fun ParticleItem(
 
         Text(
             text = "${value ?: "-"} $measurement",
+            color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.h6,
         )
     }

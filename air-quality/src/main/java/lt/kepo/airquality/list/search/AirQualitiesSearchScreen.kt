@@ -130,6 +130,7 @@ private fun AirQualitySearchScreen(
                     .focusRequester(requester),
                 textStyle = MaterialTheme.typography.h6,
                 colors = TextFieldDefaults.textFieldColors(
+                    textColor = MaterialTheme.colors.primary,
                     backgroundColor = MaterialTheme.colors.background,
                 )
             )

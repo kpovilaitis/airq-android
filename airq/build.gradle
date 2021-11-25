@@ -56,7 +56,6 @@ dependencies {
     implementation project(':core')
     implementation project(':database')
     implementation project(':location')
-    implementation project(':network')
 
     implementation "com.google.dagger:hilt-android:${versions.hilt}"
     kapt "com.google.dagger:hilt-android-compiler:${versions.hilt}"

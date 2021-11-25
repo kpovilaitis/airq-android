@@ -1,4 +1,4 @@
-package lt.kepo.network
+package lt.kepo.airqualitynetwork
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -6,10 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import lt.kepo.airqualitynetwork.AIR_QUALITY_API_URL
-import lt.kepo.airqualitynetwork.AirQualityApi
-import lt.kepo.airqualitynetwork.ApiTokenInterceptor
-import lt.kepo.airqualitynetwork.LocalDateTimeAdapter
+import lt.kepo.airqualitynetwork.response.ErrorResponse
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -17,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkModule {
+class AirQualityApiModule {
 
     @Provides
     @Singleton
@@ -44,6 +41,12 @@ class NetworkModule {
                         interceptor
                     )
                     .build()
+            ).addCallAdapterFactory(
+                AirQualityApiCallAdapter.Factory(
+                    errorResponseAdapter = Moshi.Builder()
+                        .build()
+                        .adapter(ErrorResponse::class.java),
+                )
             ).build()
             .create(
                 AirQualityApi::class.java

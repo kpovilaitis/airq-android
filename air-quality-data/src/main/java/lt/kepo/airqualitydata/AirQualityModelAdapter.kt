@@ -28,13 +28,13 @@ internal fun AirQualityResponse.toEntityModel(
     isCurrentLocationQuality: Boolean
 ): AirQualityEntity =
     AirQualityEntity(
-        stationId = stationId,
-        address = city.name,
-        airQualityIndex = airQualityIndex,
-        sulfurOxide = individualIndices.sulfurOxide?.value,
-        ozone = individualIndices.ozone?.value,
-        particle10 = individualIndices.particle10?.value,
-        particle25 = individualIndices.particle25?.value,
+        stationId = dataValue.stationId,
+        address = dataValue.city.name,
+        airQualityIndex = dataValue.airQualityIndex,
+        sulfurOxide = dataValue.individualIndices.sulfurOxide?.value,
+        ozone = dataValue.individualIndices.ozone?.value,
+        particle10 = dataValue.individualIndices.particle10?.value,
+        particle25 = dataValue.individualIndices.particle25?.value,
         isCurrentLocationQuality = isCurrentLocationQuality,
-        localTimeRecorded = time.localTimeRecorded,
+        localTimeRecorded = dataValue.time.localTimeRecorded,
     )

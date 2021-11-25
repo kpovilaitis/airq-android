@@ -7,7 +7,6 @@ import lt.kepo.airqualitydata.refresh.RefreshAirQualityHereUseCase
 import lt.kepo.airqualitydata.refresh.RefreshAirQualityUseCase
 import lt.kepo.airqualitynetwork.AirQualityApi
 import lt.kepo.airqualitynetwork.ApiResult
-import lt.kepo.airqualitynetwork.call
 import javax.inject.Inject
 
 class DatabaseAirQualitiesRepository @Inject constructor(
@@ -59,9 +58,7 @@ class DatabaseAirQualitiesRepository @Inject constructor(
 
     override suspend fun add(stationId: Int) {
         _isLoading.value = true
-        airQualityApi.call {
-            getAirQuality(stationId)
-        }.let { apiResult ->
+        airQualityApi.getAirQuality(stationId).let { apiResult ->
             _isLoading.value = false
             when (apiResult) {
                 is ApiResult.Success -> {

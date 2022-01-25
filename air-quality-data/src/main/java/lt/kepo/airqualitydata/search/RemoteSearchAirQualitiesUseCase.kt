@@ -16,7 +16,7 @@ class RemoteSearchAirQualitiesUseCase @Inject constructor(
         ).let { apiResult ->
             when (apiResult) {
                 is ApiResult.Success -> SearchAirQualitiesUseCase.Result.Success(
-                    airQualities = apiResult.data
+                    airQualities = apiResult.data.dataValue
                         .take(10)
                         .map {
                             it.toDomainModel()
@@ -26,11 +26,11 @@ class RemoteSearchAirQualitiesUseCase @Inject constructor(
             }
         }
 
-    private fun StationResponse.toDomainModel(): AirQualityListItem =
+    private fun StationResponse.Data.toDomainModel(): AirQualityListItem =
         AirQualityListItem(
-            stationId = data.id,
-            index = data.airQualityIndex,
+            stationId = id,
+            index = airQualityIndex,
             isCurrentLocation = false,
-            address = data.station.name,
+            address = station.name,
         )
 }

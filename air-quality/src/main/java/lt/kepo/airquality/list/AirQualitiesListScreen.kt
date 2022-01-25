@@ -98,7 +98,8 @@ private fun AirQualitiesListScreen(
             ) {
                 LazyColumn(
                     contentPadding = PaddingValues(
-                        vertical = 8.dp
+                        top = 8.dp,
+                        bottom = 80.dp,
                     ),
                     modifier = Modifier.fillMaxHeight()
                 ) {

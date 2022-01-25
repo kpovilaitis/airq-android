@@ -13,7 +13,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import lt.kepo.airquality.R
@@ -35,7 +37,7 @@ fun AirQualitiesListItem(
         modifier = Modifier
             .clickable {
                 onClick(listItem.stationId)
-            }.fillMaxWidth()
+            }
             .padding(
                 vertical = 12.dp,
                 horizontal = 20.dp
@@ -49,11 +51,11 @@ fun AirQualitiesListItem(
         Box(
             modifier = Modifier
                 .padding(
-                    end = 20.dp,
+                    end = 16.dp,
                 )
                 .clip(CircleShape)
                 .background(pollutionIndicatorColor)
-                .size(44.dp)
+                .size(48.dp)
                 .wrapContentSize(Alignment.Center)
         ) {
             Text(
@@ -65,24 +67,18 @@ fun AirQualitiesListItem(
         Text(
             text = listItem.address,
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.h6,
+            modifier = Modifier
+                .weight(1f)
         )
 
         if (listItem.isCurrentLocation) {
-            Spacer(
-                modifier = Modifier
-                    .weight(1.0f)
-            )
-
             Icon(
                 painter = painterResource(R.drawable.ic_location),
                 contentDescription = null,
                 tint = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                    )
             )
         }
     }
@@ -95,7 +91,7 @@ fun PreviewIndexListItem(
     AirQualitiesListItem(
         listItem = AirQualitiesListItem(
             stationId = 1,
-            address = "Kaunas",
+            address = "KaunasKaunasKaunasKaunasKaunasKaunasKaunasKaunas",
             index = "12",
             isCurrentLocation = true
         ),

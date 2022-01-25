@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#151414</color>
-    <color name="colorSecondary">#151414</color>
+    <color name="colorPrimary">#CECBCA</color>
+    <color name="colorSecondary">#CECBCA</color>
 
-    <color name="colorPollutionUnknown">#b0bec5</color>
-    <color name="colorPollutionGood">#66b26f</color>
+    <color name="colorPollutionUnknown">#78909c</color>
+    <color name="colorPollutionGood">#59a55d</color>
     <color name="colorPollutionModerate">#f5c73d</color>
     <color name="colorPollutionUnhealthyForSensitive">#ea862e</color>
     <color name="colorPollutionUnhealthy">#d85241</color>

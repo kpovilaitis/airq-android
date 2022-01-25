@@ -15,11 +15,10 @@ class AirQualitiesViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isProgressVisible: Flow<Boolean> = airQualitiesRepository.isLoading
-    val showError: Flow<SimpleEvent> = airQualitiesRepository.error.transform { error ->
-        if (error is AirQualitiesRepository.Error.Refresh) {
-            emit(SimpleEvent())
-        }
-    }
+    val showError: Flow<SimpleEvent> = airQualitiesRepository.error
+        .filter { it is AirQualitiesRepository.Error.Refresh }
+        .map { SimpleEvent() }
+
     val airQualities: Flow<List<AirQualitiesListItem>> = airQualitiesRepository
         .airQualities
         .map { airQualities ->

@@ -26,5 +26,5 @@ interface AirQualityApi {
     @GET("/search/")
     suspend fun getStations(
         @Query("keyword") query: String
-    ): ApiResult<List<StationResponse>>
+    ): ApiResult<StationResponse>
 }

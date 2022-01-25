@@ -2,9 +2,9 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:statusBarColor">@android:color/white</item>
-        <item name="android:windowBackground">@drawable/background_splash</item>
+        <item name="android:navigationBarColor">@color/colorSplash</item>
+        <item name="android:statusBarColor">@color/colorSplash</item>
+        <item name="android:windowBackground">@color/colorSplash</item>
         <item name="android:windowLightStatusBar">true</item>
 
     </style>

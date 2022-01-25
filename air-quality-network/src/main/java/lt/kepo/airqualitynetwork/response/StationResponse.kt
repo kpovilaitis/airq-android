@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class StationResponse (
-    @Json(name = "data") val data: Data,
+    @Json(name = "data") val dataValue: List<Data>,
 ) {
     @JsonClass(generateAdapter = true)
     data class Data (

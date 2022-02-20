@@ -19,8 +19,7 @@ class AirQualitiesViewModel @Inject constructor(
         .filter { it is AirQualitiesRepository.Error.Refresh }
         .map { SimpleEvent() }
 
-    val airQualities: Flow<List<AirQualitiesListItem>> = airQualitiesRepository
-        .airQualities
+    val airQualities: Flow<List<AirQualitiesListItem>> = airQualitiesRepository.airQualities
         .map { airQualities ->
             airQualities.sortedByDescending { airQuality ->
                 airQuality.isCurrentLocation

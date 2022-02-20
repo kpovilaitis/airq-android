@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,6 +22,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import lt.kepo.airquality.R
 import lt.kepo.airquality.getAirQualityIndexColor
 import lt.kepo.core.SimpleEvent
+import lt.kepo.core.collectAsStateWithLifecycle
 
 @Composable
 fun AirQualityDetailsScreen(
@@ -35,16 +35,16 @@ fun AirQualityDetailsScreen(
             .fillMaxWidth()
             .fillMaxHeight(),
     ) {
-        val stationName by viewModel.stationName.collectAsState("")
-        val index by viewModel.index.collectAsState("")
-        val sulfurOxide by viewModel.sulfurOxide.collectAsState(null)
-        val ozone by viewModel.ozone.collectAsState(null)
-        val particle10 by viewModel.particle10.collectAsState(null)
-        val particle25 by viewModel.particle25.collectAsState(null)
-        val isCurrentLocationLabelVisible by viewModel.isCurrentLocationLabelVisible.collectAsState(false)
-        val isRemoveAirQualityVisible by viewModel.isRemoveAirQualityVisible.collectAsState(false)
-        val isProgressVisible by viewModel.isProgressVisible.collectAsState(false)
-        val showError by viewModel.showError.collectAsState(null)
+        val stationName by viewModel.stationName.collectAsStateWithLifecycle("")
+        val index by viewModel.index.collectAsStateWithLifecycle("")
+        val sulfurOxide by viewModel.sulfurOxide.collectAsStateWithLifecycle(null)
+        val ozone by viewModel.ozone.collectAsStateWithLifecycle(null)
+        val particle10 by viewModel.particle10.collectAsStateWithLifecycle(null)
+        val particle25 by viewModel.particle25.collectAsStateWithLifecycle(null)
+        val isCurrentLocationLabelVisible by viewModel.isCurrentLocationLabelVisible.collectAsStateWithLifecycle(false)
+        val isRemoveAirQualityVisible by viewModel.isRemoveAirQualityVisible.collectAsStateWithLifecycle(false)
+        val isProgressVisible by viewModel.isProgressVisible.collectAsStateWithLifecycle(false)
+        val showError by viewModel.showError.collectAsStateWithLifecycle(null)
 
         AirQualityDetailsScreen(
             stationName = stationName,

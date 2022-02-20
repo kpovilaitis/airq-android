@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,18 +21,19 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import lt.kepo.airquality.R
 import lt.kepo.airquality.list.AirQualitiesListItem
 import lt.kepo.core.Event
+import lt.kepo.core.collectAsStateWithLifecycle
 
 @Composable
 fun AirQualitySearchScreen(
     navController: NavHostController,
     viewModel: SearchStationsViewModel,
 ) {
-    val query by viewModel.query.collectAsState("")
-    val stations by viewModel.stations.collectAsState(emptyList())
-    val isClearActionVisible by viewModel.isClearActionVisible.collectAsState(false)
-    val isNoResultVisible by viewModel.isNoResultsVisible.collectAsState(false)
-    val isProgressVisible by viewModel.isProgressVisible.collectAsState(false)
-    val showError by viewModel.showError.collectAsState(null)
+    val query by viewModel.query.collectAsStateWithLifecycle("")
+    val stations by viewModel.stations.collectAsStateWithLifecycle(emptyList())
+    val isClearActionVisible by viewModel.isClearActionVisible.collectAsStateWithLifecycle(false)
+    val isNoResultVisible by viewModel.isNoResultsVisible.collectAsStateWithLifecycle(false)
+    val isProgressVisible by viewModel.isProgressVisible.collectAsStateWithLifecycle(false)
+    val showError by viewModel.showError.collectAsStateWithLifecycle(null)
 
     AirQualitySearchScreen(
         query = query,

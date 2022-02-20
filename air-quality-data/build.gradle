@@ -25,6 +25,7 @@ dependencies {
     implementation project(':air-quality-network')
     implementation project(':air-quality-database')
     implementation project(':location')
+    implementation project(':core')
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinx_coroutines_core}"
 

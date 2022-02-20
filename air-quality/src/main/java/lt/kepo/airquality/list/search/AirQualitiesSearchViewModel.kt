@@ -8,16 +8,16 @@ import lt.kepo.airquality.list.AirQualitiesListItem
 import lt.kepo.airqualitydata.AirQualitiesRepository
 import lt.kepo.airqualitydata.AirQualityListItem
 import lt.kepo.airqualitydata.search.SearchAirQualitiesUseCase
+import lt.kepo.core.ApplicationScope
 import lt.kepo.core.Event
 import lt.kepo.core.addSource
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class SearchStationsViewModel @Inject constructor(
     private val searchAirQualitiesUseCase: SearchAirQualitiesUseCase,
     private val airQualitiesRepository: AirQualitiesRepository,
-    @Named("application") private val applicationScope: CoroutineScope,
+    @ApplicationScope private val applicationScope: CoroutineScope,
 ) : ViewModel() {
 
     private val _query = MutableStateFlow("")
@@ -59,8 +59,8 @@ class SearchStationsViewModel @Inject constructor(
     val query: Flow<String> = _query
     val isProgressVisible: Flow<Boolean> = airQualitiesRepository.isLoading
     val isNoResultsVisible: Flow<Boolean> = _query
-        .combine(searchResults) { query, results ->
-            query.isNotEmpty() && results.isEmpty()
+        .combine(stations) { query, stations ->
+            query.isNotEmpty() && stations.isEmpty()
         }
     val isClearActionVisible: Flow<Boolean> = _query
         .map { text ->

@@ -15,15 +15,16 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import lt.kepo.airquality.R
 import lt.kepo.core.SimpleEvent
+import lt.kepo.core.collectAsStateWithLifecycle
 
 @Composable
 fun AirQualitiesListScreen(
     navController: NavHostController,
     viewModel: AirQualitiesViewModel,
 ) {
-    val airQualities by viewModel.airQualities.collectAsState(emptyList())
-    val isProgressVisible by viewModel.isProgressVisible.collectAsState(false)
-    val showError by viewModel.showError.collectAsState(null)
+    val airQualities by viewModel.airQualities.collectAsStateWithLifecycle(emptyList())
+    val isProgressVisible by viewModel.isProgressVisible.collectAsStateWithLifecycle(false)
+    val showError by viewModel.showError.collectAsStateWithLifecycle(null)
 
     AirQualitiesListScreen(
         airQualities = airQualities,

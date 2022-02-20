@@ -7,6 +7,8 @@ import lt.kepo.airqualitydata.refresh.RefreshAirQualityHereUseCase
 import lt.kepo.airqualitydata.refresh.RefreshAirQualityUseCase
 import lt.kepo.airqualitynetwork.AirQualityApi
 import lt.kepo.airqualitynetwork.ApiResult
+import lt.kepo.core.ApplicationScope
+import lt.kepo.core.CurrentTime
 import javax.inject.Inject
 
 class DatabaseAirQualitiesRepository @Inject constructor(
@@ -14,13 +16,11 @@ class DatabaseAirQualitiesRepository @Inject constructor(
     private val refreshAirQuality: RefreshAirQualityUseCase,
     private val refreshAirQualityHere: RefreshAirQualityHereUseCase,
     private val airQualityApi: AirQualityApi,
-    private val getCurrentTimeMillis: () -> Long,
+    @CurrentTime private val getCurrentTimeMillis: () -> Long,
+    @ApplicationScope private val applicationScope: CoroutineScope,
 ) : AirQualitiesRepository {
 
     private var refreshedAtMillis: Long = 0
-    private val coroutineScope = CoroutineScope(
-        SupervisorJob() + Dispatchers.Default
-    )
 
     private val _isLoading = MutableStateFlow(false)
     override val isLoading: StateFlow<Boolean> = _isLoading
@@ -28,33 +28,29 @@ class DatabaseAirQualitiesRepository @Inject constructor(
     private val _error = MutableSharedFlow<AirQualitiesRepository.Error>()
     override val error: Flow<AirQualitiesRepository.Error> = _error
 
-    override val airQualities: Flow<List<AirQualityListItem>> =
-        airQualityDao
-            .getAll()
-            .onStart {
-                if (refreshedAtMillis < getCurrentTimeMillis() - EXPIRATION_DURATION) {
-                    coroutineScope.launch {
-                        refresh()
-                    }
-                }
-            }.map { airQualityEntities ->
-                airQualityEntities.map { airQualityEntity ->
-                    airQualityEntity.toListItemModel()
+    override val airQualities: Flow<List<AirQualityListItem>> = airQualityDao.getAll()
+        .onStart {
+            if (refreshedAtMillis < getCurrentTimeMillis() - EXPIRATION_DURATION) {
+                applicationScope.launch {
+                    refresh()
                 }
             }
+        }.map { airQualityEntities ->
+            airQualityEntities.map { airQualityEntity ->
+                airQualityEntity.toListItemModel()
+            }
+        }
 
-    override fun getAirQuality(stationId: Int): Flow<AirQualityDetails?> =
-        airQualityDao
-            .get(stationId)
-            .onStart {
-                if (refreshedAtMillis < getCurrentTimeMillis() - EXPIRATION_DURATION) {
-                    coroutineScope.launch {
-                        refresh()
-                    }
+    override fun getAirQuality(stationId: Int): Flow<AirQualityDetails?> = airQualityDao.get(stationId)
+        .onStart {
+            if (refreshedAtMillis < getCurrentTimeMillis() - EXPIRATION_DURATION) {
+                applicationScope.launch {
+                    refresh()
                 }
-            }.map { airQualityEntity ->
-                airQualityEntity?.toDetailsModel()
             }
+        }.map { airQualityEntity ->
+            airQualityEntity?.toDetailsModel()
+        }
 
     override suspend fun add(stationId: Int) {
         _isLoading.value = true
@@ -84,17 +80,17 @@ class DatabaseAirQualitiesRepository @Inject constructor(
         airQualityDao
             .getAll()
             .first()
-            .filterNot { entity ->
-                entity.isCurrentLocationQuality
+            .sortedBy { entity ->
+                entity.isCurrentLocationQuality.not()
             }.map { entity ->
                 async {
-                    refreshAirQuality(entity.stationId)
+                    if (entity.isCurrentLocationQuality) {
+                        refreshAirQualityHere()
+                    } else {
+                        refreshAirQuality(entity.stationId)
+                    }
                 }
-            }.plus(
-                async {
-                    refreshAirQualityHere()
-                }
-            ).awaitAll()
+            }.awaitAll()
             .let { refreshResults ->
                 refreshedAtMillis = getCurrentTimeMillis()
                 val isRefreshError = refreshResults.any { result ->

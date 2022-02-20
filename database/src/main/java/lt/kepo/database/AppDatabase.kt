@@ -12,7 +12,7 @@ import lt.kepo.database.typeconverter.DateTypeConverter
     entities = [
         AirQualityEntity::class
     ],
-    version = 1
+    version = 2
 )
 abstract class AppDatabase : RoomDatabase() {
 

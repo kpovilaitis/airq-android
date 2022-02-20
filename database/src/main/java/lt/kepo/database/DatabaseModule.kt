@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import lt.kepo.airqualitydatabase.AirQualityDao
+import lt.kepo.database.migration.MIGRATION_1_2
 import javax.inject.Singleton
 
 @Module
@@ -23,6 +24,8 @@ class DatabaseModule {
             context,
             AppDatabase::class.java,
             "air_quality_database"
+        ).addMigrations(
+            MIGRATION_1_2,
         ).build()
 
     @Provides

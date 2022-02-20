@@ -77,32 +77,34 @@ class DatabaseAirQualitiesRepository @Inject constructor(
 
     override suspend fun refresh() = coroutineScope {
         _isLoading.value = true
-        airQualityDao
+        val entities = airQualityDao
             .getAll()
             .first()
-            .sortedBy { entity ->
-                entity.isCurrentLocationQuality.not()
-            }.map { entity ->
-                async {
-                    if (entity.isCurrentLocationQuality) {
-                        refreshAirQualityHere()
-                    } else {
-                        refreshAirQuality(entity.stationId)
-                    }
-                }
-            }.awaitAll()
-            .let { refreshResults ->
-                refreshedAtMillis = getCurrentTimeMillis()
-                val isRefreshError = refreshResults.any { result ->
-                    result is RefreshAirQualityUseCase.Result.Error ||
-                        result is RefreshAirQualityHereUseCase.Result.Error
-                }
+            .filterNot { entity ->
+                entity.isCurrentLocationQuality
+            }
 
-                _isLoading.value = false
-                if (isRefreshError) {
-                    _error.emit(AirQualitiesRepository.Error.Refresh)
+        val refreshResults = listOf(
+            async {
+                refreshAirQualityHere()
+            }
+        ).plus(
+            entities.map { entity ->
+                async {
+                    refreshAirQuality(entity.stationId)
                 }
             }
+        ).awaitAll()
+        refreshedAtMillis = getCurrentTimeMillis()
+        val isRefreshError = refreshResults.any { result ->
+            result is RefreshAirQualityUseCase.Result.Error ||
+                    result is RefreshAirQualityHereUseCase.Result.Error
+        }
+
+        _isLoading.value = false
+        if (isRefreshError) {
+            _error.emit(AirQualitiesRepository.Error.Refresh)
+        }
     }
 
     companion object {

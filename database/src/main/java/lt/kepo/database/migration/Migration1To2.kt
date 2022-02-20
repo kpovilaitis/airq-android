@@ -25,14 +25,14 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 """
                  INSERT INTO air_qualities_tmp
                  SELECT station_id,
-                    primary_address || ', ' || secondary_address,
+                    city_name,
                     air_quality_index,
-                    sulfur_oxide,
-                    ozone,
-                    particle_10,
-                    particle_25,
-                    is_current_location,
-                    local_time_recorded
+                    sulfur_oxide_value,
+                    ozone_value,
+                    particle_10_value,
+                    particle_25_value,
+                    station_id = -1,
+                    time_local_recorded
                  FROM air_qualities
                  """,
             )
